@@ -30,115 +30,52 @@ npm -v
 
 :::
 
-若未安装，前往 [nodejs.org/zh-cn/download](https://nodejs.org/zh-cn/download) 下载对应平台安装包，安装完成后 **Windows 需重启**。
+若未安装，前往 [nodejs.org/zh-cn/download](https://nodejs.cn/download/current/) 下载对应平台安装包，安装完成后 **Windows 需重启**。
 
 ### Windows 额外：安装 Git Bash
 
 Claude  Code 依赖 bash 运行环境，Windows 用户需安装 Git Bash：
 
-1. 下载地址：[git-scm.com/install/windows](https://git-scm.com/download/windows)，选择对应版本安装。
+1. 下载地址：[git-scm.com/install/windows](https://git-scm.com/install)，选择对应版本安装。
 2. 验证：右键桌面，出现 **Open Git Bash here** 选项即安装成功。
 
 ---
 
-## 二、安装 Claude  Code
+## 二、通过ZCF安装 Claude  Code
 
 ::: code-group
 
 ```bash [npm]
-npm install -g @anthropic-ai/claude-code
-```
-
-```bash [pnpm]
-pnpm install -g @anthropic-ai/claude-code
-```
-
-```bash [yarn]
-yarn global add @anthropic-ai/claude-code
+npx zcf
 ```
 
 :::
-
-验证安装：
-
-```bash
-claude --version
-```
 
 ---
 
 ## 三、配置 FishXCode
 
-### 方式一：settings.json（推荐）
-
-编辑 `~/.claude/settings.json`（Windows 路径：`C:\Users\<用户名>\.claude\settings.json`），写入以下内容：
-
-```json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "替换为您的 API Key",
-    "ANTHROPIC_BASE_URL": "https://fishxcode.com/",
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1
-  },
-  "permissions": {
-    "allow": [
-      "Bash",
-      "LS(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "MultiEdit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Task(*)",
-      "WebFetch(domain:*)",
-      "WebSearch",
-      "TodoWrite(*)",
-      "NotebookRead(*)",
-      "NotebookEdit(*)"
-    ],
-    "defaultMode": "bypassPermissions",
-    "deny": []
-  },
-}
-```
-
-此方式**永久生效**，无需每次配置环境变量。
-
-### 方式二：临时环境变量
-
-::: code-group
-
-```bash [macOS/Linux]
-export ANTHROPIC_BASE_URL=https://fishxcode.com/
-export ANTHROPIC_AUTH_TOKEN=sk-xxx
-```
-
-```powershell [Windows PowerShell（临时）]
-$env:ANTHROPIC_BASE_URL="https://fishxcode.com/"
-$env:ANTHROPIC_AUTH_TOKEN="sk-xxx"
-```
-
-```cmd [Windows CMD（临时）]
-set ANTHROPIC_BASE_URL=https://fishxcode.com/
-set ANTHROPIC_AUTH_TOKEN=sk-xxx
-```
-
-:::
-
-如需 Windows 永久写入系统变量，在 PowerShell 中执行：
-
-```powershell
-setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
-setx ANTHROPIC_BASE_URL "https://fishxcode.com/"
-```
-
-执行后需重新打开终端窗口生效。
-
-::: warning
-请将 `sk-xxx` 替换为你在 [FishXCode 控制台](https://fishxcode.com/console/token) 获取的实际 Token。
-:::
+1、终端输入npx zcf，回车运行，会显示Ok to proceed? (y) ，这个时候输入y回车安装
+2、会提示选择ZCF显示语言，选择第一个简体中文后回车
+3、安装好后显示请选择功能，选择第一个 1. 完整初始化 - 安装 Claude Code + 导入工作流 + 配置 API 或 CCR 代理 + 配置 MCP 服务，输入1后回车
+4、接下来显示：是否修改模板语言配置，选择默认的no
+5、选择 AI 输出语言，也是选择1、简体中文
+6、是否安装claude，选择yes
+7、请选择 API 配置模式，这里选择第二个，键盘的上下方向键选择，选择：自定义 API 配置
+8、请选择 API 供应商，选择第一个：1. 自定义配置
+9、配置名称（仅限字母、数字、空格、._-）这里自定义，英文就行
+10、请选择认证类型，选择第一个API Key
+11、请输入API基础URL，这里填https://fishxcode.com
+12、请输入API密钥，填fishxcode创建的令牌的密钥，在控制台-令牌管理
+13、接下来显示请输入主要使用的模型名称、请输入默认 Haiku 模型名称、请输入默认 Sonnet 模型名称、请输入默认 Opus 模型名称、是否设为默认配置、是否继续添加 Claude Code 配置都是默认回车跳过就行
+14、选择要安装的工作流类型，选择第一个：通用工具
+15、输出风格根据自己喜好选择就行
+16、是否配置 MCP 服务，选择yes
+17、 选择要安装的 MCP 服务，空格是选择，根据自己想要的安装即可，回车是继续下一步
+18、配置CCometixLine，回车即可
+19、返回主菜单后，输入q既可退出
+20、终端输入claude，回车运行显示claude，会显示是否信任这个文件夹，选择 1. Yes, I trust this folder，
+    接下来会显示是否选择API，一定要选择第一个：YES,不能选择默认的NO后，选择YES后跳出claude界面代表安装成功
 
 ---
 
