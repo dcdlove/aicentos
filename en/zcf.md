@@ -1,65 +1,25 @@
-# Quick Setup with ZCF
+# ZCF Tutorial
 
 [ZCF](https://github.com/UfoMiao/zcf) is a zero-config enhancement tool for Claude  Code / Codex. A single `zcf init` command handles API setup, workflow import, and MCP service integration.
 
 > No account yet? Complete [Account Setup](/en/account) to get your API Key first.
 
-## Quick Connect
-
-::: code-group
-
-```bash [One-liner]
-npx zcf i -s -t api_key -k "your-api-key" -u "https://fishxcode.com/"
-```
-
-```bash [Full init (recommended)]
-npx zcf i -s \
-  -t api_key \
-  -k "your-api-key" \
-  -u "https://fishxcode.com/" \
-  -g en \
-  --workflows all \
-  --mcp-services context7,open-websearch \
-  --output-styles engineer-professional
-```
-
-```bash [Interactive (first time)]
-npx zcf init
-# ZCF guides you through API type, MCP services, workflows, etc.
-```
-
-:::
-
-::: warning
-Replace `your-api-key` with the `sk-xxx` token from your [FishXCode Console](https://fishxcode.com/console/token).
-:::
-
-This writes to `~/.claude/settings.json` automatically:
-
-```json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "sk-xxx",
-    "ANTHROPIC_BASE_URL": "https://fishxcode.com/"
-  }
-}
-```
-
 ---
 
-## Parameters
+## Common Parameters
 
 ### API Configuration
 
 | Parameter | Description |
 |---|---|
-| `-t api_key` | Use API Key mode |
-| `-k "sk-xxx"` | Your API Key |
+| `-p custom` | Use a custom provider (this is the mode FishXCode uses) |
+| `-t api_key` | Equivalent shorthand, same effect as `-p custom` |
+| `-k "sk-xxx"` | API Key |
 | `-u "https://fishxcode.com/"` | FishXCode Base URL |
 | `-M "claude-sonnet-4-5-20250929"` | Primary model |
 | `-H "claude-haiku-4-5-20251001"` | Fast model |
 
-Pin specific models:
+Pin specific models example:
 
 ```bash
 npx zcf i -s -t api_key -k "sk-xxx" -u "https://fishxcode.com/" \
@@ -91,7 +51,7 @@ Available: `context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` / `P
 
 | Parameter | Description |
 |---|---|
-| `-g en` | Set interface, template, and AI output language |
+| `-g en` | Set interface, template, and AI output language to English |
 | `-s` | Non-interactive mode, skip all prompts |
 | `-r backup` | Config strategy: `backup` / `merge` / `docs-only` / `skip` |
 | `-x false` | Skip CCometixLine status bar installation |
@@ -115,7 +75,7 @@ After installation, use these slash commands in Claude  Code:
 
 ## MCP Services
 
-MCP (Model Context Protocol) extends Claude  Code with external tools. ZCF bundles the following services:
+MCP (Model Context Protocol) extends Claude  Code with external tools and services. ZCF bundles the following services:
 
 | Service | Description | Key Required |
 |---|---|---|
@@ -129,7 +89,7 @@ MCP (Model Context Protocol) extends Claude  Code with external tools. ZCF bundl
 
 ### Service Details
 
-**context7** — Queries up-to-date library docs to avoid stale API usage:
+**context7** — Queries up-to-date library docs and code examples to avoid stale API usage:
 ```
 Get the latest React useState hook documentation and examples
 ```
@@ -139,7 +99,7 @@ Get the latest React useState hook documentation and examples
 Search for the latest TypeScript 5.0 features
 ```
 
-**spec-workflow** — Structured feature workflow with requirement analysis, design, and task breakdown:
+**spec-workflow** — Structured feature workflow with requirement analysis, technical design, and task breakdown:
 ```bash
 npx -y @pimzino/spec-workflow-mcp@latest --dashboard  # Visual dashboard
 ```
@@ -149,18 +109,18 @@ npx -y @pimzino/spec-workflow-mcp@latest --dashboard  # Visual dashboard
 Query the Composition API docs in vuejs/core
 ```
 
-**Playwright** — Browser control, screenshots, form filling, and interaction simulation.
+**Playwright** — Browser control, screenshots, form filling, and interaction simulation. First run requires downloading a browser.
 
 **exa** — AI-powered semantic web search, requires API key:
 ```bash
 export EXA_API_KEY="your-api-key"  # Get from dashboard.exa.ai
 ```
 
-**serena** — Semantic code retrieval and intelligent edit suggestions.
+**serena** — Semantic code retrieval and intelligent edit suggestions, IDE-like capabilities.
 
 ### Config File Location
 
-MCP config is written to `~/.claude/settings.json`:
+After ZCF installation, MCP config is written to `~/.claude/settings.json`:
 
 ```json
 {

@@ -1,105 +1,126 @@
-# Configuração rápida com ZCF
+# Tutorial ZCF
 
-[ZCF](https://github.com/UfoMiao/zcf) é uma ferramenta de configuração zero para Claude  Code / Codex. Um único comando `zcf init` gerencia a configuração da API, importação de workflows e integração de serviços MCP.
+[ZCF](https://github.com/UfoMiao/zcf) é uma ferramenta de aprimoramento zero-configuração para Claude Code / Codex. Um único comando `zcf init` conclui toda a inicialização: configuração da API, importação de workflows e integração de serviços MCP.
 
-> Sem conta? Conclua primeiro a [Configuração de conta](/pt/account) para obter sua API Key.
-
-## Conexão rápida
-
-::: code-group
-
-```bash [Um comando]
-npx zcf i -s -t api_key -k "sua-chave-api" -u "https://fishxcode.com/"
-```
-
-```bash [Init completa (recomendado)]
-npx zcf i -s \
-  -t api_key \
-  -k "sua-chave-api" \
-  -u "https://fishxcode.com/" \
-  -g en \
-  --workflows all \
-  --mcp-services context7,open-websearch \
-  --output-styles engineer-professional
-```
-
-```bash [Interativo (primeira vez)]
-npx zcf init
-```
-
-:::
-
-::: warning
-Substitua `sua-chave-api` pelo token `sk-xxx` do seu [Console FishXCode](https://fishxcode.com/console/token).
-:::
-
-Isso escreve automaticamente em `~/.claude/settings.json`:
-
-```json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "sk-xxx",
-    "ANTHROPIC_BASE_URL": "https://fishxcode.com/"
-  }
-}
-```
+> Sem conta? Primeiro complete a [Configuração de conta](/pt/account) para obter sua API Key.
 
 ---
 
-## Parâmetros
+## Parâmetros comuns
 
-### Configuração API
+### Configuração da API
 
 | Parâmetro | Descrição |
 |---|---|
-| `-t api_key` | Modo API Key |
-| `-k "sk-xxx"` | Sua API Key |
+| `-p custom` | Usar provedor personalizado (método utilizado pelo FishXCode) |
+| `-t api_key` | Equivalente a `-p custom`, mesmo efeito |
+| `-k "sk-xxx"` | API Key |
 | `-u "https://fishxcode.com/"` | URL base do FishXCode |
-| `-M "claude-sonnet-4-5-20250929"` | Modelo principal |
-| `-H "claude-haiku-4-5-20251001"` | Modelo rápido |
+| `-M "claude-sonnet-4-5-20250929"` | Especificar modelo principal |
+| `-H "claude-haiku-4-5-20251001"` | Especificar modelo rápido |
+
+Exemplo especificando modelos:
+
+```bash
+npx zcf i -s -t api_key -k "sk-xxx" -u "https://fishxcode.com/" \
+  -M "claude-sonnet-4-5-20250929" \
+  -H "claude-haiku-4-5-20251001"
+```
 
 ### Workflows
 
-Disponíveis: `commonTools` / `sixStepsWorkflow` / `featPlanUx` / `gitWorkflow` / `bmadWorkflow` / `all` / `skip`
+| Parâmetro | Descrição |
+|---|---|
+| `-w all` | Instalar todos os workflows |
+| `-w sixStepsWorkflow,gitWorkflow` | Instalar workflows específicos |
+| `-w skip` | Pular |
+
+Workflows disponíveis: `commonTools` / `sixStepsWorkflow` / `featPlanUx` / `gitWorkflow` / `bmadWorkflow`
 
 ### Serviços MCP
 
-Disponíveis: `context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` / `Playwright` / `exa` / `serena` / `all` / `skip`
+| Parâmetro | Descrição |
+|---|---|
+| `-m all` | Instalar todos os serviços MCP |
+| `-m context7,open-websearch` | Instalar serviços específicos |
+| `-m skip` | Pular |
+
+Serviços disponíveis: `context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` / `Playwright` / `exa` / `serena`
 
 ### Outras opções
 
 | Parâmetro | Descrição |
 |---|---|
-| `-s` | Modo não-interativo |
-| `-r backup` | Estratégia: `backup` / `merge` / `docs-only` / `skip` |
-| `-x false` | Não instalar CCometixLine |
+| `-g pt` | Definir idioma da interface, templates e saída da IA como português |
+| `-s` | Modo não-interativo, pular todos os prompts |
+| `-r backup` | Estratégia de configuração (`backup` / `merge` / `docs-only` / `skip`) |
+| `-x false` | Não instalar a barra de status CCometixLine |
 
 ---
 
 ## Comandos de workflow
 
+Após a instalação, os seguintes comandos de barra estão disponíveis no Claude Code:
+
 | Comando | Descrição |
 |---|---|
-| `/zcf:workflow` | Workflow de seis fases |
-| `/zcf:feat` | Desenvolvimento de funcionalidades com UI/UX |
-| `/zcf:git-commit` | Geração automática de commits |
-| `/zcf:git-rollback` | Rollback interativo |
+| `/zcf:workflow` | Workflow de desenvolvimento em seis fases (Pesquisa → Ideação → Planejamento → Execução → Otimização → Revisão) |
+| `/zcf:feat` | Desenvolvimento de nova funcionalidade, com planejamento e design UI/UX |
+| `/zcf:git-commit` | Geração automática de mensagens de commit Git |
+| `/zcf:git-rollback` | Rollback interativo para versões anteriores |
 | `/zcf:git-worktree` | Gerenciamento de Git Worktrees |
-| `/zcf:bmad-init` | Workflow ágil empresarial |
+| `/zcf:bmad-init` | Processo ágil de desenvolvimento empresarial |
 
 ---
 
-## Serviços MCP
+## Descrição dos serviços MCP
 
-| Serviço | Descrição | Key necessária |
+MCP (Model Context Protocol) permite que o Claude Code acesse ferramentas e serviços externos. O ZCF inclui os seguintes serviços:
+
+| Serviço | Descrição | Requer Key |
 |---|---|---|
-| `context7` | Docs e exemplos de bibliotecas atualizados | Não |
-| `open-websearch` | Pesquisa DuckDuckGo/Bing/Brave | Não |
-| `spec-workflow` | Workflow Requisitos → Design → Implementação | Não |
-| `mcp-deepwiki` | Documentação de repositórios GitHub | Não |
+| `context7` | Consulta documentação atualizada e exemplos de código de bibliotecas | Não |
+| `open-websearch` | Pesquisa web via DuckDuckGo/Bing/Brave | Não |
+| `spec-workflow` | Workflow estruturado de Requisitos → Design → Implementação | Não |
+| `mcp-deepwiki` | Consulta de documentação de repositórios GitHub | Não |
 | `Playwright` | Automação de navegador | Não |
 | `exa` | Pesquisa semântica Exa AI | Sim (`EXA_API_KEY`) |
 | `serena` | Assistente IDE, recuperação semântica de código | Não |
+
+### Descrição de cada serviço
+
+**context7** — Consulta documentação atualizada e exemplos de código de qualquer biblioteca, evitando que a IA use APIs obsoletas:
+```
+Por favor, consulte a documentação mais recente e exemplos do hook useState do React
+```
+
+**open-websearch** — Suporta pesquisa em múltiplos motores: DuckDuckGo, Bing, Brave. Não requer API Key:
+```
+Pesquise as novidades do TypeScript 5.0
+```
+
+**spec-workflow** — Workflow estruturado do requisito à implementação, incluindo análise de requisitos, design técnico e decomposição de tarefas:
+```bash
+npx -y @pimzino/spec-workflow-mcp@latest --dashboard  # Iniciar painel de visualização
+```
+
+**mcp-deepwiki** — Consulta documentação de repositórios GitHub:
+```
+Consulte a documentação da Composition API do repositório vuejs/core
+```
+
+**Playwright** — Controle do navegador para capturas de tela, preenchimento de formulários e simulação de interações. Na primeira execução, é necessário baixar o navegador.
+
+**exa** — Pesquisa semântica na web via Exa AI, requer configuração de API Key:
+```bash
+export EXA_API_KEY="your-api-key"  # Obtenha em dashboard.exa.ai
+```
+
+**serena** — Recuperação semântica de código e sugestões de edição inteligentes, com capacidades similares a um IDE.
+
+### Localização do arquivo de configuração
+
+Após a instalação pelo ZCF, as configurações MCP são gravadas em `~/.claude/settings.json`:
 
 ```json
 {
@@ -107,13 +128,17 @@ Disponíveis: `context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` /
     "context7": {
       "command": "npx",
       "args": ["-y", "@context-labs/context7"]
+    },
+    "open-websearch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-open-websearch"]
     }
   }
 }
 ```
 
 ::: tip Usuários Windows
-O ZCF corrige automaticamente os formatos de caminhos do Windows. Se os serviços MCP falharem, execute `npx zcf` → selecione `4. Configurar MCP`.
+O ZCF corrige automaticamente os formatos de caminhos do Windows. Se houver problemas de conexão com o MCP, execute `npx zcf` → selecione `4. Configurar MCP` para correção automática.
 :::
 
 ---
@@ -122,17 +147,34 @@ O ZCF corrige automaticamente os formatos de caminhos do Windows. Se os serviço
 
 ```bash
 npx zcf update
+# ou
+npx zcf u -s -g pt
 ```
+
+A atualização sincroniza apenas os templates de workflow e prompts — **não modifica a configuração da API**.
 
 ---
 
 ## Perguntas frequentes
 
-### Meu settings.json será sobrescrito?
+### O settings.json existente será sobrescrito?
 
-O ZCF faz backup em `~/.claude/backup/` antes de qualquer alteração: `backup` / `merge` / `docs-only` / `skip`.
+O ZCF faz backup automático em `~/.claude/backup/YYYY-MM-DD_HH-mm-ss/` antes de qualquer modificação e oferece quatro estratégias de tratamento:
 
-### Node.js >= 18 necessário
+```bash
+npx zcf i -s -r backup    # Backup e sobrescrever (padrão)
+npx zcf i -s -r merge     # Mescla inteligente
+npx zcf i -s -r docs-only # Atualizar apenas documentos de workflow
+npx zcf i -s -r skip      # Pular sem modificar
+```
+
+### Como voltar para configuração manual?
+
+O `settings.json` gerado pelo ZCF está em formato padrão e pode ser editado diretamente. Consulte a [Configuração do Claude Code](/pt/start).
+
+### Requisito de versão do Node.js
+
+ZCF requer Node.js >= 18:
 
 ```bash
 node --version

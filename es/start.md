@@ -1,4 +1,4 @@
-# Usar FishXCode con Claude  Code
+# Usar FishXCode con Claude Code
 
 > ¿Primera vez? Primero completa el [Registro de cuenta](/es/account).
 
@@ -10,7 +10,7 @@
 
 ### Instalar Node.js
 
-Claude  Code se instala via npm. Verifica primero que Node.js esté disponible.
+Claude Code se instala via npm. Verifica primero que Node.js esté disponible.
 
 ::: code-group
 
@@ -30,115 +30,98 @@ npm -v
 
 :::
 
-Si no está instalado, descarga desde [nodejs.org/es/download](https://nodejs.org/es/download). **Windows requiere reiniciar** después de la instalación.
+Si no está instalado, descarga desde [nodejs.org/es/download](https://nodejs.cn/download/current/) el instalador para tu plataforma. **Windows requiere reiniciar** después de la instalación.
 
 ### Solo Windows: instalar Git Bash
 
-Claude  Code requiere un entorno bash. Los usuarios de Windows deben instalar Git Bash:
+Claude Code requiere un entorno bash. Los usuarios de Windows deben instalar Git Bash:
 
-1. Descarga desde [git-scm.com/download/windows](https://git-scm.com/download/windows) e instala la versión correspondiente.
+1. Descarga desde [git-scm.com/install/windows](https://git-scm.com/install) e instala la versión correspondiente.
 2. Verificación: clic derecho en el escritorio — si aparece **Open Git Bash here**, la instalación fue exitosa.
 
 ---
 
-## 2. Instalar Claude  Code
+## 2. Instalar Claude Code via ZCF
 
 ::: code-group
 
 ```bash [npm]
-npm install -g @anthropic-ai/claude-code
-```
-
-```bash [pnpm]
-pnpm install -g @anthropic-ai/claude-code
-```
-
-```bash [yarn]
-yarn global add @anthropic-ai/claude-code
+npx zcf
 ```
 
 :::
-
-Verificar la instalación:
-
-```bash
-claude --version
-```
 
 ---
 
 ## 3. Configurar FishXCode
 
-### Opción 1: settings.json (Recomendado)
+1. Escribe `npx zcf` en la terminal y pulsa Enter.
+   Cuando aparezca `Ok to proceed? (y)`, escribe `y` y pulsa Enter.
 
-Edita `~/.claude/settings.json` (Windows: `C:\Users\<usuario>\.claude\settings.json`) con el siguiente contenido:
+2. Selecciona el idioma de ZCF:
+   Elige **English**.
 
-```json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "reemplaza con tu API Key",
-    "ANTHROPIC_BASE_URL": "https://fishxcode.com/",
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1
-  },
-  "permissions": {
-    "allow": [
-      "Bash",
-      "LS(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "MultiEdit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Task(*)",
-      "WebFetch(domain:*)",
-      "WebSearch",
-      "TodoWrite(*)",
-      "NotebookRead(*)",
-      "NotebookEdit(*)"
-    ],
-    "defaultMode": "bypassPermissions",
-    "deny": []
-  },
-}
-```
+3. Tras la instalación, selecciona:
+   `1. Full Initialization - Install Claude Code + Import Workflows + Configure API or CCR Proxy + Configure MCP Services`
 
-Esta configuración es **permanente** — no es necesario definir variables de entorno en cada sesión.
+4. ¿Modificar la configuración del idioma de plantilla?
+   Selecciona `No`
 
-### Opción 2: Variables de entorno temporales
+5. Idioma de salida de la IA:
+   Selecciona `English`
 
-::: code-group
+6. ¿Instalar Claude?
+   Selecciona `Yes`
 
-```bash [macOS/Linux]
-export ANTHROPIC_BASE_URL=https://fishxcode.com/
-export ANTHROPIC_AUTH_TOKEN=sk-xxx
-```
+7. Modo de configuración de API:
+   Selecciona `Custom API Configuration`
 
-```powershell [Windows PowerShell (temporal)]
-$env:ANTHROPIC_BASE_URL="https://fishxcode.com/"
-$env:ANTHROPIC_AUTH_TOKEN="sk-xxx"
-```
+8. Proveedor de API:
+   Selecciona `Custom Configuration`
 
-```cmd [Windows CMD (temporal)]
-set ANTHROPIC_BASE_URL=https://fishxcode.com/
-set ANTHROPIC_AUTH_TOKEN=sk-xxx
-```
+9. Nombre de la configuración:
+   Introduce un nombre en inglés a tu elección
 
-:::
+10. Tipo de autenticación:
+    Selecciona `API Key`
 
-Para escribir permanentemente en las variables del sistema Windows, ejecuta en PowerShell:
+11. URL base de la API:
+    ```
+    https://fishxcode.com
+    ```
 
-```powershell
-setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
-setx ANTHROPIC_BASE_URL "https://fishxcode.com/"
-```
+12. API Key:
+    Introduce el token generado en la consola de FishXCode
 
-Vuelve a abrir la terminal después de ejecutar estos comandos.
+13. Configuración del modelo:
+    Pulsa Enter para saltar con los valores por defecto
 
-::: warning
-Reemplaza `sk-xxx` con tu token real obtenido en la [Consola FishXCode](https://fishxcode.com/console/token).
-:::
+14. Tipo de workflow:
+    Selecciona `General Tools`
+
+15. Estilo de salida:
+    Elige según tu preferencia
+
+16. ¿Configurar MCP?
+    Selecciona `Yes`
+
+17. Servicios MCP:
+    Usa la barra espaciadora para seleccionar los servicios deseados y pulsa Enter para continuar
+
+18. Configurar CCometixLine:
+    Pulsa Enter directamente
+
+19. Desde el menú principal escribe:
+    ```
+    q
+    ```
+
+20. En la terminal escribe:
+    ```
+    claude
+    ```
+    - Selecciona `Yes, I trust this folder`
+    - En la selección de API, asegúrate de elegir **YES (la primera opción)**
 
 ---
 
@@ -153,7 +136,7 @@ claude
 
 ## 5. Selección de modelo
 
-Escribe `/model` dentro de Claude  Code para cambiar de modelo:
+Escribe `/model` dentro de Claude Code para cambiar de modelo:
 
 | Opción | Modelo real | Notas |
 |---|---|---|
@@ -177,7 +160,7 @@ claude
 
 :::
 
-::: tip Actualizar Claude  Code
+::: tip Actualizar Claude Code
 Si la versión del modelo parece desactualizada, ejecuta el comando de actualización y reinicia tus herramientas:
 ```bash
 npm install -g @anthropic-ai/claude-code
@@ -190,9 +173,9 @@ npm install -g @anthropic-ai/claude-code
 
 ### IntelliJ IDEA
 
-Ruta: Archivo → Configuración → Plugins → Marketplace → buscar `claude code` → encontrar **Claude  Code Terminal** e instalar:
+Ruta: Archivo → Configuración → Plugins → Marketplace → buscar `claude code` → encontrar **Claude Code Terminal** e instalar:
 
-![Instalar Claude  Code Terminal](/img/start/idea-01-install.png)
+![Instalar Claude Code Terminal](/img/start/idea-01-install.png)
 
 Reinicia IDEA tras la instalación y verifica que el plugin se haya cargado:
 
@@ -204,13 +187,13 @@ Si el plugin no aparece en el Marketplace, tu versión de IDEA es demasiado anti
 
 ### VSCode
 
-Presiona `Ctrl + Shift + X` para abrir el panel de extensiones, busca `claude code` y encuentra **Claude  Code for VSCode** para instalar.
+Presiona `Ctrl + Shift + X` para abrir el panel de extensiones, busca `claude code` y encuentra **Claude Code for VSCode** para instalar.
 
-![Buscar e instalar el plugin de Claude  Code](/img/start/vscode-01-install.png)
+![Buscar e instalar el plugin de Claude Code](/img/start/vscode-01-install.png)
 
 Una vez instalado, el plugin ofrece tres métodos de conexión:
 
-![Métodos de conexión del plugin Claude  Code](/img/start/vscode-02-login.png)
+![Métodos de conexión del plugin Claude Code](/img/start/vscode-02-login.png)
 
 Se recomienda conectar FishXCode mediante `settings.json`. Haz clic en el **icono de engranaje** en la esquina inferior derecha del plugin → **Editar en settings.json**:
 
@@ -232,7 +215,7 @@ Añade lo siguiente en el `settings.json` de VSCode:
 
 Tras guardar, **cierra y vuelve a abrir VSCode**; el plugin se conectará correctamente a FishXCode.
 
-![Usando Claude  Code en VSCode](/img/start/vscode-05-demo.gif)
+![Usando Claude Code en VSCode](/img/start/vscode-05-demo.gif)
 
 ---
 
@@ -261,7 +244,7 @@ Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
 Please check your internet connection and network settings.
 ```
 
-Esto ocurre porque Claude  Code no ha completado el onboarding y sigue intentando conectarse a `api.anthropic.com`. **No se necesita VPN.** Abre `~/.claude.json` (el archivo `.claude.json` en tu directorio home — no `.claude/settings.json`) y añade `"hasCompletedOnboarding": true` al final:
+Esto ocurre porque Claude Code no ha completado el onboarding y sigue intentando conectarse a `api.anthropic.com`. **No se necesita VPN.** Abre `~/.claude.json` (el archivo `.claude.json` en tu directorio home — no `.claude/settings.json`) y añade `"hasCompletedOnboarding": true` al final:
 
 ```json
 {

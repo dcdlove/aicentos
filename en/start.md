@@ -30,115 +30,98 @@ npm -v
 
 :::
 
-If not installed, download from [nodejs.org/zh-cn/download](https://nodejs.org/zh-cn/download) for your platform. **Windows requires a restart** after installation.
+If not installed, download from [nodejs.org/en/download](https://nodejs.org/en/download/current/) for your platform. **Windows requires a restart** after installation.
 
 ### Windows Only: Install Git Bash
 
 Claude  Code requires a bash environment. Windows users must install Git Bash:
 
-1. Download from [git-scm.com/install/windows](https://git-scm.com/download/windows) and install the appropriate version.
+1. Download from [git-scm.com/install/windows](https://git-scm.com/install) and install the appropriate version.
 2. Verify: right-click the desktop — if **Open Git Bash here** appears, installation succeeded.
 
 ---
 
-## 2. Install Claude  Code
+## 2. Install Claude  Code via ZCF
 
 ::: code-group
 
 ```bash [npm]
-npm install -g @anthropic-ai/claude-code
-```
-
-```bash [pnpm]
-pnpm install -g @anthropic-ai/claude-code
-```
-
-```bash [yarn]
-yarn global add @anthropic-ai/claude-code
+npx zcf
 ```
 
 :::
-
-Verify installation:
-
-```bash
-claude --version
-```
 
 ---
 
 ## 3. Configure FishXCode
 
-### Option 1: settings.json (Recommended)
+1. In the terminal, type `npx zcf` and press Enter.
+   When prompted `Ok to proceed? (y)`, type `y` and press Enter.
 
-Edit `~/.claude/settings.json` (Windows: `C:\Users\<username>\.claude\settings.json`) with the following content:
+2. Select the ZCF display language:
+   Choose **English**.
 
-```json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "replace with your API Key",
-    "ANTHROPIC_BASE_URL": "https://fishxcode.com/",
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1
-  },
-  "permissions": {
-    "allow": [
-      "Bash",
-      "LS(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "MultiEdit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Task(*)",
-      "WebFetch(domain:*)",
-      "WebSearch",
-      "TodoWrite(*)",
-      "NotebookRead(*)",
-      "NotebookEdit(*)"
-    ],
-    "defaultMode": "bypassPermissions",
-    "deny": []
-  },
-}
-```
+3. After setup completes, select:
+   `1. Full Init - Install Claude Code + Import Workflows + Configure API or CCR Proxy + Configure MCP Services`
 
-This configuration **persists permanently** — no need to set environment variables each session.
+4. Modify template language configuration:
+   Select `No`
 
-### Option 2: Temporary Environment Variables
+5. AI output language:
+   Select `English`
 
-::: code-group
+6. Install Claude:
+   Select `Yes`
 
-```bash [macOS/Linux]
-export ANTHROPIC_BASE_URL=https://fishxcode.com/
-export ANTHROPIC_AUTH_TOKEN=sk-xxx
-```
+7. API configuration mode:
+   Select `Custom API Configuration`
 
-```powershell [Windows PowerShell (temporary)]
-$env:ANTHROPIC_BASE_URL="https://fishxcode.com/"
-$env:ANTHROPIC_AUTH_TOKEN="sk-xxx"
-```
+8. API provider:
+   Select `Custom Configuration`
 
-```cmd [Windows CMD (temporary)]
-set ANTHROPIC_BASE_URL=https://fishxcode.com/
-set ANTHROPIC_AUTH_TOKEN=sk-xxx
-```
+9. Configuration name:
+   Enter a custom name in English
 
-:::
+10. Authentication type:
+    Select `API Key`
 
-To write permanently to Windows system variables, run in PowerShell:
+11. API Base URL:
+    ```
+    https://fishxcode.com
+    ```
 
-```powershell
-setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
-setx ANTHROPIC_BASE_URL "https://fishxcode.com/"
-```
+12. API Key:
+    Enter the token generated from your FishXCode console
 
-Reopen the terminal after running these commands for the changes to take effect.
+13. Model-related configuration:
+    Press Enter to skip with defaults
 
-::: warning
-Replace `sk-xxx` with your actual Token from the [FishXCode Console](https://fishxcode.com/console/token).
-:::
+14. Workflow type:
+    Select `General Tools`
+
+15. Output style:
+    Choose according to personal preference
+
+16. Configure MCP:
+    Select `Yes`
+
+17. MCP services:
+    Use Space to select desired services, then press Enter to proceed
+
+18. Configure CCometixLine:
+    Press Enter directly
+
+19. Back at the main menu, enter:
+    ```
+    q
+    ```
+
+20. In the terminal, type:
+    ```
+    claude
+    ```
+    - Select `Yes, I trust this folder`
+    - For API selection, make sure to select **YES (the first option)**
 
 ---
 
