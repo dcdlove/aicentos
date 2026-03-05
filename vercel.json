@@ -69,31 +69,17 @@
       ]
     },
     {
-      "source": "/start",
-      "headers": [
-        {
-          "key": "Link",
-          "value": "<https://s3.hi168.com>; rel=preconnect, <https://s3.hi168.com>; rel=dns-prefetch"
-        }
-      ]
-    },
-    {
-      "source": "/:locale(en|fr|es|pt)/start",
-      "headers": [
-        {
-          "key": "Link",
-          "value": "<https://s3.hi168.com>; rel=preconnect, <https://s3.hi168.com>; rel=dns-prefetch"
-        }
-      ]
-    },
-    {
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        {
+          "key": "Link",
+          "value": "<https://s3.hi168.com>; rel=preconnect, <https://s3.hi168.com>; rel=dns-prefetch"
+        }
       ]
     }
   ]
