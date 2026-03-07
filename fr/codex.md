@@ -25,30 +25,28 @@ bunx --global @openai/codex
 ## Configuration des Variables d'Environnement
 
 1. Obtenez votre clé API sur [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
-2. Définissez une variable d'environnement `FISHXCODE_TOKEN` avec votre clé
-3. Créez `~/.codex/config.toml` :
+2. Créez `~/.codex/config.toml` :
 
-```toml
-model = "gpt-5"
-model_provider = "openai-chat-completions"
-preferred_auth_method = "apikey"
+   ```toml
+   model = "gpt-5.3-codex"
+   model_provider = "fishxcode"
+   preferred_auth_method = "apikey"
 
-[model_providers.openai-chat-completions]
-name = "OpenAI using Chat Completions"
-base_url = "https://fishxcode.com/v1"
-env_key = "FISHXCODE_TOKEN"
-wire_api = "chat"
-query_params = {}
-stream_idle_timeout_ms = 300000
-```
+   [model_providers.fishxcode]
+   name = "OpenAI using Chat Completions"
+   base_url = "https://fishxcode.com/v1"
+   wire_api = "responses"
+   query_params = {}
+   stream_idle_timeout_ms = 300000
+   ```
 
-4. Créez `~/.codex/auth.json` :
+3. Créez `~/.codex/auth.json`, en définissant `OPENAI_API_KEY` avec votre clé API FishXCode :
 
-```json
-{
-  "OPENAI_API_KEY": "votre_clé_api"
-}
-```
+   ```json
+   {
+     "OPENAI_API_KEY": "votre_clé_api"
+   }
+   ```
 
 ## Démarrage Direct
 
@@ -68,7 +66,7 @@ codex
   "chatgpt.apiBase": "https://fishxcode.com/v1",
   "chatgpt.config": {
     "preferred_auth_method": "api_key",
-    "model_provider": "openai-chat-completions"
+    "model_provider": "fishxcode"
   }
 }
 ```
