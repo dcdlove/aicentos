@@ -67,6 +67,9 @@ jobs:
           gh repo clone fishxcode/new-api /tmp/backup-repo -- --depth 1 --single-branch --branch main
           cd /tmp/backup-repo
 
+          # 配置 git 凭证，确保 push 时能认证
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/fishxcode/new-api.git"
+
           git lfs install
           grep -q 'pg/\*.dump' .gitattributes 2>/dev/null || git lfs track "pg/*.dump"
           git add .gitattributes
