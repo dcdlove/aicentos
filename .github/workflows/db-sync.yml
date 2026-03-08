@@ -11,20 +11,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  dump:
+  sync:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      DUMP_FILE: /tmp/master_dump.dump
     steps:
       - name: Install PostgreSQL 18 client
         run: |
           set -e
           sudo apt-get update
-          sudo apt-get install -y curl ca-certificates jq
+          sudo apt-get install -y curl ca-certificates git-lfs jq
           curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/pgdg.gpg
           echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
           sudo apt-get update
           sudo apt-get install -y postgresql-client-18
 
+      # ========== 1. 导出主库 ==========
       - name: Dump master (exclude logs data)
         env:
           PGPASSWORD: ${{ secrets.MASTER_DB_PASSWORD }}
@@ -34,42 +37,19 @@ jobs:
           PGDATABASE: ${{ secrets.MASTER_DB_NAME }}
         run: |
           set -e
-          echo "::group::pg_dump"
           START=$(date +%s)
           pg_dump -v \
             -F c \
             --compress=9 \
             --exclude-table-data=logs \
-            -f /tmp/master_dump.dump
+            -f "$DUMP_FILE"
           END=$(date +%s)
-          echo "::endgroup::"
-          DUMP_SIZE=$(du -h /tmp/master_dump.dump | cut -f1)
+          DUMP_SIZE=$(du -h "$DUMP_FILE" | cut -f1)
           echo "Dump size: $DUMP_SIZE, took $((END-START))s"
           echo "DUMP_SIZE=$DUMP_SIZE" >> $GITHUB_ENV
           echo "DUMP_TIME=$((END-START))s" >> $GITHUB_ENV
 
-      - name: Upload dump artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: master-dump
-          path: /tmp/master_dump.dump
-          retention-days: 3
-
-  # 备份到 Git 仓库（独立 job，失败不阻断 restore）
-  backup:
-    needs: dump
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Install git-lfs
-        run: sudo apt-get update && sudo apt-get install -y git-lfs
-
-      - name: Download dump artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: master-dump
-          path: /tmp
-
+      # ========== 2. 备份到 Git 仓库 ==========
       - name: Push dump to backup repo
         env:
           GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
@@ -78,8 +58,7 @@ jobs:
           TIMESTAMP=$(date -u '+%Y-%m-%d_%H%M%S')
           FILENAME="${TIMESTAMP}.dump"
 
-          # 检查文件大小
-          FILE_SIZE_MB=$(du -m /tmp/master_dump.dump | cut -f1)
+          FILE_SIZE_MB=$(du -m "$DUMP_FILE" | cut -f1)
           echo "Dump file size: ${FILE_SIZE_MB}MB"
           if [ "$FILE_SIZE_MB" -gt 500 ]; then
             echo "::warning::Dump file is ${FILE_SIZE_MB}MB, consider cleanup"
@@ -89,12 +68,11 @@ jobs:
           cd /tmp/backup-repo
 
           git lfs install
-          # 只在 .gitattributes 不存在追踪规则时才添加
           grep -q 'pg/\*.dump' .gitattributes 2>/dev/null || git lfs track "pg/*.dump"
           git add .gitattributes
 
           mkdir -p pg
-          cp /tmp/master_dump.dump "pg/${FILENAME}"
+          cp "$DUMP_FILE" "pg/${FILENAME}"
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -105,125 +83,115 @@ jobs:
           else
             git commit -m "backup: pg dump ${TIMESTAMP}"
             git push origin main || {
-              echo "Push failed, attempting pull --rebase"
               git pull --rebase origin main
               git push origin main
             }
             echo "Pushed pg/${FILENAME} to fishxcode/new-api"
           fi
-
           rm -rf /tmp/backup-repo
 
-  restore:
-    needs: dump
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        slave:
-          - name: zeabur-sjc1
-            dsn_secret: SLAVE_ZEABUR_DSN
-          - name: neon-azure
-            dsn_secret: SLAVE_NEON_DSN
-    name: Restore → ${{ matrix.slave.name }}
-
-    steps:
-      - name: Install PostgreSQL 18 client
-        run: |
-          set -e
-          sudo apt-get update
-          sudo apt-get install -y curl ca-certificates jq
-          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/pgdg.gpg
-          echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client-18
-
-      - name: Download dump artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: master-dump
-          path: /tmp
-
-      - name: Restore to ${{ matrix.slave.name }}
+      # ========== 3. 恢复到从库 (串行，避免 artifact 泄露) ==========
+      - name: Restore to zeabur-sjc1
         env:
-          DATABASE_URL: ${{ secrets[matrix.slave.dsn_secret] }}
+          DATABASE_URL: ${{ secrets.SLAVE_ZEABUR_DSN }}
         run: |
           set -eo pipefail
-          echo "::group::pg_restore → ${{ matrix.slave.name }}"
+          echo "::group::pg_restore → zeabur-sjc1"
           START=$(date +%s)
-
-          # pg_restore 退出码: 0=成功, 1=有非致命警告(如索引已存在)
-          # 用临时文件捕获真实退出码，不用 || true 吞掉
           pg_restore -v -d "$DATABASE_URL" \
             --clean --if-exists \
             --no-owner --no-privileges \
-            --jobs=4 \
-            /tmp/master_dump.dump 2>/tmp/restore.log; RESTORE_EXIT=$?
-
+            /tmp/master_dump.dump 2>/tmp/restore_zeabur.log; RC=$?
           END=$(date +%s)
-          cat /tmp/restore.log
+          cat /tmp/restore_zeabur.log
           echo "::endgroup::"
 
-          # 检查致命错误
-          FATAL_ERRORS=$(grep -cE "FATAL|could not connect|authentication failed|no password supplied|server closed the connection" /tmp/restore.log || true)
-          if [ "$FATAL_ERRORS" -gt 0 ]; then
-            echo "::error::Restore to ${{ matrix.slave.name }} encountered fatal errors"
-            grep -E "FATAL|could not connect|authentication failed" /tmp/restore.log
+          FATAL=$(grep -cE "FATAL|could not connect|authentication failed|no password supplied" /tmp/restore_zeabur.log || true)
+          if [ "$FATAL" -gt 0 ]; then
+            echo "::error::zeabur-sjc1 restore fatal error"
             exit 1
           fi
-
-          # 退出码 1 = 非致命警告（索引/约束已存在），可接受
-          if [ "$RESTORE_EXIT" -gt 1 ]; then
-            echo "::error::pg_restore failed with exit code $RESTORE_EXIT"
+          if [ "$RC" -gt 1 ]; then
+            echo "::error::pg_restore failed (exit $RC)"
             exit 1
-          elif [ "$RESTORE_EXIT" -eq 1 ]; then
-            WARN_COUNT=$(grep -c "ERROR:" /tmp/restore.log || true)
-            echo "::warning::pg_restore had $WARN_COUNT non-fatal warnings (exit code 1)"
           fi
+          echo "zeabur-sjc1 restore took $((END-START))s (exit: $RC)"
+          echo "ZEABUR_TIME=$((END-START))s" >> $GITHUB_ENV
+          echo "ZEABUR_RC=$RC" >> $GITHUB_ENV
 
-          echo "Restore to ${{ matrix.slave.name }} took $((END-START))s (exit: $RESTORE_EXIT)"
-          echo "RESTORE_TIME_${{ matrix.slave.name }}=$((END-START))s" >> $GITHUB_ENV
-
-      - name: Verify ${{ matrix.slave.name }}
+      - name: Verify zeabur-sjc1
         env:
-          DATABASE_URL: ${{ secrets[matrix.slave.dsn_secret] }}
+          DATABASE_URL: ${{ secrets.SLAVE_ZEABUR_DSN }}
         run: |
           set -e
-          TABLE_COUNT=$(psql -A -t "$DATABASE_URL" -c "SELECT count(*) FROM pg_stat_user_tables;" | tr -d '[:space:]')
-          echo "${{ matrix.slave.name }} has $TABLE_COUNT tables"
+          COUNT=$(psql -A -t "$DATABASE_URL" -c "SELECT count(*) FROM pg_stat_user_tables;" | tr -d '[:space:]')
+          echo "zeabur-sjc1: $COUNT tables"
+          [ "$COUNT" -ge 10 ] || { echo "::error::Table count too low"; exit 1; }
+          echo "ZEABUR_TABLES=$COUNT" >> $GITHUB_ENV
 
-          if [ "$TABLE_COUNT" -lt 10 ]; then
-            echo "::error::Table count too low ($TABLE_COUNT), sync to ${{ matrix.slave.name }} may have failed"
+      - name: Restore to neon-azure
+        env:
+          DATABASE_URL: ${{ secrets.SLAVE_NEON_DSN }}
+        run: |
+          set -eo pipefail
+          echo "::group::pg_restore → neon-azure"
+          START=$(date +%s)
+          pg_restore -v -d "$DATABASE_URL" \
+            --clean --if-exists \
+            --no-owner --no-privileges \
+            /tmp/master_dump.dump 2>/tmp/restore_neon.log; RC=$?
+          END=$(date +%s)
+          cat /tmp/restore_neon.log
+          echo "::endgroup::"
+
+          FATAL=$(grep -cE "FATAL|could not connect|authentication failed|no password supplied" /tmp/restore_neon.log || true)
+          if [ "$FATAL" -gt 0 ]; then
+            echo "::error::neon-azure restore fatal error"
             exit 1
           fi
+          if [ "$RC" -gt 1 ]; then
+            echo "::error::pg_restore failed (exit $RC)"
+            exit 1
+          fi
+          echo "neon-azure restore took $((END-START))s (exit: $RC)"
+          echo "NEON_TIME=$((END-START))s" >> $GITHUB_ENV
+          echo "NEON_RC=$RC" >> $GITHUB_ENV
 
-          psql -A "$DATABASE_URL" -c "SELECT tablename, n_live_tup FROM pg_stat_user_tables ORDER BY tablename;"
+      - name: Verify neon-azure
+        env:
+          DATABASE_URL: ${{ secrets.SLAVE_NEON_DSN }}
+        run: |
+          set -e
+          COUNT=$(psql -A -t "$DATABASE_URL" -c "SELECT count(*) FROM pg_stat_user_tables;" | tr -d '[:space:]')
+          echo "neon-azure: $COUNT tables"
+          [ "$COUNT" -ge 10 ] || { echo "::error::Table count too low"; exit 1; }
+          echo "NEON_TABLES=$COUNT" >> $GITHUB_ENV
 
+      # ========== 4. 清理 ==========
       - name: Cleanup
         if: always()
-        run: rm -f /tmp/master_dump.dump /tmp/restore.log
+        run: rm -f /tmp/master_dump.dump /tmp/restore_*.log /tmp/backup-repo
 
-  notify:
-    needs: [dump, backup, restore]
-    if: always()
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
+      # ========== 5. 通知 ==========
       - name: Notify PushPlus
+        if: always()
         run: |
-          DUMP="${{ needs.dump.result }}"
-          BACKUP="${{ needs.backup.result }}"
-          RESTORE="${{ needs.restore.result }}"
+          STATUS="${{ job.status }}"
           SYNC_TIME="$(date -u '+%Y-%m-%d %H:%M:%S UTC')"
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ZEABUR_TABLES="${ZEABUR_TABLES:-?}"
+          NEON_TABLES="${NEON_TABLES:-?}"
+          DUMP_SIZE="${DUMP_SIZE:-?}"
+          DUMP_TIME="${DUMP_TIME:-?}"
+          ZEABUR_TIME="${ZEABUR_TIME:-?}"
+          NEON_TIME="${NEON_TIME:-?}"
 
-          if [ "$RESTORE" = "success" ]; then
+          if [ "$STATUS" = "success" ]; then
             TITLE="✅ DB 同步成功"
-            CONTENT="<h3>主→从 数据库同步完成</h3><table><tr><td>同步状态</td><td>✅ 全部从库成功</td></tr><tr><td>备份仓库</td><td>${BACKUP}</td></tr><tr><td>时间</td><td>${SYNC_TIME}</td></tr><tr><td>从库</td><td>zeabur-sjc1, neon-azure</td></tr></table><p><a href='${RUN_URL}'>查看详情</a></p>"
+            CONTENT="<h3>主→从 数据库同步完成</h3><table><tr><td>时间</td><td>${SYNC_TIME}</td></tr><tr><td>备份大小</td><td>${DUMP_SIZE}</td></tr><tr><td>导出耗时</td><td>${DUMP_TIME}</td></tr><tr><td>zeabur-sjc1</td><td>${ZEABUR_TABLES} 表 (${ZEABUR_TIME})</td></tr><tr><td>neon-azure</td><td>${NEON_TABLES} 表 (${NEON_TIME})</td></tr></table><p><a href='${RUN_URL}'>查看详情</a></p>"
           else
-            TITLE="❌ DB 同步异常"
-            CONTENT="<h3>主→从 数据库同步异常</h3><table><tr><td>导出(dump)</td><td>${DUMP}</td></tr><tr><td>备份仓库(backup)</td><td>${BACKUP}</td></tr><tr><td>从库同步(restore)</td><td>${RESTORE}</td></tr></table><p>⚠️ restore 为 matrix job，部分从库可能成功。</p><p><a href='${RUN_URL}'>查看日志确认各从库状态</a></p>"
+            TITLE="❌ DB 同步失败"
+            CONTENT="<h3>主→从 数据库同步失败</h3><p><a href='${RUN_URL}'>查看日志</a></p>"
           fi
 
           jq -n \
@@ -236,19 +204,21 @@ jobs:
             -d @-
 
       - name: Notify Feishu
+        if: always()
         run: |
-          DUMP="${{ needs.dump.result }}"
-          BACKUP="${{ needs.backup.result }}"
-          RESTORE="${{ needs.restore.result }}"
+          STATUS="${{ job.status }}"
           SYNC_TIME="$(date -u '+%Y-%m-%d %H:%M:%S UTC')"
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ZEABUR_TABLES="${ZEABUR_TABLES:-?}"
+          NEON_TABLES="${NEON_TABLES:-?}"
+          DUMP_SIZE="${DUMP_SIZE:-?}"
 
-          if [ "$RESTORE" = "success" ]; then
+          if [ "$STATUS" = "success" ]; then
             COLOR="green"
-            TEXT="**✅ DB 同步成功**\n\n- 时间：${SYNC_TIME}\n- 从库：zeabur-sjc1, neon-azure\n- 同步状态：全部成功\n- 备份仓库：${BACKUP}"
+            TEXT="**✅ DB 同步成功**\n\n- 时间：${SYNC_TIME}\n- 备份：${DUMP_SIZE}\n- zeabur-sjc1：${ZEABUR_TABLES} 表\n- neon-azure：${NEON_TABLES} 表"
           else
             COLOR="red"
-            TEXT="**❌ DB 同步异常**\n\n- dump: ${DUMP}\n- backup: ${BACKUP}\n- restore: ${RESTORE}\n- ⚠️ restore 为 matrix job，请查看日志确认各从库状态\n- [查看日志](${RUN_URL})"
+            TEXT="**❌ DB 同步失败**\n\n[查看日志](${RUN_URL})"
           fi
 
           jq -n \
