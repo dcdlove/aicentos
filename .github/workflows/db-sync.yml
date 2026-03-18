@@ -49,9 +49,7 @@ jobs:
           echo "DUMP_SIZE=$DUMP_SIZE" >> $GITHUB_ENV
           echo "DUMP_TIME=$((END-START))s" >> $GITHUB_ENV
 
-          # 生成恢复清单，排除 logs 表数据（从库不需要日志）
-          pg_restore -l "$DUMP_FILE" | grep -v 'TABLE DATA.*logs' > /tmp/restore_list.txt
-          echo "Restore list: $(wc -l < /tmp/restore_list.txt) entries (logs data excluded)"
+          # 全量导出，恢复时不跳过任何表
 
       # ========== 2. 备份到 Git 仓库 ==========
       - name: Push dump to backup repo
@@ -140,7 +138,6 @@ jobs:
             pg_restore -v -d "${SLAVE_DSN}" \
               --clean --if-exists \
               --no-owner --no-privileges \
-              -L /tmp/restore_list.txt \
               "$DUMP_FILE" 2>"$LOG_FILE" || RC=$?
 
             END=$(date +%s)
@@ -208,7 +205,7 @@ jobs:
       # ========== 4. 清理 ==========
       - name: Cleanup
         if: always()
-        run: rm -f /tmp/master_dump.dump /tmp/restore_*.log /tmp/restore_list.txt && rm -rf /tmp/backup-repo
+        run: rm -f /tmp/master_dump.dump /tmp/restore_*.log && rm -rf /tmp/backup-repo
 
       # ========== 6. 通知 ==========
       - name: Notify PushPlus
