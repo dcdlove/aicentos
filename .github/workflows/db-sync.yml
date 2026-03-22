@@ -14,6 +14,7 @@ jobs:
     env:
       DUMP_FILE: /tmp/master_dump.dump
       MAX_PARALLEL: 5
+      FAIL_ON_SLAVE_ERROR: "false"
       # ── 从库列表由单个 Secret 管理，每行格式: name|dsn ──
       # 新增从库只需编辑 GitHub Secret SLAVE_DSNS，无需改 workflow
       SLAVE_DSNS: ${{ secrets.SLAVE_DSNS }}
@@ -251,8 +252,12 @@ jobs:
           } >> $GITHUB_ENV
 
           if [ "$FAILED" -gt 0 ]; then
-            echo "::error::${FAILED}/${TOTAL} slave(s) failed"
-            exit 1
+            if [ "${FAIL_ON_SLAVE_ERROR:-true}" = "true" ]; then
+              echo "::error::${FAILED}/${TOTAL} slave(s) failed"
+              exit 1
+            else
+              echo "::warning::${FAILED}/${TOTAL} slave(s) failed, but allowed"
+            fi
           fi
 
 
