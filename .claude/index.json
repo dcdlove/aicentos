@@ -42,7 +42,7 @@
         "languages": ["zh-CN", "en-US", "fr-FR", "es-ES", "pt-BR"],
         "pages": [
           "index.md", "start.md", "account.md", "zcf.md",
-          "codex.md", "gemini.md", "roocode.md", "qwencode.md",
+          "codex.md", "roocode.md", "qwencode.md",
           "droid.md", "opencode.md", "openclaw.md",
           "models.md", "compare.md", "faq.md", "changelog.md",
           "terms.md", "privacy.md"

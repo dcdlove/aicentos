@@ -8,7 +8,6 @@
 |------|--------|------|
 | **Claude Code** | Anthropic | CLI 终端工具 |
 | **OpenAI Codex** | OpenAI | CLI + VSCode 扩展 |
-| **Gemini CLI** | Google | CLI 终端工具 |
 | **RooCode** | Roo Veterinary | VSCode 扩展 |
 | **Qwen Code** | 阿里巴巴 | CLI 终端工具 |
 | **Droid CLI** | Factory AI | CLI 终端工具 |
@@ -20,7 +19,6 @@
 |------|:-----:|:-------:|:-----:|
 | **Claude Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **OpenAI Codex** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| **Gemini CLI** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **RooCode** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **Qwen Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **Droid CLI** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
@@ -32,7 +30,6 @@
 |------|:----:|:------:|:--------:|
 | **Claude Code** | :white_check_mark: | - | - |
 | **OpenAI Codex** | :white_check_mark: | :white_check_mark: | - |
-| **Gemini CLI** | :white_check_mark: | - | - |
 | **RooCode** | - | :white_check_mark: | - |
 | **Qwen Code** | :white_check_mark: | - | - |
 | **Droid CLI** | :white_check_mark: | - | - |
@@ -44,7 +41,6 @@
 |------|:--------:|:--------:|:--------:|
 | **Claude Code** | :white_check_mark: | - | - |
 | **OpenAI Codex** | :white_check_mark: | TOML + JSON | VSCode 设置 |
-| **Gemini CLI** | :white_check_mark: | - | - |
 | **RooCode** | - | - | :white_check_mark: |
 | **Qwen Code** | :white_check_mark: | - | - |
 | **Droid CLI** | - | JSON | CLI 交互 |
@@ -56,15 +52,10 @@
 |------|:--------:|:--------:|------|
 | **Claude Code** | :white_check_mark: 已支持 | 简单 | 设置环境变量即可 |
 | **OpenAI Codex** | :white_check_mark: 已支持 | 中等 | 需配置 TOML 和 JSON 文件 |
-| **Gemini CLI** | :x: 暂不支持 | - | 不支持自定义路由 |
 | **RooCode** | :white_check_mark: 已支持 | 简单 | GUI 界面配置提供商 |
 | **Qwen Code** | :white_check_mark: 已支持 | 简单 | 设置环境变量即可 |
 | **Droid CLI** | :white_check_mark: 已支持 | 中等 | 需编辑 JSON 配置文件 |
 | **OpenCode** | :white_check_mark: 已支持 | 中等 | 需编辑 JSON 配置文件 |
-
-::: warning Gemini CLI 暂不支持
-Gemini CLI 目前不支持自定义 API 路由，因此无法接入 FishXCode。如需使用 Google 生态，建议选择其他已支持的工具作为替代。
-:::
 
 ## 核心特性
 
@@ -72,7 +63,6 @@ Gemini CLI 目前不支持自定义 API 路由，因此无法接入 FishXCode。
 |------|----------|
 | **Claude Code** | 强大的代码理解与生成能力，原生终端体验，支持多模型切换 |
 | **OpenAI Codex** | CLI 与 VSCode 双模式，GPT 系列模型支持，生态成熟 |
-| **Gemini CLI** | Google AI 驱动，与 Google 生态深度集成 |
 | **RooCode** | 纯 VSCode 图形化体验，OpenAI Compatible 协议，零终端门槛 |
 | **Qwen Code** | 阿里通义系列加持，对中文代码场景优化，轻量易用 |
 | **Droid CLI** | 自定义模型灵活，支持超大上下文窗口，专注终端工作流 |

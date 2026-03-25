@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "FishXCode"
   text: "Relais AI Coding"
-  tagline: Utilisez les modèles Claude, Codex et Gemini sur plusieurs plateformes
+  tagline: Utilisez les modèles Claude et Codex sur plusieurs plateformes
   image:
     src: /img/logo.svg
     alt: FishXCode Logo
@@ -20,7 +20,7 @@ features:
   - title: Démarrage rapide
     details: Inscrivez-vous et commencez votre workflow AI Coding en quelques minutes.
   - title: Support multi-modèles
-    details: Supporte Claude, Codex, Gemini et d'autres modèles IA. Changez selon vos besoins.
+    details: Supporte Claude, Codex et d'autres modèles IA. Changez selon vos besoins.
   - title: Compatible multi-outils
-    details: Fonctionne avec Claude Code, OpenAI Codex, Gemini CLI, RooCode, Qwen Code, Droid et OpenCode.
+    details: Fonctionne avec Claude Code, OpenAI Codex, RooCode, Qwen Code, Droid et OpenCode.
 ---

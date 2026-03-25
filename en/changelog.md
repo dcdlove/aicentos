@@ -8,4 +8,3 @@
 - Multi-language support (中文, English, Français, Español, Português)
 
 ### Known Limitations
-- Gemini CLI does not yet support custom system routing

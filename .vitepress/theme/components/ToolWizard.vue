@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useData } from 'vitepress'
 
 type Scenario = 'cli' | 'vscode' | 'both'
-type Model = 'claude' | 'gpt' | 'gemini' | 'any'
+type Model = 'claude' | 'gpt' | 'any'
 type Trait = 'ootb' | 'customizable' | 'lightweight'
 
 interface I18nText {
@@ -27,7 +27,7 @@ const I18N: Record<string, I18nText> = {
     scenarioLabel: '你主要在哪里写代码？',
     scenarios: { cli: 'CLI 终端', vscode: 'VS Code 编辑器', both: '两者都要' },
     modelLabel: '你偏好哪个 AI 模型？',
-    models: { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', any: '不限' },
+    models: { claude: 'Claude', gpt: 'GPT', any: '不限' },
     traitLabel: '你最看重什么？',
     traits: { ootb: '开箱即用', customizable: '高度可定制', lightweight: '轻量快速' },
     resultPrefix: '推荐工具',
@@ -40,7 +40,7 @@ const I18N: Record<string, I18nText> = {
     scenarioLabel: 'Where do you mainly write code?',
     scenarios: { cli: 'CLI Terminal', vscode: 'VS Code Editor', both: 'Both' },
     modelLabel: 'Which AI model do you prefer?',
-    models: { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', any: 'Any' },
+    models: { claude: 'Claude', gpt: 'GPT', any: 'Any' },
     traitLabel: 'What matters most to you?',
     traits: { ootb: 'Out of the box', customizable: 'Highly customizable', lightweight: 'Lightweight & fast' },
     resultPrefix: 'Recommended Tool',
@@ -53,7 +53,7 @@ const I18N: Record<string, I18nText> = {
     scenarioLabel: 'Où écrivez-vous principalement du code ?',
     scenarios: { cli: 'Terminal CLI', vscode: 'Éditeur VS Code', both: 'Les deux' },
     modelLabel: 'Quel modèle IA préférez-vous ?',
-    models: { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', any: 'Peu importe' },
+    models: { claude: 'Claude', gpt: 'GPT', any: 'Peu importe' },
     traitLabel: 'Qu\'est-ce qui compte le plus ?',
     traits: { ootb: 'Prêt à l\'emploi', customizable: 'Personnalisable', lightweight: 'Léger et rapide' },
     resultPrefix: 'Outil recommandé',
@@ -66,7 +66,7 @@ const I18N: Record<string, I18nText> = {
     scenarioLabel: '¿Dónde escribes código principalmente?',
     scenarios: { cli: 'Terminal CLI', vscode: 'Editor VS Code', both: 'Ambos' },
     modelLabel: '¿Qué modelo de IA prefieres?',
-    models: { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', any: 'Cualquiera' },
+    models: { claude: 'Claude', gpt: 'GPT', any: 'Cualquiera' },
     traitLabel: '¿Qué es lo más importante para ti?',
     traits: { ootb: 'Listo para usar', customizable: 'Altamente personalizable', lightweight: 'Ligero y rápido' },
     resultPrefix: 'Herramienta recomendada',
@@ -79,7 +79,7 @@ const I18N: Record<string, I18nText> = {
     scenarioLabel: 'Onde você escreve código principalmente?',
     scenarios: { cli: 'Terminal CLI', vscode: 'Editor VS Code', both: 'Ambos' },
     modelLabel: 'Qual modelo de IA você prefere?',
-    models: { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', any: 'Qualquer um' },
+    models: { claude: 'Claude', gpt: 'GPT', any: 'Qualquer um' },
     traitLabel: 'O que é mais importante para você?',
     traits: { ootb: 'Pronto para usar', customizable: 'Altamente personalizável', lightweight: 'Leve e rápido' },
     resultPrefix: 'Ferramenta recomendada',
@@ -95,11 +95,9 @@ const LANG_PREFIX: Record<string, string> = {
 const RECOMMENDATIONS: Record<string, { name: string; path: string }> = {
   'cli|claude':   { name: 'Claude Code',   path: '/start' },
   'cli|gpt':      { name: 'OpenAI Codex',  path: '/codex' },
-  'cli|gemini':   { name: 'Gemini CLI',    path: '/gemini' },
   'cli|any':      { name: 'Claude Code',   path: '/start' },
   'both|claude':  { name: 'Claude Code',   path: '/start' },
   'both|gpt':     { name: 'OpenAI Codex',  path: '/codex' },
-  'both|gemini':  { name: 'Gemini CLI',    path: '/gemini' },
   'both|any':     { name: 'Claude Code',   path: '/start' },
   'vscode':       { name: 'RooCode',       path: '/roocode' },
   'lightweight':  { name: 'Droid CLI',     path: '/droid' },

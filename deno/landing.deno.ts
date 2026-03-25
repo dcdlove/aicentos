@@ -1,4 +1,79 @@
 // @ts-nocheck
+
+type DurationUnit = "day" | "month" | "year" | string;
+type QuotaResetPeriod = "never" | "daily" | "monthly" | string;
+type CycleKey = "daily" | "weekly" | "monthly";
+
+type RawSubscriptionPlan = {
+  id: number;
+  title: string;
+  subtitle: string;
+  price_amount: number;
+  currency: string;
+  duration_unit: DurationUnit;
+  duration_value: number;
+  enabled: boolean;
+  total_amount: number;
+  quota_reset_period: QuotaResetPeriod;
+};
+
+const SUB_CYCLES: { key: CycleKey; label: string }[] = [
+  { key: "daily", label: "天订阅" },
+  { key: "weekly", label: "周订阅" },
+  { key: "monthly", label: "月订阅" },
+];
+
+function buildSubscriptionMatrix(plans: RawSubscriptionPlan[]) {
+  const enabledPlans = plans.filter((plan) => plan.enabled);
+
+  const groupedByCycle: Record<CycleKey, RawSubscriptionPlan[]> = {
+    daily: [],
+    weekly: [],
+    monthly: [],
+  };
+
+  for (const cycle of SUB_CYCLES) {
+    groupedByCycle[cycle.key] = enabledPlans
+      .filter((plan) => matchCycle(plan, cycle.key))
+      .sort((a, b) => a.price_amount - b.price_amount);
+  }
+
+  const maxRows = Math.max(...SUB_CYCLES.map((cycle) => groupedByCycle[cycle.key].length), 0);
+
+  const rows = Array.from({ length: maxRows }, (_, rowIdx) => {
+    const cells = SUB_CYCLES.reduce((acc, cycle) => {
+      const plan = groupedByCycle[cycle.key][rowIdx] ?? null;
+      acc[cycle.key] = {
+        cycleKey: cycle.key,
+        plan: plan
+          ? {
+              id: plan.id,
+              title: plan.title,
+              subtitle: plan.subtitle,
+              priceAmount: plan.price_amount,
+              currency: plan.currency,
+              durationLabel: formatDurationLabel(plan.duration_unit, plan.duration_value),
+              resetRuleLabel: formatResetRuleLabel(plan.quota_reset_period),
+              totalAmount: plan.total_amount,
+            }
+          : null,
+        comingSoon: plan === null,
+      };
+      return acc;
+    }, {} as Record<CycleKey, { cycleKey: CycleKey; plan: any; comingSoon: boolean }>);
+
+    return {
+      rank: rowIdx + 1,
+      cells,
+    };
+  });
+
+  return {
+    cycles: SUB_CYCLES,
+    rows,
+  };
+}
+
 const port = Number(Deno.env.get("PORT")) || 8001;
 
 // Deno KV — 持久化访问计数
@@ -49,7 +124,7 @@ const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
 const MANIFEST_JSON = JSON.stringify({
   name: "FishXCode - AI Coding 中转站",
   short_name: "FishXCode",
-  description: "支持 Claude、Codex、Gemini 等主流 AI 模型的 Coding 中转站",
+  description: "支持 Claude、Codex 等主流 AI 模型的 Coding 中转站",
   start_url: "/",
   display: "standalone",
   background_color: "#fdf9f5",
@@ -91,6 +166,73 @@ self.addEventListener('fetch', e => {
   }
 });`;
 
+const SUBSCRIPTION_API_URL = Deno.env.get("SUBSCRIPTION_API_URL") || "";
+const SUBSCRIPTION_ACCESS_TOKEN = Deno.env.get("SUBSCRIPTION_ACCESS_TOKEN") || "";
+const SUBSCRIPTION_USER_ID = Deno.env.get("SUBSCRIPTION_USER_ID") || "";
+
+type SubscriptionPayload = {
+  data?: Array<{ plan?: RawSubscriptionPlan }>;
+};
+
+async function readLocalSubscriptionPlans(): Promise<RawSubscriptionPlan[]> {
+  try {
+    const text = await Deno.readTextFile("../.git/subscription.json");
+    const payload = JSON.parse(text) as SubscriptionPayload;
+    return (payload.data ?? [])
+      .map((item) => item.plan)
+      .filter((plan): plan is RawSubscriptionPlan => Boolean(plan));
+  } catch {
+    return [];
+  }
+}
+
+async function fetchRemoteSubscriptionPlans(): Promise<RawSubscriptionPlan[]> {
+  if (!SUBSCRIPTION_ACCESS_TOKEN) return [];
+
+  try {
+    const resp = await fetch(SUBSCRIPTION_API_URL, {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${SUBSCRIPTION_ACCESS_TOKEN}`,
+        "New-Api-User": SUBSCRIPTION_USER_ID,
+      },
+    });
+
+    if (!resp.ok) return [];
+
+    const payload = (await resp.json()) as SubscriptionPayload;
+    return (payload.data ?? [])
+      .map((item) => item.plan)
+      .filter((plan): plan is RawSubscriptionPlan => Boolean(plan));
+  } catch {
+    return [];
+  }
+}
+
+async function getSubscriptionPlans(): Promise<{ plans: RawSubscriptionPlan[]; source: "remote" | "local" | "empty" }> {
+  const remotePlans = await fetchRemoteSubscriptionPlans();
+  if (remotePlans.length > 0) {
+    return { plans: remotePlans, source: "remote" };
+  }
+
+  const localPlans = await readLocalSubscriptionPlans();
+  if (localPlans.length > 0) {
+    return { plans: localPlans, source: "local" };
+  }
+
+  return { plans: [], source: "empty" };
+}
+
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+    },
+  });
+}
+
 function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -98,9 +240,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- ═══ Primary SEO ═══ -->
-  <title>FishXCode · AI Coding 中转站 | Claude、Codex、Gemini 模型接入</title>
-  <meta name="description" content="FishXCode 是专为开发者打造的 AI Coding 中转站，支持 Claude、OpenAI Codex、Gemini 等主流模型，兼容 Claude Code、RooCode、Qwen Code 等全部主流工具，注册即用。" />
-  <meta name="keywords" content="AI Coding,Claude Code,OpenAI Codex,Gemini CLI,AI 编程,中转站,FishXCode,RooCode,Qwen Code,AI 开发工具" />
+  <title>FishXCode · 订阅制 Claude Codex 国际中转站 | 个人/团队主打订阅包月制</title>
+  <meta name="description" content="FishXCode 是订阅制 Claude Codex 国际中转站，面向个人与团队，主打订阅包月制，同时支持天卡、周卡与月度订阅套餐。" />
+  <meta name="keywords" content="订阅制,Claude,Codex,国际中转站,包月,个人,团队,AI Coding,FishXCode" />
   <meta name="author" content="FishXCode" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://fishxcode.com/" />
@@ -112,8 +254,8 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
   <!-- ═══ Open Graph ═══ -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="FishXCode" />
-  <meta property="og:title" content="FishXCode · AI Coding 中转站" />
-  <meta property="og:description" content="连接全球顶尖 AI 模型，支持 Claude、Codex、Gemini，兼容所有主流 AI 编程工具，注册即用。" />
+  <meta property="og:title" content="FishXCode · 订阅制 Claude Codex 国际中转站" />
+  <meta property="og:description" content="主打订阅包月制，支持个人与团队订阅方案，覆盖天卡、周卡、月度套餐。" />
   <meta property="og:image" content="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
@@ -123,8 +265,8 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
   <!-- ═══ Twitter / X Card ═══ -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@fishxcode" />
-  <meta name="twitter:title" content="FishXCode · AI Coding 中转站" />
-  <meta name="twitter:description" content="连接全球顶尖 AI 模型，支持 Claude、Codex、Gemini，兼容所有主流 AI 编程工具，注册即用。" />
+  <meta name="twitter:title" content="FishXCode · 订阅制 Claude Codex 国际中转站" />
+  <meta name="twitter:description" content="主打订阅包月制，面向个人与团队的 Claude/Codex 国际中转订阅服务。" />
   <meta name="twitter:image" content="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" />
 
   <!-- ═══ Schema.org JSON-LD ═══ -->
@@ -134,7 +276,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
     "@type": "WebSite",
     "name": "FishXCode",
     "url": "https://fishxcode.com/",
-    "description": "AI Coding 中转站，支持 Claude、Codex、Gemini 等主流模型",
+    "description": "AI Coding 中转站，支持 Claude、Codex 等主流模型",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://doc.fishxcode.com/?q={search_term_string}",
@@ -567,7 +709,76 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       font-size: 28px;
     }
 
-    /* ─── 移动端适配 ──────────────────────────────────────────────────────── */
+    /* Subscription matrix */
+    .subscription-wrap {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+    .subscription-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--surface-border);
+    }
+    .sub-head,
+    .sub-cell {
+      padding: 16px 14px;
+      border-right: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .sub-head {
+      font-weight: 700;
+      text-align: center;
+      color: var(--text);
+      background: var(--bg-soft);
+    }
+    .sub-cell {
+      background: var(--surface);
+    }
+    .sub-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .sub-price { font-size: 24px; line-height: 1.1; font-weight: 800; color: #c9973e; margin-top: 8px; }
+    .sub-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+    .sub-expand {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #7a5020;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      font-weight: 600;
+    }
+    [data-theme="dark"] .sub-expand { color: #e0c870; }
+    .sub-detail {
+      margin-top: 10px;
+      background: var(--bg-soft);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 10px;
+      display: none;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .sub-detail.open { display: block; }
+    .sub-coming {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+
     @media (max-width: 640px) {
       /* 终端在小屏上字体缩小，确保不横溢 */
       .terminal { font-size: 11px; }
@@ -577,6 +788,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       .url-bar { flex-wrap: wrap; max-width: 100%; }
       .url-bar-text { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .url-bar-btn { width: 100%; justify-content: center; border-radius: 6px; margin-top: 2px; }
+
+      .subscription-wrap { border-radius: 16px; overflow-x: auto; }
+      .subscription-grid { min-width: 900px; }
 
       /* 迁移卡片内边距缩小 */
       .migration-card { padding: 24px 20px; }
@@ -697,7 +911,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       <div class="anim-fade-up mb-6">
         <span class="badge">
           <span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>
-          <span data-i18n="hero.badge">Claude · Codex · Gemini 全支持</span>
+          <span data-i18n="hero.badge">订阅制 Claude · Codex｜个人与团队国际中转站</span>
         </span>
       </div>
 
@@ -705,18 +919,21 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       <h1 class="anim-fade-up delay-1 text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight">
         <span class="grad-text">AI Coding</span>
         <br/>
-        <span class="text-gray-900" data-i18n="hero.title">最顺手的中转站</span>
+        <span class="text-gray-900" data-i18n="hero.title">订阅制 Claude Codex 个人/团队国际中转站</span>
       </h1>
 
       <!-- Subline -->
-      <p class="anim-fade-up delay-2 text-lg sm:text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed" data-i18n="hero.desc">
-        注册即用，无缝连接全球顶尖 AI 模型，让你的代码工作流快上加快
+      <p class="anim-fade-up delay-2 text-lg sm:text-xl text-gray-500 mb-4 max-w-2xl mx-auto leading-relaxed" data-i18n="hero.desc">
+        主打订阅包月制，同时支持天卡与周卡，覆盖个人与团队的国际中转订阅需求
+      </p>
+      <p class="anim-fade-up delay-2 text-base sm:text-lg font-semibold grad-text mb-10" data-i18n="hero.bonus">
+        注册送 Token · 每日签到送 Token · 邀请好友再送 Token
       </p>
 
       <!-- CTA Buttons -->
       <div class="anim-fade-up delay-3 flex flex-col sm:flex-row gap-4 justify-center mb-16">
         <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="btn-primary text-base" style="padding:16px 36px;justify-content:center">
-          <span data-i18n="hero.btn1">免费注册，立即使用</span>
+          <span data-i18n="hero.btn1">立即注册，按需订阅</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <a href="https://doc.fishxcode.com/" target="_blank" class="btn-ghost text-base" style="padding:14px 36px;justify-content:center">
@@ -785,6 +1002,34 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
   <div class="divider px-6"></div>
 
   <!-- ╔══════════════════════════════╗ -->
+  <!-- ║      SUBSCRIPTION MATRIX     ║ -->
+  <!-- ╚══════════════════════════════╝ -->
+  <section class="py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto reveal">
+      <div class="text-center mb-12">
+        <span class="badge mb-4" data-i18n="sub.badge">主打订阅制套餐</span>
+        <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4" data-i18n="sub.title">统一价格矩阵：天 / 周 / 月</h2>
+        <p class="text-gray-500 text-lg max-w-2xl mx-auto" data-i18n="sub.desc">覆盖个人、团队、企业三类使用场景，按需选择订阅周期与档位</p>
+      </div>
+
+      <div class="subscription-wrap">
+        <div id="subscriptionMatrix" class="subscription-grid">
+          <div class="sub-head" data-i18n="sub.cycle.daily">天订阅</div>
+          <div class="sub-head" data-i18n="sub.cycle.weekly">周订阅</div>
+          <div class="sub-head" data-i18n="sub.cycle.monthly">月订阅</div>
+        </div>
+      </div>
+
+      <div class="text-center mt-8">
+        <a href="https://fishxcode.com/console/topup" target="_blank" class="btn-primary text-base" style="padding:14px 34px;justify-content:center">
+          <span data-i18n="sub.cta">前往充值并选择订阅套餐</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════╗ -->
   <!-- ║          FEATURES            ║ -->
   <!-- ╚══════════════════════════════╝ -->
   <section class="py-24 px-4 sm:px-6 lg:px-8">
@@ -810,7 +1055,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <div class="card p-8 reveal" style="transition-delay:0.1s">
           <div class="w-12 h-12 rounded-2xl grad-bg-soft flex items-center justify-center text-2xl mb-5">🔧</div>
           <h3 class="text-xl font-bold text-gray-900 mb-2" data-i18n="feat.f2.title">多端完美适配</h3>
-          <p class="text-gray-500 text-sm leading-relaxed" data-i18n="feat.f2.desc">完美集成 Claude Code、Codex、Gemini CLI 等生产力工具，一键替换 API 地址即可起飞</p>
+          <p class="text-gray-500 text-sm leading-relaxed" data-i18n="feat.f2.desc">完美集成 Claude Code、Codex 等生产力工具，一键替换 API 地址即可起飞</p>
         </div>
         <!-- F3 -->
         <div class="card p-8 reveal" style="transition-delay:0.2s">
@@ -827,7 +1072,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <p class="text-gray-500 text-sm mt-2" data-i18n="brand.desc">深度优化 API 路由，确保在 CLI 环境下依然拥有流畅的流式交互体验</p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6">
+      <div class="grid md:grid-cols-2 gap-6">
         <!-- Claude Code -->
         <div class="tool-brand reveal">
           <div class="tool-brand-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">
@@ -850,19 +1095,6 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           <h4 class="text-lg font-bold text-gray-900 mt-1 mb-2">OpenAI Codex</h4>
           <p class="text-gray-500 text-sm leading-relaxed" data-i18n="brand.codex.desc">深度思考模式，慢工出细活，复杂逻辑处理更严谨</p>
           <a href="https://doc.fishxcode.com/codex" target="_blank" class="inline-flex items-center gap-1 text-purple-600 text-sm font-semibold mt-4 hover:underline">
-            <span data-i18n="brand.guide">接入指南</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-        <!-- Gemini CLI -->
-        <div class="tool-brand reveal" style="transition-delay:0.2s">
-          <div class="tool-brand-icon" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">
-            <span>🔵</span>
-          </div>
-          <span class="text-xs text-gray-400 font-semibold tracking-wider uppercase" data-i18n="brand.gemini.label">Google AI</span>
-          <h4 class="text-lg font-bold text-gray-900 mt-1 mb-2">Gemini CLI</h4>
-          <p class="text-gray-500 text-sm leading-relaxed" data-i18n="brand.gemini.desc">前端能力顶尖，UI/UX 设计与实现一步到位，视觉效果出众</p>
-          <a href="https://doc.fishxcode.com/gemini" target="_blank" class="inline-flex items-center gap-1 text-purple-600 text-sm font-semibold mt-4 hover:underline">
             <span data-i18n="brand.guide">接入指南</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -896,7 +1128,6 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           <div class="flex flex-wrap gap-3">
             <span class="tool-tag">🤖 Claude  Code</span>
             <span class="tool-tag">💻 OpenAI Codex</span>
-            <span class="tool-tag">✨ Gemini CLI</span>
             <span class="tool-tag">🦘 RooCode</span>
             <span class="tool-tag">🇨🇳 Qwen Code</span>
             <span class="tool-tag">🤖 Droid</span>
@@ -1023,7 +1254,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="https://fishxcode.com/" target="_blank" class="btn-primary text-base" style="padding:16px 40px;justify-content:center">
-            <span data-i18n="cta.btn1">免费注册并使用</span>
+            <span data-i18n="cta.btn1">立即注册，按需订阅</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <a href="https://doc.fishxcode.com/account" target="_blank" class="btn-ghost text-base" style="padding:14px 36px;justify-content:center">
@@ -1076,9 +1307,27 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <div>
           <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider" data-i18n="footer.support">支持</h4>
           <ul class="space-y-2.5">
-            <li><a href="mailto:support@fishxcode.com" class="foot-link" style="color:#e0c870" data-i18n="footer.cs">联系客服</a></li>
-            <li><a href="https://status.fishxcode.com" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.status">服务状态</a></li>
-            <li><a href="https://api-key-tool.fishxcode.com" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.quota">额度查询</a></li>
+            <li>
+              <a href="https://pre.fishxcode.com/qq_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+                QQ群：373865837（查看二维码）
+              </a>
+            </li>
+            <li>
+              <a href="https://pre.fishxcode.com/fishxcode_user.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+                微信号：fishxcode（查看二维码）
+              </a>
+            </li>
+            <li>
+              <a href="https://pre.fishxcode.com/wechat_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+                微信群（查看二维码）
+              </a>
+            </li>
+            <li>
+              <a href="https://pre.fishxcode.com/qq.png" target="_blank" class="foot-link" style="color:#e0c870">
+                QQ客服：2013571175（查看二维码）
+              </a>
+            </li>
+            <li><a href="mailto:support@fishxcode.com" class="foot-link" style="color:#e0c870" data-i18n="footer.cs">联系客服邮箱</a></li>
           </ul>
         </div>
       </div>
@@ -1111,22 +1360,27 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
     var _T = {
       'zh-CN': {
         'nav.docs':'文档','nav.start':'快速开始','nav.enter':'进入平台',
-        'hero.badge':'Claude · Codex · Gemini 全支持',
-        'hero.title':'最顺手的中转站',
-        'hero.desc':'注册即用，无缝连接全球顶尖 AI 模型，让你的代码工作流快上加快',
-        'hero.btn1':'免费注册，立即使用','hero.btn2':'查看使用文档',
+        'hero.badge':'订阅制 Claude · Codex｜个人与团队国际中转站',
+        'hero.title':'订阅制 Claude Codex 个人/团队国际中转站',
+        'hero.desc':'主打订阅包月制，同时支持天卡与周卡，覆盖个人与团队的国际中转订阅需求',
+        'hero.bonus':'注册送 Token · 每日签到送 Token · 邀请好友再送 Token',
+        'hero.btn1':'立即注册，按需订阅','hero.btn2':'查看使用文档',
         'hero.stat1':'低延迟响应','hero.stat2':'多模型切换','hero.stat3':'全工具支持',
         'hero.urlHint':'▸ 替换 Base URL 即可接入','hero.copy':'复制','hero.copied':'已复制',
+        'sub.badge':'主打订阅制套餐','sub.title':'统一价格矩阵：天 / 周 / 月','sub.desc':'覆盖个人、团队、企业三类使用场景，按需选择订阅周期与档位',
+        'sub.cta':'前往充值并选择订阅套餐','sub.expand':'查看规则','sub.hide':'收起规则','sub.comingSoon':'即将上线','sub.loadFail':'套餐加载失败',
+        'sub.validity':'有效期','sub.resetRule':'重置规则','sub.totalAmount':'总额度',
+        'sub.cycle.daily':'天订阅','sub.cycle.weekly':'周订阅','sub.cycle.monthly':'月订阅',
+        'sub.audience.personal':'个人','sub.audience.team':'团队','sub.audience.enterprise':'企业',
         'feat.badge':'核心优势','feat.title':'为什么开发者选择 FishXCode？',
         'feat.desc':'专为 AI Coding 场景打磨，省去一切繁琐配置',
         'feat.f1.title':'极致编码提效','feat.f1.desc':'专为程序员优化的响应链路，支持流式输出，让代码生成几乎零感知延迟',
-        'feat.f2.title':'多端完美适配','feat.f2.desc':'完美集成 Claude  Code、Codex、Gemini CLI 等生产力工具，一键替换 API 地址即可起飞',
+        'feat.f2.title':'多端完美适配','feat.f2.desc':'完美集成 Claude  Code、Codex 等生产力工具，一键替换 API 地址即可起飞',
         'feat.f3.title':'开箱即用','feat.f3.desc':'注册账户后立即可用，无需繁琐的本地配置，5 分钟内接入完整 AI 工作流',
         'brand.badge':'原生支持','brand.title':'极致工具链','brand.guide':'接入指南',
         'brand.desc':'深度优化 API 路由，确保在 CLI 环境下依然拥有流畅的流式交互体验',
         'brand.claude.label':'Anthropic','brand.claude.desc':'代码执行能力强劲，高效理解需求，快速生成精准代码',
         'brand.codex.label':'OpenAI','brand.codex.desc':'深度思考模式，慢工出细活，复杂逻辑处理更严谨',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'前端能力顶尖，UI/UX 设计与实现一步到位，视觉效果出众',
         'compat.badge':'全面兼容','compat.title':'支持的工具 & 快速接入','compat.desc':'与你日常使用的所有 AI 开发工具无缝衔接',
         'compat.listTitle':'支持的工具清单','compat.startTitle':'5 分钟快速开始',
         'step1.title':'注册账户','step2.title':'获取 API Key',
@@ -1136,7 +1390,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item2.title':'专属客服，全程协助迁移',
         'cta.title':'随时出发，AI 助力编码',
         'cta.desc':'数千位开发者已在使用 FishXCode，现在加入，体验更高效的 AI 工作流',
-        'cta.btn1':'免费注册并使用','cta.btn2':'查看接入文档',
+        'cta.btn1':'立即注册，按需订阅','cta.btn2':'查看接入文档',
         'footer.product':'产品','footer.resources':'资源','footer.support':'支持',
         'footer.home':'平台首页','footer.console':'控制台','footer.register':'立即注册',
         'footer.faq':'常见问题','footer.models':'支持的模型','footer.changelog':'更新日志',
@@ -1156,22 +1410,22 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       },
       'zh-TW': {
         'nav.docs':'文檔','nav.start':'快速開始','nav.enter':'進入平台',
-        'hero.badge':'Claude · Codex · Gemini 全支援',
+        'hero.badge':'Claude · Codex 全支援',
         'hero.title':'最順手的中繼站',
         'hero.desc':'註冊即用，無縫連接全球頂尖 AI 模型，讓你的程式工作流快上加快',
+        'hero.bonus':'註冊送 Token · 每日簽到送 Token · 邀請好友再送 Token',
         'hero.btn1':'免費註冊，立即使用','hero.btn2':'查看使用文檔',
         'hero.stat1':'低延遲響應','hero.stat2':'多模型切換','hero.stat3':'全工具支援',
         'hero.urlHint':'▸ 替換 Base URL 即可接入','hero.copy':'複製','hero.copied':'已複製',
         'feat.badge':'核心優勢','feat.title':'為什麼開發者選擇 FishXCode？',
         'feat.desc':'專為 AI Coding 場景打磨，省去一切繁瑣配置',
         'feat.f1.title':'極致編碼提效','feat.f1.desc':'專為程式設計師最佳化的響應鏈路，支援串流輸出，讓程式碼生成幾乎零感知延遲',
-        'feat.f2.title':'多端完美適配','feat.f2.desc':'完美整合 Claude  Code、Codex、Gemini CLI 等生產力工具，一鍵替換 API 地址即可起飛',
+        'feat.f2.title':'多端完美適配','feat.f2.desc':'完美整合 Claude  Code、Codex 等生產力工具，一鍵替換 API 地址即可起飛',
         'feat.f3.title':'開箱即用','feat.f3.desc':'註冊帳戶後立即可用，無需繁瑣的本地設定，5 分鐘內接入完整 AI 工作流',
         'brand.badge':'原生支援','brand.title':'極致工具鏈','brand.guide':'接入指南',
         'brand.desc':'深度最佳化 API 路由，確保在 CLI 環境下依然擁有流暢的串流互動體驗',
         'brand.claude.label':'Anthropic','brand.claude.desc':'程式碼執行能力強勁，高效理解需求，快速生成精準程式碼',
         'brand.codex.label':'OpenAI','brand.codex.desc':'深度思考模式，慢工出細活，複雜邏輯處理更嚴謹',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'前端能力頂尖，UI/UX 設計與實現一步到位，視覺效果出眾',
         'compat.badge':'全面相容','compat.title':'支援的工具 & 快速接入','compat.desc':'與你日常使用的所有 AI 開發工具無縫銜接',
         'compat.listTitle':'支援的工具清單','compat.startTitle':'5 分鐘快速開始',
         'step1.title':'註冊帳戶','step2.title':'取得 API Key',
@@ -1201,22 +1455,27 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       },
       'en': {
         'nav.docs':'Docs','nav.start':'Quick Start','nav.enter':'Enter Platform',
-        'hero.badge':'Claude · Codex · Gemini Supported',
+        'hero.badge':'Claude · Codex Supported',
         'hero.title':'Best AI Coding Relay',
         'hero.desc':'Connect to top AI models globally. Supercharge your coding workflow instantly.',
+        'hero.bonus':'Free Token on signup · daily check-in · invite rewards',
         'hero.btn1':'Sign Up Free','hero.btn2':'View Docs',
         'hero.stat1':'Low Latency','hero.stat2':'Multi-Model','hero.stat3':'All Tools',
         'hero.urlHint':'▸ Replace Base URL to connect','hero.copy':'Copy','hero.copied':'Copied!',
+        'sub.badge':'Subscription Plans','sub.title':'Unified Pricing Matrix: Daily / Weekly / Monthly','sub.desc':'Covers personal, team, and enterprise usage scenarios. Choose your cycle and tier as needed.',
+        'sub.cta':'Go to Top Up and choose subscription','sub.expand':'View Rules','sub.hide':'Hide Rules','sub.comingSoon':'Coming Soon','sub.loadFail':'Failed to load plans',
+        'sub.validity':'Validity','sub.resetRule':'Reset Rule','sub.totalAmount':'Total Quota',
+        'sub.cycle.daily':'Daily','sub.cycle.weekly':'Weekly','sub.cycle.monthly':'Monthly',
+        'sub.audience.personal':'Personal','sub.audience.team':'Team','sub.audience.enterprise':'Enterprise',
         'feat.badge':'Key Advantages','feat.title':'Why FishXCode?',
         'feat.desc':'Built for AI Coding. Maximum performance and stability.',
         'feat.f1.title':'Blazing Fast','feat.f1.desc':'Optimized response pipeline with streaming support for near-zero perceived latency.',
-        'feat.f2.title':'Universal Compatibility','feat.f2.desc':'Seamlessly integrates with Claude  Code, Codex, Gemini CLI. Just swap the API URL.',
+        'feat.f2.title':'Universal Compatibility','feat.f2.desc':'Seamlessly integrates with Claude  Code and Codex. Just swap the API URL.',
         'feat.f3.title':'Ready in Minutes','feat.f3.desc':'Sign up and start immediately. Full AI workflow in 5 minutes.',
         'brand.badge':'Native Support','brand.title':'Ultimate Toolchain','brand.guide':'Setup Guide',
         'brand.desc':'Deeply optimized API routing for smooth streaming in CLI environments.',
         'brand.claude.label':'Anthropic','brand.claude.desc':'Powerful code execution. Understands requirements fast, generates precise code.',
         'brand.codex.label':'OpenAI','brand.codex.desc':'Deep thinking mode for rigorous and complex logic processing.',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'Top-tier frontend capabilities. UI/UX design and implementation in one step.',
         'compat.badge':'Full Compatibility','compat.title':'Supported Tools & Quick Start','compat.desc':'Works seamlessly with all AI development tools you use daily.',
         'compat.listTitle':'Supported Tools','compat.startTitle':'Get Started in 5 Min',
         'step1.title':'Create Account','step2.title':'Get API Key',
@@ -1246,22 +1505,22 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       },
       'fr': {
         'nav.docs':'Docs','nav.start':'Démarrage','nav.enter':'Accéder',
-        'hero.badge':'Claude · Codex · Gemini Supportés',
+        'hero.badge':'Claude · Codex Supportés',
         'hero.title':'Meilleur Relais AI Coding',
         'hero.desc':'Connectez-vous aux meilleurs modèles IA mondiaux. Boostez votre développement.',
+        'hero.bonus':'Token offert à l’inscription · check-in quotidien · récompense d’invitation',
         'hero.btn1':'Inscription gratuite','hero.btn2':'Documentation',
         'hero.stat1':'Faible latence','hero.stat2':'Multi-modèle','hero.stat3':'Tous les outils',
         'hero.urlHint':"▸ Remplacez l'URL de base","hero.copy":'Copier','hero.copied':'Copié !',
         'feat.badge':'Avantages clés','feat.title':'Pourquoi FishXCode ?',
         'feat.desc':'Conçu pour le AI Coding. Performance et stabilité maximales.',
         'feat.f1.title':'Faible latence','feat.f1.desc':'Pipeline de réponse optimisé pour les développeurs avec support du streaming.',
-        'feat.f2.title':'Compatibilité universelle','feat.f2.desc':"Intégration parfaite avec Claude  Code, Codex, Gemini CLI. Changez l'URL API.",
+        'feat.f2.title':'Compatibilité universelle','feat.f2.desc':"Intégration parfaite avec Claude  Code et Codex. Changez l'URL API.",
         'feat.f3.title':'Prêt en minutes','feat.f3.desc':'Inscrivez-vous et commencez immédiatement. Workflow IA complet en 5 minutes.',
         'brand.badge':'Support natif','brand.title':"Chaîne d'outils ultime",'brand.guide':"Guide d'intégration",
         'brand.desc':'Routage API profondément optimisé pour un streaming fluide en CLI.',
         'brand.claude.label':'Anthropic','brand.claude.desc':'Exécution de code puissante, comprend rapidement les besoins.',
         'brand.codex.label':'OpenAI','brand.codex.desc':'Mode de réflexion approfondie pour logique complexe.',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'Capacités frontend de premier plan. Design UI/UX en une étape.',
         'compat.badge':'Compatibilité totale','compat.title':'Outils & Démarrage rapide','compat.desc':'Intégration parfaite avec tous vos outils de développement IA.',
         'compat.listTitle':'Outils supportés','compat.startTitle':'Démarrez en 5 min',
         'step1.title':'Créer un compte','step2.title':"Obtenir une clé API",
@@ -1291,22 +1550,22 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       },
       'ja': {
         'nav.docs':'ドキュメント','nav.start':'クイックスタート','nav.enter':'プラットフォームへ',
-        'hero.badge':'Claude · Codex · Gemini 全対応',
+        'hero.badge':'Claude · Codex 全対応',
         'hero.title':'最高の AI Coding リレー',
         'hero.desc':'世界トップクラスの AI モデルへシームレスに接続。コーディングを加速。',
+        'hero.bonus':'登録でToken付与・毎日チェックインでToken・招待でさらにToken',
         'hero.btn1':'無料登録して使う','hero.btn2':'ドキュメントを見る',
         'hero.stat1':'低レイテンシ','hero.stat2':'マルチモデル','hero.stat3':'全ツール対応',
         'hero.urlHint':'▸ Base URL を置き換えて接続','hero.copy':'コピー','hero.copied':'コピー済み',
         'feat.badge':'主な特長','feat.title':'FishXCode を選ぶ理由',
         'feat.desc':'AI Coding のために設計。最高のパフォーマンスと安定性。',
         'feat.f1.title':'高速レスポンス','feat.f1.desc':'開発者向けに最適化されたパイプライン。ストリーミング対応で遅延ほぼゼロ。',
-        'feat.f2.title':'ユニバーサル対応','feat.f2.desc':'Claude  Code、Codex、Gemini CLI とシームレスに統合。API URL を変えるだけ。',
+        'feat.f2.title':'ユニバーサル対応','feat.f2.desc':'Claude  Code、Codex とシームレスに統合。API URL を変えるだけ。',
         'feat.f3.title':'即時使用可能','feat.f3.desc':'登録後すぐに使用可能。5 分で AI ワークフローを完全接続。',
         'brand.badge':'ネイティブ対応','brand.title':'究極のツールチェーン','brand.guide':'導入ガイド',
         'brand.desc':'CLI 環境でもスムーズなストリーミングを実現する最適化 API ルーティング。',
         'brand.claude.label':'Anthropic','brand.claude.desc':'強力なコード実行能力。要件を素早く理解し、精確なコードを生成。',
         'brand.codex.label':'OpenAI','brand.codex.desc':'深い思考モードで複雑なロジックも丁寧に処理。',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'トップクラスのフロントエンド能力。UI/UX デザインと実装を一気に。',
         'compat.badge':'完全互換','compat.title':'対応ツール & クイックスタート','compat.desc':'日常使う AI 開発ツールとすべてシームレスに連携。',
         'compat.listTitle':'対応ツール一覧','compat.startTitle':'5 分でスタート',
         'step1.title':'アカウント登録','step2.title':'API キーを取得',
@@ -1336,22 +1595,22 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       },
       'ru': {
         'nav.docs':'Документация','nav.start':'Быстрый старт','nav.enter':'Войти',
-        'hero.badge':'Claude · Codex · Gemini Поддерживаются',
+        'hero.badge':'Claude · Codex Поддерживаются',
         'hero.title':'Лучший ретранслятор AI Coding',
         'hero.desc':'Подключайтесь к лучшим AI-моделям мира. Ускорьте рабочий процесс разработки.',
+        'hero.bonus':'Токены за регистрацию · ежедневный check-in · приглашения друзей',
         'hero.btn1':'Зарегистрироваться бесплатно','hero.btn2':'Документация',
         'hero.stat1':'Низкая задержка','hero.stat2':'Мульти-модель','hero.stat3':'Все инструменты',
         'hero.urlHint':'▸ Замените Base URL для подключения','hero.copy':'Копировать','hero.copied':'Скопировано!',
         'feat.badge':'Ключевые преимущества','feat.title':'Почему FishXCode?',
         'feat.desc':'Создан для AI Coding. Максимальная производительность и стабильность.',
         'feat.f1.title':'Низкая задержка','feat.f1.desc':'Оптимизированный конвейер для разработчиков с поддержкой стриминга.',
-        'feat.f2.title':'Универсальная совместимость','feat.f2.desc':'Интеграция с Claude  Code, Codex, Gemini CLI. Просто замените URL API.',
+        'feat.f2.title':'Универсальная совместимость','feat.f2.desc':'Интеграция с Claude  Code и Codex. Просто замените URL API.',
         'feat.f3.title':'Готов за минуты','feat.f3.desc':'Зарегистрируйтесь и начните немедленно. Полный AI-воркфлоу за 5 минут.',
         'brand.badge':'Нативная поддержка','brand.title':'Полный набор инструментов','brand.guide':'Руководство',
         'brand.desc':'Глубоко оптимизированная маршрутизация API для плавного стриминга в CLI.',
         'brand.claude.label':'Anthropic','brand.claude.desc':'Мощное выполнение кода, быстро понимает требования.',
         'brand.codex.label':'OpenAI','brand.codex.desc':'Режим глубокого мышления для сложной логики.',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'Лучшие возможности для frontend. Дизайн и реализация UI/UX за один шаг.',
         'compat.badge':'Полная совместимость','compat.title':'Поддерживаемые инструменты','compat.desc':'Бесшовная интеграция со всеми AI-инструментами разработки.',
         'compat.listTitle':'Список инструментов','compat.startTitle':'Старт за 5 минут',
         'step1.title':'Создать аккаунт','step2.title':'Получить API-ключ',
@@ -1381,22 +1640,22 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       },
       'vi': {
         'nav.docs':'Tài liệu','nav.start':'Bắt đầu nhanh','nav.enter':'Vào nền tảng',
-        'hero.badge':'Claude · Codex · Gemini Hỗ trợ',
+        'hero.badge':'Claude · Codex Hỗ trợ',
         'hero.title':'Trạm chuyển tiếp AI Coding tốt nhất',
         'hero.desc':'Kết nối với các mô hình AI hàng đầu thế giới. Tăng tốc quy trình làm việc.',
+        'hero.bonus':'Tặng Token khi đăng ký · điểm danh hằng ngày · mời bạn nhận thêm Token',
         'hero.btn1':'Đăng ký miễn phí','hero.btn2':'Xem tài liệu',
         'hero.stat1':'Độ trễ thấp','hero.stat2':'Đa mô hình','hero.stat3':'Mọi công cụ',
         'hero.urlHint':'▸ Thay Base URL để kết nối','hero.copy':'Sao chép','hero.copied':'Đã sao chép!',
         'feat.badge':'Ưu điểm chính','feat.title':'Tại sao chọn FishXCode?',
         'feat.desc':'Được xây dựng cho AI Coding. Hiệu suất và độ ổn định tối đa.',
         'feat.f1.title':'Tốc độ cao','feat.f1.desc':'Pipeline phản hồi được tối ưu hóa cho lập trình viên, hỗ trợ streaming.',
-        'feat.f2.title':'Tương thích toàn diện','feat.f2.desc':'Tích hợp hoàn hảo với Claude  Code, Codex, Gemini CLI. Chỉ cần đổi URL API.',
+        'feat.f2.title':'Tương thích toàn diện','feat.f2.desc':'Tích hợp hoàn hảo với Claude  Code và Codex. Chỉ cần đổi URL API.',
         'feat.f3.title':'Sẵn sàng trong vài phút','feat.f3.desc':'Đăng ký và bắt đầu ngay. Quy trình AI đầy đủ trong 5 phút.',
         'brand.badge':'Hỗ trợ gốc','brand.title':'Chuỗi công cụ tối ưu','brand.guide':'Hướng dẫn tích hợp',
         'brand.desc':'Định tuyến API được tối ưu hóa sâu để streaming mượt mà trong CLI.',
         'brand.claude.label':'Anthropic','brand.claude.desc':'Thực thi code mạnh mẽ, hiểu yêu cầu nhanh chóng, tạo code chính xác.',
         'brand.codex.label':'OpenAI','brand.codex.desc':'Chế độ suy nghĩ sâu cho logic phức tạp.',
-        'brand.gemini.label':'Google AI','brand.gemini.desc':'Khả năng frontend hàng đầu. Thiết kế và triển khai UI/UX trong một bước.',
         'compat.badge':'Tương thích đầy đủ','compat.title':'Công cụ được hỗ trợ & Bắt đầu','compat.desc':'Tích hợp hoàn hảo với mọi công cụ phát triển AI.',
         'compat.listTitle':'Danh sách công cụ','compat.startTitle':'Bắt đầu trong 5 phút',
         'step1.title':'Tạo tài khoản','step2.title':'Lấy API Key',
@@ -1512,6 +1771,90 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         if (_execCopy(url)) _showCopied(btn);
       }
     }
+
+    function _fmtPrice(v, c) {
+      var n = Number(v || 0);
+      if (Number.isInteger(n)) return '¥' + n;
+      return '¥' + n.toFixed(2);
+    }
+
+    function _fmtAmount(v) {
+      var n = Number(v || 0);
+      if (!n) return '--';
+      return n.toLocaleString();
+    }
+
+    function toggleSubDetail(btn) {
+      var detail = btn && btn.nextElementSibling;
+      if (!detail) return;
+      detail.classList.toggle('open');
+      var t = _getT();
+      var opened = detail.classList.contains('open');
+      btn.textContent = opened ? (t['sub.hide'] || '收起规则') : (t['sub.expand'] || '查看规则');
+    }
+
+    function renderSubscriptionMatrix(matrix) {
+      var root = document.getElementById('subscriptionMatrix');
+      if (!root) return;
+
+      var t = _getT();
+      var headHtml = [
+        '<div class="sub-head">' + (t['sub.cycle.daily'] || '天订阅') + '</div>',
+        '<div class="sub-head">' + (t['sub.cycle.weekly'] || '周订阅') + '</div>',
+        '<div class="sub-head">' + (t['sub.cycle.monthly'] || '月订阅') + '</div>'
+      ].join('');
+
+      if (!matrix || !matrix.rows || !matrix.rows.length) {
+        root.innerHTML = headHtml +
+          '<div class="sub-cell"><span class="sub-coming">' + (t['sub.loadFail'] || '套餐加载失败') + '</span></div>' +
+          '<div class="sub-cell"><span class="sub-coming">' + (t['sub.loadFail'] || '套餐加载失败') + '</span></div>' +
+          '<div class="sub-cell"><span class="sub-coming">' + (t['sub.loadFail'] || '套餐加载失败') + '</span></div>';
+        return;
+      }
+
+      var rowsHtml = matrix.rows.map(function(row) {
+        var rowCells = [row.cells.daily, row.cells.weekly, row.cells.monthly];
+        return rowCells.map(function(item) {
+          if (!item || !item.plan) {
+            return '<div class="sub-cell"><span class="sub-coming">' + (t['sub.comingSoon'] || '即将上线') + '</span></div>';
+          }
+
+          var plan = item.plan;
+          var amountLine = Number(plan.totalAmount || 0) > 0
+            ? '<div>' + (t['sub.totalAmount'] || '总额度') + '：' + _fmtAmount(plan.totalAmount) + '</div>'
+            : '';
+
+          return [
+            '<div class="sub-cell">',
+            '<div class="sub-title">' + plan.title + '</div>',
+            '<div class="sub-price">' + _fmtPrice(plan.priceAmount, plan.currency) + '</div>',
+            '<div class="sub-subtitle">' + (plan.subtitle || '') + '</div>',
+            '<button class="sub-expand" onclick="toggleSubDetail(this)">' + (t['sub.expand'] || '查看规则') + '</button>',
+            '<div class="sub-detail">',
+            '<div>' + (t['sub.validity'] || '有效期') + '：' + (plan.durationLabel || '--') + '</div>',
+            '<div>' + (t['sub.resetRule'] || '重置规则') + '：' + (plan.resetRuleLabel || '--') + '</div>',
+            amountLine,
+            '</div>',
+            '</div>'
+          ].join('');
+        }).join('');
+      }).join('');
+
+      root.innerHTML = headHtml + rowsHtml;
+    }
+
+    async function initSubscriptionMatrix() {
+      try {
+        var resp = await fetch('/api/subscription-matrix', { cache: 'no-store' });
+        if (!resp.ok) throw new Error('load failed');
+        var payload = await resp.json();
+        renderSubscriptionMatrix(payload.matrix);
+      } catch (_) {
+        renderSubscriptionMatrix(null);
+      }
+    }
+
+    initSubscriptionMatrix();
   </script>
 
   <script>
@@ -1551,6 +1894,12 @@ Deno.serve(
       return new Response(SW_JS, {
         headers: { "content-type": "application/javascript; charset=utf-8", "cache-control": "no-cache" },
       });
+    }
+
+    if (path === "/api/subscription-matrix") {
+      const { plans, source } = await getSubscriptionPlans();
+      const matrix = buildSubscriptionMatrix(plans);
+      return jsonResponse({ success: true, source, matrix });
     }
 
     // 主页 — 原子递增访问计数

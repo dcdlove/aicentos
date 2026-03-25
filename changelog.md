@@ -8,4 +8,3 @@
 - 多语言支持（中文、English、Français、Español、Português）
 
 ### 已知限制
-- Gemini CLI 暂不支持自定义系统路由

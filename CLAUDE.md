@@ -2,7 +2,7 @@
 
 ## 项目愿景
 
-FishXCode 是一个 **AI Coding 中转站**，支持 Claude、Codex、Gemini 等主流 AI 模型在多种平台使用。本仓库包含两个核心部分：
+FishXCode 是一个 **AI Coding 中转站**，支持 Claude、Codex 等主流 AI 模型在多种平台使用。本仓库包含两个核心部分：
 
 1. **文档站** (VitePress) -- 面向用户的多语言文档门户，部署于 `doc.fishxcode.com`
 2. **Landing Page** (Deno) -- 独立的单文件 Deno 服务器，服务于 `fishxcode.com` 主站着陆页
@@ -120,7 +120,6 @@ fishxcode/
 │   ├── start.md                  # Claude Code 使用指南
 │   ├── account.md                # 账户注册
 │   ├── codex.md                  # OpenAI Codex 指南
-│   ├── gemini.md                 # Gemini CLI 指南
 │   ├── roocode.md                # RooCode 指南
 │   ├── qwencode.md               # Qwen Code 指南
 │   ├── droid.md                  # Droid CLI 指南
@@ -151,7 +150,6 @@ fishxcode/
 | 账户注册 | account.md | Y | Y | Y | Y |
 | ZCF 接入 | zcf.md | Y | Y | Y | Y |
 | OpenAI Codex | codex.md | Y | Y | Y | Y |
-| Gemini CLI | gemini.md | Y | Y | Y | Y |
 | RooCode | roocode.md | Y | Y | Y | Y |
 | Qwen Code | qwencode.md | Y | Y | Y | Y |
 | Droid CLI | droid.md | Y | Y | Y | Y |

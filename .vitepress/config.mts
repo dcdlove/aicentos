@@ -7,7 +7,7 @@ import { resolve } from 'path'
 
 const SITE_URL = 'https://doc.fishxcode.com'
 const SITE_TITLE = 'FishXCode'
-const SITE_DESC = 'AI Coding 中转站 - 支持 Claude、Codex、Gemini 模型在多种平台使用'
+const SITE_DESC = 'AI Coding 中转站 - 支持 Claude、Codex 模型在多种平台使用'
 
 // GitHub Pages 子路径支持：
 //   - 本地开发 / Docker / 自定义域名：BASE = '/'
@@ -108,7 +108,6 @@ export default withPwa(defineConfig({
             items: [
               { text: 'Claude Code', link: '/start' },
               { text: 'OpenAI Codex', link: '/codex' },
-              { text: 'Gemini Cli', link: '/gemini' },
               { text: 'RooCode', link: '/roocode' },
               { text: 'Qwen Code', link: '/qwencode' },
               { text: 'Droid CLI', link: '/droid' },
@@ -149,7 +148,6 @@ export default withPwa(defineConfig({
               { text: 'Claude Code', link: '/start' },
               { text: 'ZCF 快速接入', link: '/zcf' },
               { text: 'OpenAI Codex', link: '/codex' },
-              { text: 'Gemini Cli', link: '/gemini' },
               { text: 'RooCode', link: '/roocode' },
               { text: 'Qwen Code', link: '/qwencode' },
               { text: 'Droid CLI', link: '/droid' },
@@ -199,7 +197,6 @@ export default withPwa(defineConfig({
             items: [
               { text: 'Claude Code', link: '/en/start' },
               { text: 'OpenAI Codex', link: '/en/codex' },
-              { text: 'Gemini Cli', link: '/en/gemini' },
               { text: 'RooCode', link: '/en/roocode' },
               { text: 'Qwen Code', link: '/en/qwencode' },
               { text: 'Droid CLI', link: '/en/droid' },
@@ -240,7 +237,6 @@ export default withPwa(defineConfig({
               { text: 'Claude Code', link: '/en/start' },
               { text: 'ZCF Quick Setup', link: '/en/zcf' },
               { text: 'OpenAI Codex', link: '/en/codex' },
-              { text: 'Gemini Cli', link: '/en/gemini' },
               { text: 'RooCode', link: '/en/roocode' },
               { text: 'Qwen Code', link: '/en/qwencode' },
               { text: 'Droid CLI', link: '/en/droid' },
@@ -290,7 +286,6 @@ export default withPwa(defineConfig({
             items: [
               { text: 'Claude Code', link: '/fr/start' },
               { text: 'OpenAI Codex', link: '/fr/codex' },
-              { text: 'Gemini Cli', link: '/fr/gemini' },
               { text: 'RooCode', link: '/fr/roocode' },
               { text: 'Qwen Code', link: '/fr/qwencode' },
               { text: 'Droid CLI', link: '/fr/droid' },
@@ -331,7 +326,6 @@ export default withPwa(defineConfig({
               { text: 'Claude Code', link: '/fr/start' },
               { text: 'ZCF Configuration', link: '/fr/zcf' },
               { text: 'OpenAI Codex', link: '/fr/codex' },
-              { text: 'Gemini Cli', link: '/fr/gemini' },
               { text: 'RooCode', link: '/fr/roocode' },
               { text: 'Qwen Code', link: '/fr/qwencode' },
               { text: 'Droid CLI', link: '/fr/droid' },
@@ -381,7 +375,6 @@ export default withPwa(defineConfig({
             items: [
               { text: 'Claude Code', link: '/es/start' },
               { text: 'OpenAI Codex', link: '/es/codex' },
-              { text: 'Gemini Cli', link: '/es/gemini' },
               { text: 'RooCode', link: '/es/roocode' },
               { text: 'Qwen Code', link: '/es/qwencode' },
               { text: 'Droid CLI', link: '/es/droid' },
@@ -422,7 +415,6 @@ export default withPwa(defineConfig({
               { text: 'Claude Code', link: '/es/start' },
               { text: 'ZCF Configuración', link: '/es/zcf' },
               { text: 'OpenAI Codex', link: '/es/codex' },
-              { text: 'Gemini Cli', link: '/es/gemini' },
               { text: 'RooCode', link: '/es/roocode' },
               { text: 'Qwen Code', link: '/es/qwencode' },
               { text: 'Droid CLI', link: '/es/droid' },
@@ -472,7 +464,6 @@ export default withPwa(defineConfig({
             items: [
               { text: 'Claude Code', link: '/pt/start' },
               { text: 'OpenAI Codex', link: '/pt/codex' },
-              { text: 'Gemini Cli', link: '/pt/gemini' },
               { text: 'RooCode', link: '/pt/roocode' },
               { text: 'Qwen Code', link: '/pt/qwencode' },
               { text: 'Droid CLI', link: '/pt/droid' },
@@ -513,7 +504,6 @@ export default withPwa(defineConfig({
               { text: 'Claude Code', link: '/pt/start' },
               { text: 'ZCF Configuração', link: '/pt/zcf' },
               { text: 'OpenAI Codex', link: '/pt/codex' },
-              { text: 'Gemini Cli', link: '/pt/gemini' },
               { text: 'RooCode', link: '/pt/roocode' },
               { text: 'Qwen Code', link: '/pt/qwencode' },
               { text: 'Droid CLI', link: '/pt/droid' },

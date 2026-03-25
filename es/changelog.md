@@ -8,4 +8,3 @@
 - Soporte multilingüe (中文, English, Français, Español, Português)
 
 ### Limitaciones conocidas
-- Gemini CLI aún no admite enrutamiento de sistema personalizado

@@ -8,4 +8,3 @@
 - Suporte multilíngue (中文, English, Français, Español, Português)
 
 ### Limitações conhecidas
-- Gemini CLI ainda não suporta roteamento de sistema personalizado

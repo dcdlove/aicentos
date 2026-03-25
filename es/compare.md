@@ -8,7 +8,6 @@ Elige la herramienta de codificacion con IA que mejor se adapte a tu flujo de tr
 |-------------|---------------|------|
 | **Claude Code** | Anthropic | Herramienta CLI de terminal |
 | **OpenAI Codex** | OpenAI | CLI + Extension VSCode |
-| **Gemini CLI** | Google | Herramienta CLI de terminal |
 | **RooCode** | Roo Veterinary | Extension VSCode |
 | **Qwen Code** | Alibaba | Herramienta CLI de terminal |
 | **Droid CLI** | Factory AI | Herramienta CLI de terminal |
@@ -20,7 +19,6 @@ Elige la herramienta de codificacion con IA que mejor se adapte a tu flujo de tr
 |-------------|:-----:|:-------:|:-----:|
 | **Claude Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **OpenAI Codex** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| **Gemini CLI** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **RooCode** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **Qwen Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | **Droid CLI** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
@@ -32,7 +30,6 @@ Elige la herramienta de codificacion con IA que mejor se adapte a tu flujo de tr
 |-------------|:-------:|:------:|:---------:|
 | **Claude Code** | :white_check_mark: | - | - |
 | **OpenAI Codex** | :white_check_mark: | :white_check_mark: | - |
-| **Gemini CLI** | :white_check_mark: | - | - |
 | **RooCode** | - | :white_check_mark: | - |
 | **Qwen Code** | :white_check_mark: | - | - |
 | **Droid CLI** | :white_check_mark: | - | - |
@@ -44,7 +41,6 @@ Elige la herramienta de codificacion con IA que mejor se adapte a tu flujo de tr
 |-------------|:--------------------:|:------------------:|:---------------------:|
 | **Claude Code** | :white_check_mark: | - | - |
 | **OpenAI Codex** | :white_check_mark: | TOML + JSON | Ajustes de VSCode |
-| **Gemini CLI** | :white_check_mark: | - | - |
 | **RooCode** | - | - | :white_check_mark: |
 | **Qwen Code** | :white_check_mark: | - | - |
 | **Droid CLI** | - | JSON | CLI interactivo |
@@ -56,15 +52,10 @@ Elige la herramienta de codificacion con IA que mejor se adapte a tu flujo de tr
 |-------------|:------:|:----------:|-------|
 | **Claude Code** | :white_check_mark: Compatible | Facil | Variables de entorno |
 | **OpenAI Codex** | :white_check_mark: Compatible | Media | Requiere archivos TOML y JSON |
-| **Gemini CLI** | :x: No compatible | - | Sin soporte de enrutamiento personalizado |
 | **RooCode** | :white_check_mark: Compatible | Facil | Configuracion del proveedor via GUI |
 | **Qwen Code** | :white_check_mark: Compatible | Facil | Variables de entorno |
 | **Droid CLI** | :white_check_mark: Compatible | Media | Requiere editar archivo JSON |
 | **OpenCode** | :white_check_mark: Compatible | Media | Requiere editar archivo JSON |
-
-::: warning Gemini CLI no compatible por ahora
-Gemini CLI actualmente no soporta enrutamiento de API personalizado, lo que lo hace incompatible con FishXCode. Si buscas una alternativa, consulta las demas herramientas compatibles listadas arriba.
-:::
 
 ## Caracteristicas principales
 
@@ -72,7 +63,6 @@ Gemini CLI actualmente no soporta enrutamiento de API personalizado, lo que lo h
 |-------------|-------------------|
 | **Claude Code** | Comprension y generacion de codigo avanzadas, experiencia nativa en terminal, cambio entre multiples modelos |
 | **OpenAI Codex** | Doble modo CLI y VSCode, soporte de modelos GPT, ecosistema maduro |
-| **Gemini CLI** | Impulsado por Google AI, integracion profunda con el ecosistema de Google |
 | **RooCode** | Experiencia 100% grafica en VSCode, protocolo OpenAI Compatible, sin barrera de terminal |
 | **Qwen Code** | Respaldado por los modelos Qwen de Alibaba, optimizado para escenarios multilingues, ligero |
 | **Droid CLI** | Soporte flexible de modelos personalizados, ventanas de contexto extra grandes, enfocado en terminal |

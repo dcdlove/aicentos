@@ -4,7 +4,7 @@
 
 ### What is FishXCode?
 
-FishXCode is an AI Coding relay that supports Claude, Codex, and Gemini models across multiple platforms.
+FishXCode is an AI Coding relay that supports Claude and Codex models across multiple platforms.
 
 ### Which tools are supported?
 
@@ -12,7 +12,6 @@ Currently supported tools:
 
 - **Claude Code** — Anthropic's official CLI
 - **OpenAI Codex** — OpenAI's coding assistant
-- **Gemini CLI** — Google's command-line AI tool
 - **RooCode** — AI coding extension for VS Code
 - **Qwen Code** — Alibaba's Qwen-based coding tool
 - **Droid CLI** — Lightweight AI coding CLI
