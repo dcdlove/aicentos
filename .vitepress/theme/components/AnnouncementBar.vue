@@ -19,25 +19,44 @@ const I18N: Record<string, { text: string; linkText: string }> = {
 const { lang } = useData()
 const t = computed(() => I18N[lang.value] ?? I18N['zh-CN'])
 
-const BAR_HEIGHT = '70px'
+const BAR_HEIGHT = '72px'
 
 const visible = ref(false)
+const inIframe = ref(false)
 
 function setLayoutOffset(height: string) {
   document.documentElement.style.setProperty('--vp-layout-top-height', height)
 }
 
+function checkInIframe(): boolean {
+  try {
+    return window.self !== window.top
+  } catch {
+    return true
+  }
+}
+
 onMounted(() => {
+  inIframe.value = checkInIframe()
+
+  if (inIframe.value) {
+    setLayoutOffset(BAR_HEIGHT)
+  }
+
   if (!localStorage.getItem(props.storageKey)) {
     visible.value = true
-    setLayoutOffset(BAR_HEIGHT)
+    if (!inIframe.value) {
+      setLayoutOffset(BAR_HEIGHT)
+    }
   }
 })
 
 function dismiss() {
   visible.value = false
   localStorage.setItem(props.storageKey, '1')
-  setLayoutOffset('0px')
+  if (!inIframe.value) {
+    setLayoutOffset('0px')
+  }
 }
 </script>
 
@@ -63,7 +82,7 @@ function dismiss() {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70px;
+  height: 72px;
   background-color: var(--vp-c-brand-3);
   color: var(--vp-c-white);
   font-size: 14px;
