@@ -38,29 +38,41 @@ function buildSubscriptionMatrix(plans: RawSubscriptionPlan[]) {
       .sort((a, b) => a.price_amount - b.price_amount);
   }
 
-  const maxRows = Math.max(...SUB_CYCLES.map((cycle) => groupedByCycle[cycle.key].length), 0);
+  const maxRows = Math.max(
+    ...SUB_CYCLES.map((cycle) => groupedByCycle[cycle.key].length),
+    0,
+  );
 
   const rows = Array.from({ length: maxRows }, (_, rowIdx) => {
-    const cells = SUB_CYCLES.reduce((acc, cycle) => {
-      const plan = groupedByCycle[cycle.key][rowIdx] ?? null;
-      acc[cycle.key] = {
-        cycleKey: cycle.key,
-        plan: plan
-          ? {
-              id: plan.id,
-              title: plan.title,
-              subtitle: plan.subtitle,
-              priceAmount: plan.price_amount,
-              currency: plan.currency,
-              durationLabel: formatDurationLabel(plan.duration_unit, plan.duration_value),
-              resetRuleLabel: formatResetRuleLabel(plan.quota_reset_period),
-              totalAmount: plan.total_amount,
-            }
-          : null,
-        comingSoon: plan === null,
-      };
-      return acc;
-    }, {} as Record<CycleKey, { cycleKey: CycleKey; plan: any; comingSoon: boolean }>);
+    const cells = SUB_CYCLES.reduce(
+      (acc, cycle) => {
+        const plan = groupedByCycle[cycle.key][rowIdx] ?? null;
+        acc[cycle.key] = {
+          cycleKey: cycle.key,
+          plan: plan
+            ? {
+                id: plan.id,
+                title: plan.title,
+                subtitle: plan.subtitle,
+                priceAmount: plan.price_amount,
+                currency: plan.currency,
+                durationLabel: formatDurationLabel(
+                  plan.duration_unit,
+                  plan.duration_value,
+                ),
+                resetRuleLabel: formatResetRuleLabel(plan.quota_reset_period),
+                totalAmount: plan.total_amount,
+              }
+            : null,
+          comingSoon: plan === null,
+        };
+        return acc;
+      },
+      {} as Record<
+        CycleKey,
+        { cycleKey: CycleKey; plan: any; comingSoon: boolean }
+      >,
+    );
 
     return {
       rank: rowIdx + 1,
@@ -82,38 +94,38 @@ const kv = await Deno.openKv();
 // ─── robots.txt ────────────────────────────────────────────────────────────
 const ROBOTS_TXT = `User-agent: *
 Allow: /
-Sitemap: https://fishxcode.com/sitemap.xml`;
+Sitemap: https://aicentos.com/sitemap.xml`;
 
 // ─── sitemap.xml ───────────────────────────────────────────────────────────
 const TODAY = new Date().toISOString().split("T")[0];
 const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fishxcode.com/</loc>
+    <loc>https://aicentos.com/</loc>
     <lastmod>${TODAY}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://doc.fishxcode.com/</loc>
+    <loc>https://doc.aicentos.com/</loc>
     <lastmod>${TODAY}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://doc.fishxcode.com/account</loc>
+    <loc>https://doc.aicentos.com/account</loc>
     <lastmod>${TODAY}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://doc.fishxcode.com/start</loc>
+    <loc>https://doc.aicentos.com/start</loc>
     <lastmod>${TODAY}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://doc.fishxcode.com/faq</loc>
+    <loc>https://doc.aicentos.com/faq</loc>
     <lastmod>${TODAY}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -122,8 +134,8 @@ const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
 
 // ─── manifest.json ─────────────────────────────────────────────────────────
 const MANIFEST_JSON = JSON.stringify({
-  name: "FishXCode - AI Coding 中转站",
-  short_name: "FishXCode",
+  name: "AICentOS - AI Coding 中转站",
+  short_name: "AICentOS",
   description: "支持 Claude、Codex 等主流 AI 模型的 Coding 中转站",
   start_url: "/",
   display: "standalone",
@@ -134,8 +146,8 @@ const MANIFEST_JSON = JSON.stringify({
   categories: ["productivity", "developer-tools"],
   icons: [
     {
-      src: "https://free.picui.cn/free/2026/02/11/698c585ee1b64.png",
-      sizes: "512x512",
+      src: "https://aicentos.com/img/logo.svg",
+      sizes: "192x192",
       type: "image/png",
       purpose: "any maskable",
     },
@@ -143,7 +155,7 @@ const MANIFEST_JSON = JSON.stringify({
 });
 
 // ─── sw.js ─────────────────────────────────────────────────────────────────
-const SW_JS = `const CACHE = 'fishxcode-v1';
+const SW_JS = `const CACHE = 'aicentos-v1';
 const SHELL = ['/'];
 
 self.addEventListener('install', e => {
@@ -167,7 +179,8 @@ self.addEventListener('fetch', e => {
 });`;
 
 const SUBSCRIPTION_API_URL = Deno.env.get("SUBSCRIPTION_API_URL") || "";
-const SUBSCRIPTION_ACCESS_TOKEN = Deno.env.get("SUBSCRIPTION_ACCESS_TOKEN") || "";
+const SUBSCRIPTION_ACCESS_TOKEN =
+  Deno.env.get("SUBSCRIPTION_ACCESS_TOKEN") || "";
 const SUBSCRIPTION_USER_ID = Deno.env.get("SUBSCRIPTION_USER_ID") || "";
 
 type SubscriptionPayload = {
@@ -209,7 +222,10 @@ async function fetchRemoteSubscriptionPlans(): Promise<RawSubscriptionPlan[]> {
   }
 }
 
-async function getSubscriptionPlans(): Promise<{ plans: RawSubscriptionPlan[]; source: "remote" | "local" | "empty" }> {
+async function getSubscriptionPlans(): Promise<{
+  plans: RawSubscriptionPlan[];
+  source: "remote" | "local" | "empty";
+}> {
   const remotePlans = await fetchRemoteSubscriptionPlans();
   if (remotePlans.length > 0) {
     return { plans: remotePlans, source: "remote" };
@@ -233,53 +249,54 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
+function buildHtml(visitCount: number): string {
+  return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- ═══ Primary SEO ═══ -->
-  <title>FishXCode · 订阅制 Claude Codex 国际中转站 | 个人/团队主打订阅包月制</title>
-  <meta name="description" content="FishXCode 是订阅制 Claude Codex 国际中转站，面向个人与团队，主打订阅包月制，同时支持天卡、周卡与月度订阅套餐。" />
-  <meta name="keywords" content="订阅制,Claude,Codex,国际中转站,包月,个人,团队,AI Coding,FishXCode" />
-  <meta name="author" content="FishXCode" />
+  <title>AICentOS · 订阅制 Claude Codex 国际中转站 | 个人/团队主打订阅包月制</title>
+  <meta name="description" content="AICentOS 是订阅制 Claude Codex 国际中转站，面向个人与团队，主打订阅包月制，同时支持天卡、周卡与月度订阅套餐。" />
+  <meta name="keywords" content="订阅制,Claude,Codex,国际中转站,包月,个人,团队,AI Coding,AICentOS" />
+  <meta name="author" content="AICentOS" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://fishxcode.com/" />
+  <link rel="canonical" href="https://aicentos.com/" />
 
   <!-- ═══ Favicon ═══ -->
-  <link rel="icon" type="image/png" href="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" />
-  <link rel="apple-touch-icon" href="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" />
+  <link rel="icon" type="image/png" href="https://aicentos.com/logo.svg" />
+  <link rel="apple-touch-icon" href="https://aicentos.com/logo.svg" />
 
   <!-- ═══ Open Graph ═══ -->
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="FishXCode" />
-  <meta property="og:title" content="FishXCode · 订阅制 Claude Codex 国际中转站" />
+  <meta property="og:site_name" content="AICentOS" />
+  <meta property="og:title" content="AICentOS · 订阅制 Claude Codex 国际中转站" />
   <meta property="og:description" content="主打订阅包月制，支持个人与团队订阅方案，覆盖天卡、周卡、月度套餐。" />
-  <meta property="og:image" content="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" />
+  <meta property="og:image" content="https://aicentos.com/logo.svg" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
-  <meta property="og:url" content="https://fishxcode.com/" />
+  <meta property="og:url" content="https://aicentos.com/" />
   <meta property="og:locale" content="zh_CN" />
 
   <!-- ═══ Twitter / X Card ═══ -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="@fishxcode" />
-  <meta name="twitter:title" content="FishXCode · 订阅制 Claude Codex 国际中转站" />
+  <meta name="twitter:site" content="@aicentos" />
+  <meta name="twitter:title" content="AICentOS · 订阅制 Claude Codex 国际中转站" />
   <meta name="twitter:description" content="主打订阅包月制，面向个人与团队的 Claude/Codex 国际中转订阅服务。" />
-  <meta name="twitter:image" content="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" />
+  <meta name="twitter:image" content="https://aicentos.com/logo.svg" />
 
   <!-- ═══ Schema.org JSON-LD ═══ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "FishXCode",
-    "url": "https://fishxcode.com/",
+    "name": "AICentOS",
+    "url": "https://aicentos.com/",
     "description": "AI Coding 中转站，支持 Claude、Codex 等主流模型",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://doc.fishxcode.com/?q={search_term_string}",
+      "target": "https://doc.aicentos.com/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
@@ -291,7 +308,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="FishXCode" />
+  <meta name="apple-mobile-web-app-title" content="AICentOS" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -845,7 +862,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       } catch(e) {}
 
       // 监听父窗口 postMessage：主题同步 + 语言同步
-      // fishxcode.com 发送 {themeMode:'dark'|'light'} 和 {lang:'zh-CN'|'en'|...}
+      // aicentos.com 发送 {themeMode:'dark'|'light'} 和 {lang:'zh-CN'|'en'|...}
       window.addEventListener('message', function(e) {
         if (e.data && typeof e.data === 'object') {
           if ('themeMode' in e.data) {
@@ -872,22 +889,22 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <a href="https://fishxcode.com/" target="_blank" class="flex items-center gap-2.5 group" style="text-decoration:none">
+        <a href="https://aicentos.com/" target="_blank" class="flex items-center gap-2.5 group" style="text-decoration:none">
           <div class="w-9 h-9 rounded-xl grad-bg flex items-center justify-center text-white font-black text-base shadow-md group-hover:scale-105 transition-transform">
             F
           </div>
-          <span class="font-bold text-gray-900 text-base hidden sm:block">FishXCode</span>
+          <span class="font-bold text-gray-900 text-base hidden sm:block">AICentOS</span>
         </a>
 
         <!-- Nav Links -->
         <div class="flex items-center gap-2 sm:gap-4">
-          <a href="https://doc.fishxcode.com/" target="_blank" class="text-gray-600 hover:text-purple-700 transition text-sm font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
+          <a href="https://doc.aicentos.com/" target="_blank" class="text-gray-600 hover:text-purple-700 transition text-sm font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
             <span data-i18n="nav.docs">文档</span>
           </a>
-          <a href="https://doc.fishxcode.com/start" target="_blank" class="text-gray-600 hover:text-purple-700 transition text-sm font-medium px-3 py-2 rounded-lg hover:bg-purple-50 hidden sm:block">
+          <a href="https://doc.aicentos.com/start" target="_blank" class="text-gray-600 hover:text-purple-700 transition text-sm font-medium px-3 py-2 rounded-lg hover:bg-purple-50 hidden sm:block">
             <span data-i18n="nav.start">快速开始</span>
           </a>
-          <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="btn-primary text-sm" style="padding:10px 22px">
+          <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="btn-primary text-sm" style="padding:10px 22px">
             <span data-i18n="nav.enter">进入平台</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -932,11 +949,11 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
 
       <!-- CTA Buttons -->
       <div class="anim-fade-up delay-3 flex flex-col sm:flex-row gap-4 justify-center mb-16">
-        <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="btn-primary text-base" style="padding:16px 36px;justify-content:center">
+        <a href="https://aicentos.com/register" target="_blank" class="btn-primary text-base" style="padding:16px 36px;justify-content:center">
           <span data-i18n="hero.btn1">立即注册，按需订阅</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-        <a href="https://doc.fishxcode.com/" target="_blank" class="btn-ghost text-base" style="padding:14px 36px;justify-content:center">
+        <a href="https://doc.aicentos.com/" target="_blank" class="btn-ghost text-base" style="padding:14px 36px;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span data-i18n="hero.btn2">查看使用文档</span>
         </a>
@@ -969,7 +986,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       <div class="anim-fade-up delay-4 mb-10">
         <p class="text-gray-400 text-xs mb-2 tracking-wide"><span data-i18n="hero.urlHint">▸ 替换 Base URL 即可接入</span></p>
         <div class="url-bar">
-          <span class="url-bar-text" id="apiUrl">https://fishxcode.com</span>
+          <span class="url-bar-text" id="apiUrl">https://aicentos.com</span>
           <button class="url-bar-btn" id="copyBtn" onclick="copyUrl()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span data-i18n="hero.copy">复制</span>
@@ -988,7 +1005,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           </div>
           <div class="terminal-body">
             <p><span class="cm" data-i18n="terminal.comment">// 配置 Claude Code（只需两行）</span></p>
-            <p><span class="kw">export</span> <span class="var">ANTHROPIC_BASE_URL</span><span class="op">=</span><span class="str">"https://fishxcode.com"</span></p>
+            <p><span class="kw">export</span> <span class="var">ANTHROPIC_BASE_URL</span><span class="op">=</span><span class="str">"https://aicentos.com"</span></p>
             <p><span class="kw">export</span> <span class="var">ANTHROPIC_API_KEY</span><span class="op">=</span><span class="str">"sk-..."</span></p>
             <p></p>
             <p><span class="cm" data-i18n="terminal.start"># 开始编码</span></p>
@@ -1021,7 +1038,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       </div>
 
       <div class="text-center mt-8">
-        <a href="https://fishxcode.com/console/topup" target="_blank" class="btn-primary text-base" style="padding:14px 34px;justify-content:center">
+        <a href="https://aicentos.com/console/topup" target="_blank" class="btn-primary text-base" style="padding:14px 34px;justify-content:center">
           <span data-i18n="sub.cta">前往充值并选择订阅套餐</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -1037,7 +1054,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       <div class="text-center mb-16 reveal">
         <span class="badge mb-4" data-i18n="feat.badge">核心优势</span>
         <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4" data-i18n="feat.title">
-          为什么开发者选择 FishXCode？
+          为什么开发者选择 AICentOS？
         </h2>
         <p class="text-gray-500 text-lg max-w-xl mx-auto" data-i18n="feat.desc">
           专为 AI Coding 场景打磨，省去一切繁琐配置
@@ -1081,7 +1098,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           <span class="text-xs text-gray-400 font-semibold tracking-wider uppercase" data-i18n="brand.claude.label">Anthropic</span>
           <h4 class="text-lg font-bold text-gray-900 mt-1 mb-2">Claude Code</h4>
           <p class="text-gray-500 text-sm leading-relaxed" data-i18n="brand.claude.desc">代码执行能力强劲，高效理解需求，快速生成精准代码</p>
-          <a href="https://doc.fishxcode.com/start" target="_blank" class="inline-flex items-center gap-1 text-purple-600 text-sm font-semibold mt-4 hover:underline">
+          <a href="https://doc.aicentos.com/start" target="_blank" class="inline-flex items-center gap-1 text-purple-600 text-sm font-semibold mt-4 hover:underline">
             <span data-i18n="brand.guide">接入指南</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -1094,7 +1111,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           <span class="text-xs text-gray-400 font-semibold tracking-wider uppercase" data-i18n="brand.codex.label">OpenAI</span>
           <h4 class="text-lg font-bold text-gray-900 mt-1 mb-2">OpenAI Codex</h4>
           <p class="text-gray-500 text-sm leading-relaxed" data-i18n="brand.codex.desc">深度思考模式，慢工出细活，复杂逻辑处理更严谨</p>
-          <a href="https://doc.fishxcode.com/codex" target="_blank" class="inline-flex items-center gap-1 text-purple-600 text-sm font-semibold mt-4 hover:underline">
+          <a href="https://doc.aicentos.com/codex" target="_blank" class="inline-flex items-center gap-1 text-purple-600 text-sm font-semibold mt-4 hover:underline">
             <span data-i18n="brand.guide">接入指南</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -1135,7 +1152,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           </div>
           <div class="mt-6 pt-6 border-t border-purple-50">
             <p class="text-sm text-gray-400"><span data-i18n="compat.more">更多工具持续接入中，欢迎提交建议 →</span>
-              <a href="https://fishxcode.com/" target="_blank" class="text-purple-600 hover:underline font-medium" data-i18n="compat.enterPlatform">进入平台</a>
+              <a href="https://aicentos.com/" target="_blank" class="text-purple-600 hover:underline font-medium" data-i18n="compat.enterPlatform">进入平台</a>
             </p>
           </div>
         </div>
@@ -1153,7 +1170,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
               <div class="step-num">1</div>
               <div>
                 <p class="font-semibold text-gray-800" data-i18n="step1.title">注册账户</p>
-                <p class="text-gray-500 text-sm mt-0.5" data-i18n-html="step1.desc">访问 <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 注册，几秒即可完成</p>
+                <p class="text-gray-500 text-sm mt-0.5" data-i18n-html="step1.desc">访问 <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> 注册，几秒即可完成</p>
               </div>
             </li>
             <li class="flex gap-4 items-start">
@@ -1167,7 +1184,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
               <div class="step-num">3</div>
               <div>
                 <p class="font-semibold text-gray-800" data-i18n="step3.title">配置你的工具</p>
-                <p class="text-gray-500 text-sm mt-0.5" data-i18n-html="step3.desc">参考 <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">接入指南</a>，将 Base URL 和 Key 填入对应工具</p>
+                <p class="text-gray-500 text-sm mt-0.5" data-i18n-html="step3.desc">参考 <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">接入指南</a>，将 Base URL 和 Key 填入对应工具</p>
               </div>
             </li>
             <li class="flex gap-4 items-start">
@@ -1227,7 +1244,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
 
             <div class="mt-6 pt-5 border-t border-amber-200 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
               <p class="text-gray-600 text-sm" data-i18n="mig.contact.hint">需要迁移帮助或有其他问题？</p>
-              <a href="mailto:support@fishxcode.com" class="btn-primary text-sm" style="padding:10px 22px;background:linear-gradient(135deg,#f59e0b,#f97316);box-shadow:0 4px 14px rgba(245,158,11,0.35)">
+              <a href="mailto:support@aicentos.com" class="btn-primary text-sm" style="padding:10px 22px;background:linear-gradient(135deg,#f59e0b,#f97316);box-shadow:0 4px 14px rgba(245,158,11,0.35)">
                 <span data-i18n="mig.contact.btn">联系客服</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </a>
@@ -1250,14 +1267,14 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           随时出发，AI 助力编码
         </h2>
         <p class="text-gray-500 text-lg mb-10 max-w-xl mx-auto" data-i18n="cta.desc">
-          数千位开发者已在使用 FishXCode，现在加入，体验更高效的 AI 工作流
+          数千位开发者已在使用 AICentOS，现在加入，体验更高效的 AI 工作流
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="https://fishxcode.com/" target="_blank" class="btn-primary text-base" style="padding:16px 40px;justify-content:center">
+          <a href="https://aicentos.com/" target="_blank" class="btn-primary text-base" style="padding:16px 40px;justify-content:center">
             <span data-i18n="cta.btn1">立即注册，按需订阅</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="https://doc.fishxcode.com/account" target="_blank" class="btn-ghost text-base" style="padding:14px 36px;justify-content:center">
+          <a href="https://doc.aicentos.com/account" target="_blank" class="btn-ghost text-base" style="padding:14px 36px;justify-content:center">
             <span data-i18n="cta.btn2">查看接入文档</span>
           </a>
         </div>
@@ -1276,7 +1293,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <div class="sm:col-span-2 lg:col-span-1">
           <div class="flex items-center gap-2.5 mb-4">
             <div class="w-9 h-9 rounded-xl grad-bg flex items-center justify-center text-white font-black text-base">F</div>
-            <span class="font-bold text-white text-lg">FishXCode</span>
+            <span class="font-bold text-white text-lg">AICentOS</span>
           </div>
           <p style="color:#e0c870;font-size:14px;line-height:1.7;white-space:pre-line" data-i18n="footer.brand">AI Coding 中转站
 连接全球顶尖 AI 模型
@@ -1287,9 +1304,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <div>
           <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider" data-i18n="footer.product">产品</h4>
           <ul class="space-y-2.5">
-            <li><a href="https://fishxcode.com/" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.home">平台首页</a></li>
-            <li><a href="https://fishxcode.com/console" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.console">控制台</a></li>
-            <li><a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.register">立即注册</a></li>
+            <li><a href="https://aicentos.com/" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.home">平台首页</a></li>
+            <li><a href="https://aicentos.com/console" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.console">控制台</a></li>
+            <li><a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.register">立即注册</a></li>
           </ul>
         </div>
 
@@ -1297,9 +1314,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <div>
           <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider" data-i18n="footer.resources">资源</h4>
           <ul class="space-y-2.5">
-            <li><a href="https://doc.fishxcode.com/faq" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.faq">常见问题</a></li>
-            <li><a href="https://doc.fishxcode.com/models" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.models">支持的模型</a></li>
-            <li><a href="https://doc.fishxcode.com/changelog" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.changelog">更新日志</a></li>
+            <li><a href="https://doc.aicentos.com/faq" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.faq">常见问题</a></li>
+            <li><a href="https://doc.aicentos.com/models" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.models">支持的模型</a></li>
+            <li><a href="https://doc.aicentos.com/changelog" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.changelog">更新日志</a></li>
           </ul>
         </div>
 
@@ -1307,27 +1324,27 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         <div>
           <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider" data-i18n="footer.support">支持</h4>
           <ul class="space-y-2.5">
-            <li>
-              <a href="https://pre.fishxcode.com/qq_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
-                QQ群：373865837（查看二维码）
+            <!-- <li>
+               <a href="https://pre.aicentos.com/qq_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+                 QQ群：（查看二维码）
+               </a>
+             </li>
+            <li> -->
+              <a href="https://pre.aicentos.com/fishxcode_user.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+                微信号：oiovdev（查看二维码）
               </a>
             </li>
             <li>
-              <a href="https://pre.fishxcode.com/fishxcode_user.jpg" target="_blank" class="foot-link" style="color:#e0c870">
-                微信号：fishxcode（查看二维码）
-              </a>
-            </li>
-            <li>
-              <a href="https://pre.fishxcode.com/wechat_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+              <a href="https://pre.aicentos.com/wechat_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
                 微信群（查看二维码）
               </a>
             </li>
-            <li>
-              <a href="https://pre.fishxcode.com/qq.png" target="_blank" class="foot-link" style="color:#e0c870">
-                QQ客服：2013571175（查看二维码）
-              </a>
-            </li>
-            <li><a href="mailto:support@fishxcode.com" class="foot-link" style="color:#e0c870" data-i18n="footer.cs">联系客服邮箱</a></li>
+           <!-- <li>
+               <a href="https://pre.aicentos.com/qq.png" target="_blank" class="foot-link" style="color:#e0c870">
+                QQ客服：（查看二维码）
+               </a>
+             </li> -->
+            <li><a href="mailto:support@aicentos.com" class="foot-link" style="color:#e0c870" data-i18n="footer.cs">联系客服邮箱</a></li>
           </ul>
         </div>
       </div>
@@ -1338,7 +1355,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
       <!-- Bottom -->
       <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
         <div style="color:#6272a4;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span>&copy; 2026 FishXCode. All rights reserved.</span>
+          <span>&copy; 2026 AICentOS. All rights reserved.</span>
           <span style="color:#374163">·</span>
           <span><span data-i18n="footer.visits.prefix">累计访问</span>
             <span style="color:#e0c870;font-weight:700">${visitCount.toLocaleString()}</span>
@@ -1346,10 +1363,10 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
           </span>
         </div>
         <div class="flex flex-wrap gap-5 justify-center">
-          <a href="https://doc.fishxcode.com/terms" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.terms">用户协议</a>
-          <a href="https://doc.fishxcode.com/privacy" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.privacy">隐私政策</a>
-          <a href="mailto:support@fishxcode.com" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.contact">联系我们</a>
-          <a href="https://github.com/fishxcode" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px">GitHub</a>
+          <a href="https://doc.aicentos.com/terms" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.terms">用户协议</a>
+          <a href="https://doc.aicentos.com/privacy" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.privacy">隐私政策</a>
+          <a href="mailto:support@aicentos.com" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.contact">联系我们</a>
+          <!-- <a href="https://github.com/fishxcode" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px">GitHub</a> -->
         </div>
       </div>
     </div>
@@ -1372,7 +1389,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'sub.validity':'有效期','sub.resetRule':'重置规则','sub.totalAmount':'总额度',
         'sub.cycle.daily':'天订阅','sub.cycle.weekly':'周订阅','sub.cycle.monthly':'月订阅',
         'sub.audience.personal':'个人','sub.audience.team':'团队','sub.audience.enterprise':'企业',
-        'feat.badge':'核心优势','feat.title':'为什么开发者选择 FishXCode？',
+        'feat.badge':'核心优势','feat.title':'为什么开发者选择 AICentOS？',
         'feat.desc':'专为 AI Coding 场景打磨，省去一切繁琐配置',
         'feat.f1.title':'极致编码提效','feat.f1.desc':'专为程序员优化的响应链路，支持流式输出，让代码生成几乎零感知延迟',
         'feat.f2.title':'多端完美适配','feat.f2.desc':'完美集成 Claude  Code、Codex 等生产力工具，一键替换 API 地址即可起飞',
@@ -1389,7 +1406,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'旧平台未使用额度，同等迁移至新平台',
         'mig.item2.title':'专属客服，全程协助迁移',
         'cta.title':'随时出发，AI 助力编码',
-        'cta.desc':'数千位开发者已在使用 FishXCode，现在加入，体验更高效的 AI 工作流',
+        'cta.desc':'数千位开发者已在使用 AICentOS，现在加入，体验更高效的 AI 工作流',
         'cta.btn1':'立即注册，按需订阅','cta.btn2':'查看接入文档',
         'footer.product':'产品','footer.resources':'资源','footer.support':'支持',
         'footer.home':'平台首页','footer.console':'控制台','footer.register':'立即注册',
@@ -1397,9 +1414,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'联系客服','footer.status':'服务状态','footer.quota':'额度查询',
         'footer.terms':'用户协议','footer.privacy':'隐私政策','footer.contact':'联系我们',
         'terminal.comment':'// 配置 Claude  Code（只需两行）','terminal.start':'# 开始编码',
-        'step1.desc':'访问 <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 注册，几秒即可完成',
+        'step1.desc':'访问 <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> 注册，几秒即可完成',
         'step2.desc':'在账户设置中一键生成专属 API Key',
-        'step3.desc':'参考 <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">接入指南</a>，将 Base URL 和 Key 填入对应工具',
+        'step3.desc':'参考 <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">接入指南</a>，将 Base URL 和 Key 填入对应工具',
         'step4.desc':'一切就绪，享受 AI Coding 加持的开发体验',
         'mig.item1.desc':'无论余额多少，全部等值迁移，您的每一分投入都不会浪费',
         'mig.item2.desc':'遇到任何疑问，联系客服即可，我们帮您一对一处理',
@@ -1417,7 +1434,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'hero.btn1':'免費註冊，立即使用','hero.btn2':'查看使用文檔',
         'hero.stat1':'低延遲響應','hero.stat2':'多模型切換','hero.stat3':'全工具支援',
         'hero.urlHint':'▸ 替換 Base URL 即可接入','hero.copy':'複製','hero.copied':'已複製',
-        'feat.badge':'核心優勢','feat.title':'為什麼開發者選擇 FishXCode？',
+        'feat.badge':'核心優勢','feat.title':'為什麼開發者選擇 AICentOS？',
         'feat.desc':'專為 AI Coding 場景打磨，省去一切繁瑣配置',
         'feat.f1.title':'極致編碼提效','feat.f1.desc':'專為程式設計師最佳化的響應鏈路，支援串流輸出，讓程式碼生成幾乎零感知延遲',
         'feat.f2.title':'多端完美適配','feat.f2.desc':'完美整合 Claude  Code、Codex 等生產力工具，一鍵替換 API 地址即可起飛',
@@ -1434,7 +1451,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'舊平台未使用額度，等同遷移至新平台',
         'mig.item2.title':'專屬客服，全程協助遷移',
         'cta.title':'隨時出發，AI 助力編碼',
-        'cta.desc':'數千位開發者已在使用 FishXCode，現在加入，體驗更高效的 AI 工作流',
+        'cta.desc':'數千位開發者已在使用 AICentOS，現在加入，體驗更高效的 AI 工作流',
         'cta.btn1':'免費註冊並使用','cta.btn2':'查看接入文檔',
         'footer.product':'產品','footer.resources':'資源','footer.support':'支援',
         'footer.home':'平台首頁','footer.console':'控制台','footer.register':'立即註冊',
@@ -1442,9 +1459,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'聯繫客服','footer.status':'服務狀態','footer.quota':'額度查詢',
         'footer.terms':'用戶協議','footer.privacy':'隱私政策','footer.contact':'聯繫我們',
         'terminal.comment':'// 設定 Claude  Code（只需兩行）','terminal.start':'# 開始編碼',
-        'step1.desc':'訪問 <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 註冊，幾秒即可完成',
+        'step1.desc':'訪問 <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> 註冊，幾秒即可完成',
         'step2.desc':'在帳戶設定中一鍵生成專屬 API Key',
-        'step3.desc':'參考 <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">接入指南</a>，將 Base URL 和 Key 填入對應工具',
+        'step3.desc':'參考 <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">接入指南</a>，將 Base URL 和 Key 填入對應工具',
         'step4.desc':'一切就緒，享受 AI Coding 加持的開發體驗',
         'mig.item1.desc':'無論餘額多少，全部等值遷移，您的每一分投入都不會浪費',
         'mig.item2.desc':'遇到任何疑問，聯繫客服即可，我們幫您一對一處理',
@@ -1467,7 +1484,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'sub.validity':'Validity','sub.resetRule':'Reset Rule','sub.totalAmount':'Total Quota',
         'sub.cycle.daily':'Daily','sub.cycle.weekly':'Weekly','sub.cycle.monthly':'Monthly',
         'sub.audience.personal':'Personal','sub.audience.team':'Team','sub.audience.enterprise':'Enterprise',
-        'feat.badge':'Key Advantages','feat.title':'Why FishXCode?',
+        'feat.badge':'Key Advantages','feat.title':'Why AICentOS?',
         'feat.desc':'Built for AI Coding. Maximum performance and stability.',
         'feat.f1.title':'Blazing Fast','feat.f1.desc':'Optimized response pipeline with streaming support for near-zero perceived latency.',
         'feat.f2.title':'Universal Compatibility','feat.f2.desc':'Seamlessly integrates with Claude  Code and Codex. Just swap the API URL.',
@@ -1484,7 +1501,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'Unused credits transferred at equal value',
         'mig.item2.title':'Dedicated support throughout migration',
         'cta.title':'Start Now. AI-Powered Coding.',
-        'cta.desc':'Thousands of developers use FishXCode. Join now for a more efficient AI workflow.',
+        'cta.desc':'Thousands of developers use AICentOS. Join now for a more efficient AI workflow.',
         'cta.btn1':'Sign Up Free','cta.btn2':'View Setup Docs',
         'footer.product':'Product','footer.resources':'Resources','footer.support':'Support',
         'footer.home':'Home','footer.console':'Console','footer.register':'Register',
@@ -1492,9 +1509,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'Contact Support','footer.status':'Status','footer.quota':'Usage Checker',
         'footer.terms':'Terms','footer.privacy':'Privacy','footer.contact':'Contact Us',
         'terminal.comment':'// Setup Claude  Code (just 2 lines)','terminal.start':'# Start coding',
-        'step1.desc':'Visit <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> to sign up — takes just seconds',
+        'step1.desc':'Visit <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> to sign up — takes just seconds',
         'step2.desc':'Generate your API Key in account settings with one click',
-        'step3.desc':'Follow the <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">Setup Guide</a> to configure Base URL and Key',
+        'step3.desc':'Follow the <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">Setup Guide</a> to configure Base URL and Key',
         'step4.desc':'All set! Enjoy AI-powered coding experience',
         'mig.item1.desc':'All remaining credits transferred at equal value — nothing wasted',
         'mig.item2.desc':'Got questions? Contact support for one-on-one assistance',
@@ -1512,7 +1529,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'hero.btn1':'Inscription gratuite','hero.btn2':'Documentation',
         'hero.stat1':'Faible latence','hero.stat2':'Multi-modèle','hero.stat3':'Tous les outils',
         'hero.urlHint':"▸ Remplacez l'URL de base","hero.copy":'Copier','hero.copied':'Copié !',
-        'feat.badge':'Avantages clés','feat.title':'Pourquoi FishXCode ?',
+        'feat.badge':'Avantages clés','feat.title':'Pourquoi AICentOS ?',
         'feat.desc':'Conçu pour le AI Coding. Performance et stabilité maximales.',
         'feat.f1.title':'Faible latence','feat.f1.desc':'Pipeline de réponse optimisé pour les développeurs avec support du streaming.',
         'feat.f2.title':'Compatibilité universelle','feat.f2.desc':"Intégration parfaite avec Claude  Code et Codex. Changez l'URL API.",
@@ -1529,7 +1546,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'Crédits inutilisés transférés à valeur égale',
         'mig.item2.title':'Support dédié tout au long de la migration',
         'cta.title':'Partez maintenant. Codez avec IA.',
-        'cta.desc':'Des milliers de développeurs utilisent FishXCode. Rejoignez-les.',
+        'cta.desc':'Des milliers de développeurs utilisent AICentOS. Rejoignez-les.',
         'cta.btn1':"S'inscrire gratuitement",'cta.btn2':'Documentation',
         'footer.product':'Produit','footer.resources':'Ressources','footer.support':'Support',
         'footer.home':'Accueil','footer.console':'Console','footer.register':"S'inscrire",
@@ -1537,9 +1554,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'Support','footer.status':'Statut','footer.quota':"Vérifier l'usage",
         'footer.terms':'CGU','footer.privacy':'Confidentialité','footer.contact':'Contact',
         'terminal.comment':'// Configurer Claude  Code (2 lignes)','terminal.start':'# Commencer à coder',
-        'step1.desc':'Visitez <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> pour vous inscrire — quelques secondes',
+        'step1.desc':'Visitez <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> pour vous inscrire — quelques secondes',
         'step2.desc':"Générez votre clé API en un clic dans les paramètres du compte",
-        'step3.desc':'Suivez le <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">guide d\\'intégration</a> pour configurer Base URL et Key',
+        'step3.desc':'Suivez le <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">guide d\\'intégration</a> pour configurer Base URL et Key',
         'step4.desc':'Tout est prêt ! Profitez du développement assisté par IA',
         'mig.item1.desc':'Tous les crédits restants transférés à valeur égale — rien de perdu',
         'mig.item2.desc':'Des questions ? Contactez le support pour une assistance personnalisée',
@@ -1557,7 +1574,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'hero.btn1':'無料登録して使う','hero.btn2':'ドキュメントを見る',
         'hero.stat1':'低レイテンシ','hero.stat2':'マルチモデル','hero.stat3':'全ツール対応',
         'hero.urlHint':'▸ Base URL を置き換えて接続','hero.copy':'コピー','hero.copied':'コピー済み',
-        'feat.badge':'主な特長','feat.title':'FishXCode を選ぶ理由',
+        'feat.badge':'主な特長','feat.title':'AICentOS を選ぶ理由',
         'feat.desc':'AI Coding のために設計。最高のパフォーマンスと安定性。',
         'feat.f1.title':'高速レスポンス','feat.f1.desc':'開発者向けに最適化されたパイプライン。ストリーミング対応で遅延ほぼゼロ。',
         'feat.f2.title':'ユニバーサル対応','feat.f2.desc':'Claude  Code、Codex とシームレスに統合。API URL を変えるだけ。',
@@ -1574,7 +1591,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'旧プラットフォームの未使用クレジットを等価移行',
         'mig.item2.title':'移行全般を専任サポートが支援',
         'cta.title':'さあ出発。AI でコーディング。',
-        'cta.desc':'数千人の開発者が FishXCode を使用中。今すぐ参加しましょう。',
+        'cta.desc':'数千人の開発者が AICentOS を使用中。今すぐ参加しましょう。',
         'cta.btn1':'無料で登録する','cta.btn2':'導入ドキュメント',
         'footer.product':'プロダクト','footer.resources':'リソース','footer.support':'サポート',
         'footer.home':'ホーム','footer.console':'コンソール','footer.register':'登録',
@@ -1582,9 +1599,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'サポートへ連絡','footer.status':'サービス状態','footer.quota':'使用量確認',
         'footer.terms':'利用規約','footer.privacy':'プライバシー','footer.contact':'お問い合わせ',
         'terminal.comment':'// Claude  Code を設定（2 行だけ）','terminal.start':'# コーディング開始',
-        'step1.desc':'<a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> でアカウント登録 — 数秒で完了',
+        'step1.desc':'<a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> でアカウント登録 — 数秒で完了',
         'step2.desc':'アカウント設定からワンクリックで API Key を発行',
-        'step3.desc':'<a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">導入ガイド</a>を参考に、Base URL と Key をツールに設定',
+        'step3.desc':'<a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">導入ガイド</a>を参考に、Base URL と Key をツールに設定',
         'step4.desc':'準備完了！AI 搭載のコーディング体験をお楽しみください',
         'mig.item1.desc':'残高はすべて等価で移行 — 無駄になりません',
         'mig.item2.desc':'ご不明な点はサポートまでお気軽にお問い合わせください',
@@ -1602,7 +1619,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'hero.btn1':'Зарегистрироваться бесплатно','hero.btn2':'Документация',
         'hero.stat1':'Низкая задержка','hero.stat2':'Мульти-модель','hero.stat3':'Все инструменты',
         'hero.urlHint':'▸ Замените Base URL для подключения','hero.copy':'Копировать','hero.copied':'Скопировано!',
-        'feat.badge':'Ключевые преимущества','feat.title':'Почему FishXCode?',
+        'feat.badge':'Ключевые преимущества','feat.title':'Почему AICentOS?',
         'feat.desc':'Создан для AI Coding. Максимальная производительность и стабильность.',
         'feat.f1.title':'Низкая задержка','feat.f1.desc':'Оптимизированный конвейер для разработчиков с поддержкой стриминга.',
         'feat.f2.title':'Универсальная совместимость','feat.f2.desc':'Интеграция с Claude  Code и Codex. Просто замените URL API.',
@@ -1619,7 +1636,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'Неиспользованные кредиты перенесены по равной стоимости',
         'mig.item2.title':'Персональная поддержка на всём пути миграции',
         'cta.title':'Начните сейчас. Кодирование с AI.',
-        'cta.desc':'Тысячи разработчиков уже используют FishXCode. Присоединяйтесь.',
+        'cta.desc':'Тысячи разработчиков уже используют AICentOS. Присоединяйтесь.',
         'cta.btn1':'Зарегистрироваться','cta.btn2':'Документация по настройке',
         'footer.product':'Продукт','footer.resources':'Ресурсы','footer.support':'Поддержка',
         'footer.home':'Главная','footer.console':'Консоль','footer.register':'Регистрация',
@@ -1627,9 +1644,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'Поддержка','footer.status':'Статус','footer.quota':'Проверка лимитов',
         'footer.terms':'Условия','footer.privacy':'Конфиденциальность','footer.contact':'Контакты',
         'terminal.comment':'// Настройка Claude  Code (2 строки)','terminal.start':'# Начало кодирования',
-        'step1.desc':'Зарегистрируйтесь на <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> — за несколько секунд',
+        'step1.desc':'Зарегистрируйтесь на <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> — за несколько секунд',
         'step2.desc':'Сгенерируйте API-ключ в настройках аккаунта одним кликом',
-        'step3.desc':'Следуйте <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">руководству</a> для настройки Base URL и ключа',
+        'step3.desc':'Следуйте <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">руководству</a> для настройки Base URL и ключа',
         'step4.desc':'Всё готово! Наслаждайтесь разработкой с AI',
         'mig.item1.desc':'Все оставшиеся кредиты переносятся по равной стоимости — ничего не теряется',
         'mig.item2.desc':'Есть вопросы? Обратитесь в поддержку для персональной помощи',
@@ -1647,7 +1664,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'hero.btn1':'Đăng ký miễn phí','hero.btn2':'Xem tài liệu',
         'hero.stat1':'Độ trễ thấp','hero.stat2':'Đa mô hình','hero.stat3':'Mọi công cụ',
         'hero.urlHint':'▸ Thay Base URL để kết nối','hero.copy':'Sao chép','hero.copied':'Đã sao chép!',
-        'feat.badge':'Ưu điểm chính','feat.title':'Tại sao chọn FishXCode?',
+        'feat.badge':'Ưu điểm chính','feat.title':'Tại sao chọn AICentOS?',
         'feat.desc':'Được xây dựng cho AI Coding. Hiệu suất và độ ổn định tối đa.',
         'feat.f1.title':'Tốc độ cao','feat.f1.desc':'Pipeline phản hồi được tối ưu hóa cho lập trình viên, hỗ trợ streaming.',
         'feat.f2.title':'Tương thích toàn diện','feat.f2.desc':'Tích hợp hoàn hảo với Claude  Code và Codex. Chỉ cần đổi URL API.',
@@ -1664,7 +1681,7 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'mig.item1.title':'Tín dụng chưa dùng được chuyển với giá trị tương đương',
         'mig.item2.title':'Hỗ trợ riêng trong suốt quá trình di chuyển',
         'cta.title':'Bắt đầu ngay. Code với AI.',
-        'cta.desc':'Hàng nghìn lập trình viên đã sử dụng FishXCode. Tham gia ngay.',
+        'cta.desc':'Hàng nghìn lập trình viên đã sử dụng AICentOS. Tham gia ngay.',
         'cta.btn1':'Đăng ký miễn phí','cta.btn2':'Xem tài liệu tích hợp',
         'footer.product':'Sản phẩm','footer.resources':'Tài nguyên','footer.support':'Hỗ trợ',
         'footer.home':'Trang chủ','footer.console':'Bảng điều khiển','footer.register':'Đăng ký',
@@ -1672,9 +1689,9 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
         'footer.cs':'Hỗ trợ','footer.status':'Trạng thái','footer.quota':'Kiểm tra quota',
         'footer.terms':'Điều khoản','footer.privacy':'Quyền riêng tư','footer.contact':'Liên hệ',
         'terminal.comment':'// Cấu hình Claude  Code (chỉ 2 dòng)','terminal.start':'# Bắt đầu code',
-        'step1.desc':'Truy cập <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> để đăng ký — chỉ vài giây',
+        'step1.desc':'Truy cập <a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> để đăng ký — chỉ vài giây',
         'step2.desc':'Tạo API Key trong cài đặt tài khoản chỉ với một cú nhấp',
-        'step3.desc':'Theo <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">hướng dẫn tích hợp</a> để cấu hình Base URL và Key',
+        'step3.desc':'Theo <a href="https://doc.aicentos.com/start" target="_blank" class="text-purple-600 hover:underline">hướng dẫn tích hợp</a> để cấu hình Base URL và Key',
         'step4.desc':'Sẵn sàng! Tận hưởng trải nghiệm lập trình với AI',
         'mig.item1.desc':'Tất cả tín dụng còn lại được chuyển với giá trị tương đương — không lãng phí',
         'mig.item2.desc':'Có thắc mắc? Liên hệ hỗ trợ để được tư vấn riêng',
@@ -1865,55 +1882,65 @@ function buildHtml(visitCount: number): string { return `<!DOCTYPE html>
     }
   </script>
 </body>
-</html>`; }
+</html>`;
+}
 
-Deno.serve(
-  { port, hostname: "0.0.0.0" },
-  async (req) => {
-    const path = new URL(req.url).pathname;
+Deno.serve({ port, hostname: "0.0.0.0" }, async (req) => {
+  const path = new URL(req.url).pathname;
 
-    if (path === "/robots.txt") {
-      return new Response(ROBOTS_TXT, {
-        headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=86400" },
-      });
-    }
-
-    if (path === "/sitemap.xml") {
-      return new Response(SITEMAP_XML, {
-        headers: { "content-type": "application/xml; charset=utf-8", "cache-control": "public, max-age=3600" },
-      });
-    }
-
-    if (path === "/manifest.json") {
-      return new Response(MANIFEST_JSON, {
-        headers: { "content-type": "application/manifest+json; charset=utf-8", "cache-control": "public, max-age=86400" },
-      });
-    }
-
-    if (path === "/sw.js") {
-      return new Response(SW_JS, {
-        headers: { "content-type": "application/javascript; charset=utf-8", "cache-control": "no-cache" },
-      });
-    }
-
-    if (path === "/api/subscription-matrix") {
-      const { plans, source } = await getSubscriptionPlans();
-      const matrix = buildSubscriptionMatrix(plans);
-      return jsonResponse({ success: true, source, matrix });
-    }
-
-    // 主页 — 原子递增访问计数
-    await kv.atomic()
-      .mutate({ type: "sum", key: ["visits"], value: new Deno.KvU64(1n) })
-      .commit();
-    const entry = await kv.get<Deno.KvU64>(["visits"]);
-    const visitCount = Number(entry.value?.value ?? 1n);
-
-    return new Response(buildHtml(visitCount), {
-      headers: { "content-type": "text/html; charset=utf-8" },
+  if (path === "/robots.txt") {
+    return new Response(ROBOTS_TXT, {
+      headers: {
+        "content-type": "text/plain; charset=utf-8",
+        "cache-control": "public, max-age=86400",
+      },
     });
-  },
-);
+  }
 
-console.log("FishXCode landing page → http://localhost:" + port);
+  if (path === "/sitemap.xml") {
+    return new Response(SITEMAP_XML, {
+      headers: {
+        "content-type": "application/xml; charset=utf-8",
+        "cache-control": "public, max-age=3600",
+      },
+    });
+  }
 
+  if (path === "/manifest.json") {
+    return new Response(MANIFEST_JSON, {
+      headers: {
+        "content-type": "application/manifest+json; charset=utf-8",
+        "cache-control": "public, max-age=86400",
+      },
+    });
+  }
+
+  if (path === "/sw.js") {
+    return new Response(SW_JS, {
+      headers: {
+        "content-type": "application/javascript; charset=utf-8",
+        "cache-control": "no-cache",
+      },
+    });
+  }
+
+  if (path === "/api/subscription-matrix") {
+    const { plans, source } = await getSubscriptionPlans();
+    const matrix = buildSubscriptionMatrix(plans);
+    return jsonResponse({ success: true, source, matrix });
+  }
+
+  // 主页 — 原子递增访问计数
+  await kv
+    .atomic()
+    .mutate({ type: "sum", key: ["visits"], value: new Deno.KvU64(1n) })
+    .commit();
+  const entry = await kv.get<Deno.KvU64>(["visits"]);
+  const visitCount = Number(entry.value?.value ?? 1n);
+
+  return new Response(buildHtml(visitCount), {
+    headers: { "content-type": "text/html; charset=utf-8" },
+  });
+});
+
+console.log("AICentOS landing page → http://localhost:" + port);

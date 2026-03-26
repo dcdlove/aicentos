@@ -1,5 +1,5 @@
 /// <reference lib="deno.ns" />
-// FishXCode 升级维护页面 - Deno 单文件服务器
+// AICentOS 升级维护页面 - Deno 单文件服务器
 // 用法: deno run --allow-net --allow-env maintenance.deno.ts
 // 环境变量:
 //   PORT          - 监听端口 (默认 8001)
@@ -51,10 +51,10 @@ const LANG_LABELS: Record<string, string> = {
 
 const I18N: Record<string, I18nTexts> = {
   zh: {
-    title: "FishXCode - 系统升级维护中",
+    title: "AICentOS - 系统升级维护中",
     heading: "系统升级维护中",
     subtitle: "我们正在为您带来更好的体验",
-    desc: "FishXCode 正在进行系统升级，以提升服务稳定性和性能。升级期间所有服务暂时不可用，您的数据安全不会受到任何影响。",
+    desc: "AICentOS 正在进行系统升级，以提升服务稳定性和性能。升级期间所有服务暂时不可用，您的数据安全不会受到任何影响。",
     progress: "升级进度",
     eta: `预计维护时间约 ${ESTIMATED_MIN} 分钟`,
     status1: "备份数据",
@@ -62,21 +62,23 @@ const I18N: Record<string, I18nTexts> = {
     status3: "服务恢复",
     faq: "常见问题",
     faqQ1: "我的数据会丢失吗？",
-    faqA1: "不会。所有用户数据已在维护前完成备份，升级过程不会影响任何数据安全。",
+    faqA1:
+      "不会。所有用户数据已在维护前完成备份，升级过程不会影响任何数据安全。",
     faqQ2: "升级期间 API Key 还能用吗？",
-    faqA2: "升级期间 API 服务暂时不可用，升级完成后您的 Key 将自动恢复使用，无需重新配置。",
+    faqA2:
+      "升级期间 API 服务暂时不可用，升级完成后您的 Key 将自动恢复使用，无需重新配置。",
     faqQ3: "升级后需要重新登录吗？",
     faqA3: "不需要。您的登录状态和所有配置在升级后都将保持不变。",
     contact: "如有紧急问题，请联系",
-    footer: "FishXCode - AI Coding 中转站",
+    footer: "AICentOS - AI Coding 中转站",
     lightMode: "浅色",
     darkMode: "深色",
   },
   en: {
-    title: "FishXCode - System Maintenance",
+    title: "AICentOS - System Maintenance",
     heading: "System Upgrade in Progress",
     subtitle: "We're working to bring you a better experience",
-    desc: "FishXCode is undergoing a system upgrade to improve service stability and performance. All services are temporarily unavailable during this period. Your data remains safe and secure.",
+    desc: "AICentOS is undergoing a system upgrade to improve service stability and performance. All services are temporarily unavailable during this period. Your data remains safe and secure.",
     progress: "Upgrade Progress",
     eta: `Estimated maintenance time: ${ESTIMATED_MIN} minutes`,
     status1: "Data Backup",
@@ -84,21 +86,24 @@ const I18N: Record<string, I18nTexts> = {
     status3: "Service Recovery",
     faq: "FAQ",
     faqQ1: "Will I lose my data?",
-    faqA1: "No. All user data has been backed up before maintenance. The upgrade process will not affect data safety.",
+    faqA1:
+      "No. All user data has been backed up before maintenance. The upgrade process will not affect data safety.",
     faqQ2: "Can I use my API Key during the upgrade?",
-    faqA2: "API services are temporarily unavailable during the upgrade. Your Key will automatically resume working after completion — no reconfiguration needed.",
+    faqA2:
+      "API services are temporarily unavailable during the upgrade. Your Key will automatically resume working after completion — no reconfiguration needed.",
     faqQ3: "Do I need to log in again after the upgrade?",
-    faqA3: "No. Your login status and all configurations will remain intact after the upgrade.",
+    faqA3:
+      "No. Your login status and all configurations will remain intact after the upgrade.",
     contact: "For urgent issues, please contact",
-    footer: "FishXCode - AI Coding Hub",
+    footer: "AICentOS - AI Coding Hub",
     lightMode: "Light",
     darkMode: "Dark",
   },
   fr: {
-    title: "FishXCode - Maintenance du système",
+    title: "AICentOS - Maintenance du système",
     heading: "Mise à jour du système en cours",
     subtitle: "Nous travaillons pour vous offrir une meilleure expérience",
-    desc: "FishXCode effectue une mise à jour du système pour améliorer la stabilité et les performances. Tous les services sont temporairement indisponibles. Vos données restent en sécurité.",
+    desc: "AICentOS effectue une mise à jour du système pour améliorer la stabilité et les performances. Tous les services sont temporairement indisponibles. Vos données restent en sécurité.",
     progress: "Progression de la mise à jour",
     eta: `Durée estimée de la maintenance : ${ESTIMATED_MIN} minutes`,
     status1: "Sauvegarde",
@@ -106,21 +111,24 @@ const I18N: Record<string, I18nTexts> = {
     status3: "Récupération",
     faq: "Questions fréquentes",
     faqQ1: "Vais-je perdre mes données ?",
-    faqA1: "Non. Toutes les données ont été sauvegardées avant la maintenance. Le processus de mise à jour n'affectera pas la sécurité des données.",
+    faqA1:
+      "Non. Toutes les données ont été sauvegardées avant la maintenance. Le processus de mise à jour n'affectera pas la sécurité des données.",
     faqQ2: "Puis-je utiliser ma clé API pendant la mise à jour ?",
-    faqA2: "Les services API sont temporairement indisponibles. Votre clé reprendra automatiquement son fonctionnement après la mise à jour.",
+    faqA2:
+      "Les services API sont temporairement indisponibles. Votre clé reprendra automatiquement son fonctionnement après la mise à jour.",
     faqQ3: "Dois-je me reconnecter après la mise à jour ?",
-    faqA3: "Non. Votre état de connexion et toutes vos configurations seront préservés.",
+    faqA3:
+      "Non. Votre état de connexion et toutes vos configurations seront préservés.",
     contact: "Pour les questions urgentes, contactez",
-    footer: "FishXCode - Relais AI Coding",
+    footer: "AICentOS - Relais AI Coding",
     lightMode: "Clair",
     darkMode: "Sombre",
   },
   es: {
-    title: "FishXCode - Mantenimiento del sistema",
+    title: "AICentOS - Mantenimiento del sistema",
     heading: "Actualización del sistema en curso",
     subtitle: "Estamos trabajando para ofrecerte una mejor experiencia",
-    desc: "FishXCode está realizando una actualización del sistema para mejorar la estabilidad y el rendimiento. Todos los servicios no están disponibles temporalmente. Tus datos están seguros.",
+    desc: "AICentOS está realizando una actualización del sistema para mejorar la estabilidad y el rendimiento. Todos los servicios no están disponibles temporalmente. Tus datos están seguros.",
     progress: "Progreso de la actualización",
     eta: `Tiempo estimado de mantenimiento: ${ESTIMATED_MIN} minutos`,
     status1: "Respaldo",
@@ -128,21 +136,24 @@ const I18N: Record<string, I18nTexts> = {
     status3: "Recuperación",
     faq: "Preguntas frecuentes",
     faqQ1: "¿Perderé mis datos?",
-    faqA1: "No. Todos los datos fueron respaldados antes del mantenimiento. El proceso de actualización no afectará la seguridad de los datos.",
+    faqA1:
+      "No. Todos los datos fueron respaldados antes del mantenimiento. El proceso de actualización no afectará la seguridad de los datos.",
     faqQ2: "¿Puedo usar mi API Key durante la actualización?",
-    faqA2: "Los servicios API están temporalmente no disponibles. Tu Key se restaurará automáticamente al finalizar.",
+    faqA2:
+      "Los servicios API están temporalmente no disponibles. Tu Key se restaurará automáticamente al finalizar.",
     faqQ3: "¿Necesito iniciar sesión de nuevo después de la actualización?",
-    faqA3: "No. Tu estado de sesión y todas las configuraciones se mantendrán intactas.",
+    faqA3:
+      "No. Tu estado de sesión y todas las configuraciones se mantendrán intactas.",
     contact: "Para problemas urgentes, contacta a",
-    footer: "FishXCode - Estación de relevo AI Coding",
+    footer: "AICentOS - Estación de relevo AI Coding",
     lightMode: "Claro",
     darkMode: "Oscuro",
   },
   pt: {
-    title: "FishXCode - Manutenção do sistema",
+    title: "AICentOS - Manutenção do sistema",
     heading: "Atualização do sistema em andamento",
     subtitle: "Estamos trabalhando para oferecer uma melhor experiência",
-    desc: "O FishXCode está passando por uma atualização do sistema para melhorar a estabilidade e o desempenho. Todos os serviços estão temporariamente indisponíveis. Seus dados permanecem seguros.",
+    desc: "O AICentOS está passando por uma atualização do sistema para melhorar a estabilidade e o desempenho. Todos os serviços estão temporariamente indisponíveis. Seus dados permanecem seguros.",
     progress: "Progresso da atualização",
     eta: `Tempo estimado de manutenção: ${ESTIMATED_MIN} minutos`,
     status1: "Backup",
@@ -150,21 +161,24 @@ const I18N: Record<string, I18nTexts> = {
     status3: "Recuperação",
     faq: "Perguntas frequentes",
     faqQ1: "Vou perder meus dados?",
-    faqA1: "Não. Todos os dados foram salvos antes da manutenção. O processo de atualização não afetará a segurança dos dados.",
+    faqA1:
+      "Não. Todos os dados foram salvos antes da manutenção. O processo de atualização não afetará a segurança dos dados.",
     faqQ2: "Posso usar minha API Key durante a atualização?",
-    faqA2: "Os serviços API estão temporariamente indisponíveis. Sua Key será restaurada automaticamente após a conclusão.",
+    faqA2:
+      "Os serviços API estão temporariamente indisponíveis. Sua Key será restaurada automaticamente após a conclusão.",
     faqQ3: "Preciso fazer login novamente após a atualização?",
-    faqA3: "Não. Seu estado de login e todas as configurações permanecerão intactos.",
+    faqA3:
+      "Não. Seu estado de login e todas as configurações permanecerão intactos.",
     contact: "Para questões urgentes, entre em contato com",
-    footer: "FishXCode - Hub de AI Coding",
+    footer: "AICentOS - Hub de AI Coding",
     lightMode: "Claro",
     darkMode: "Escuro",
   },
   ja: {
-    title: "FishXCode - システムメンテナンス中",
+    title: "AICentOS - システムメンテナンス中",
     heading: "システムアップグレード中",
     subtitle: "より良い体験をお届けするために作業中です",
-    desc: "FishXCode はサービスの安定性とパフォーマンスを向上させるためにシステムアップグレードを実施中です。メンテナンス中はすべてのサービスが一時的に利用できません。データの安全性には影響ありません。",
+    desc: "AICentOS はサービスの安定性とパフォーマンスを向上させるためにシステムアップグレードを実施中です。メンテナンス中はすべてのサービスが一時的に利用できません。データの安全性には影響ありません。",
     progress: "アップグレード進捗",
     eta: `予想メンテナンス時間: 約${ESTIMATED_MIN}分`,
     status1: "データバックアップ",
@@ -172,21 +186,23 @@ const I18N: Record<string, I18nTexts> = {
     status3: "サービス復旧",
     faq: "よくある質問",
     faqQ1: "データは失われますか？",
-    faqA1: "いいえ。すべてのデータはメンテナンス前にバックアップ済みです。アップグレードはデータの安全性に影響しません。",
+    faqA1:
+      "いいえ。すべてのデータはメンテナンス前にバックアップ済みです。アップグレードはデータの安全性に影響しません。",
     faqQ2: "アップグレード中にAPIキーは使えますか？",
-    faqA2: "アップグレード中はAPIサービスが一時停止します。完了後は自動的に復旧し、再設定は不要です。",
+    faqA2:
+      "アップグレード中はAPIサービスが一時停止します。完了後は自動的に復旧し、再設定は不要です。",
     faqQ3: "アップグレード後に再ログインが必要ですか？",
     faqA3: "いいえ。ログイン状態と設定はそのまま維持されます。",
     contact: "緊急のお問い合わせは",
-    footer: "FishXCode - AI Coding ハブ",
+    footer: "AICentOS - AI Coding ハブ",
     lightMode: "ライト",
     darkMode: "ダーク",
   },
   ko: {
-    title: "FishXCode - 시스템 유지보수 중",
+    title: "AICentOS - 시스템 유지보수 중",
     heading: "시스템 업그레이드 진행 중",
     subtitle: "더 나은 경험을 위해 작업 중입니다",
-    desc: "FishXCode는 서비스 안정성과 성능을 향상시키기 위해 시스템 업그레이드를 진행하고 있습니다. 업그레이드 기간 동안 모든 서비스가 일시적으로 사용할 수 없습니다. 데이터 보안에는 영향이 없습니다.",
+    desc: "AICentOS는 서비스 안정성과 성능을 향상시키기 위해 시스템 업그레이드를 진행하고 있습니다. 업그레이드 기간 동안 모든 서비스가 일시적으로 사용할 수 없습니다. 데이터 보안에는 영향이 없습니다.",
     progress: "업그레이드 진행률",
     eta: `예상 유지보수 시간: 약 ${ESTIMATED_MIN}분`,
     status1: "데이터 백업",
@@ -194,21 +210,23 @@ const I18N: Record<string, I18nTexts> = {
     status3: "서비스 복구",
     faq: "자주 묻는 질문",
     faqQ1: "데이터가 손실되나요?",
-    faqA1: "아닙니다. 유지보수 전에 모든 데이터가 백업되었습니다. 업그레이드는 데이터 안전에 영향을 미치지 않습니다.",
+    faqA1:
+      "아닙니다. 유지보수 전에 모든 데이터가 백업되었습니다. 업그레이드는 데이터 안전에 영향을 미치지 않습니다.",
     faqQ2: "업그레이드 중에 API Key를 사용할 수 있나요?",
-    faqA2: "업그레이드 중에는 API 서비스가 일시 중단됩니다. 완료 후 자동으로 복구되며 재설정이 필요 없습니다.",
+    faqA2:
+      "업그레이드 중에는 API 서비스가 일시 중단됩니다. 완료 후 자동으로 복구되며 재설정이 필요 없습니다.",
     faqQ3: "업그레이드 후 다시 로그인해야 하나요?",
     faqA3: "아닙니다. 로그인 상태와 모든 설정이 그대로 유지됩니다.",
     contact: "긴급 문의는",
-    footer: "FishXCode - AI Coding 허브",
+    footer: "AICentOS - AI Coding 허브",
     lightMode: "라이트",
     darkMode: "다크",
   },
   ru: {
-    title: "FishXCode - Техническое обслуживание",
+    title: "AICentOS - Техническое обслуживание",
     heading: "Обновление системы",
     subtitle: "Мы работаем над улучшением вашего опыта",
-    desc: "FishXCode проходит обновление системы для повышения стабильности и производительности. Все сервисы временно недоступны. Ваши данные в полной безопасности.",
+    desc: "AICentOS проходит обновление системы для повышения стабильности и производительности. Все сервисы временно недоступны. Ваши данные в полной безопасности.",
     progress: "Прогресс обновления",
     eta: `Ожидаемое время обслуживания: ${ESTIMATED_MIN} минут`,
     status1: "Резервное копирование",
@@ -216,21 +234,23 @@ const I18N: Record<string, I18nTexts> = {
     status3: "Восстановление",
     faq: "Часто задаваемые вопросы",
     faqQ1: "Потеряю ли я данные?",
-    faqA1: "Нет. Все данные были сохранены перед обслуживанием. Обновление не повлияет на безопасность данных.",
+    faqA1:
+      "Нет. Все данные были сохранены перед обслуживанием. Обновление не повлияет на безопасность данных.",
     faqQ2: "Могу ли я использовать API Key во время обновления?",
-    faqA2: "Сервисы API временно недоступны. Ваш ключ автоматически возобновит работу после завершения обновления.",
+    faqA2:
+      "Сервисы API временно недоступны. Ваш ключ автоматически возобновит работу после завершения обновления.",
     faqQ3: "Нужно ли входить заново после обновления?",
     faqA3: "Нет. Ваш статус входа и все настройки сохранятся без изменений.",
     contact: "По срочным вопросам обращайтесь",
-    footer: "FishXCode - AI Coding Хаб",
+    footer: "AICentOS - AI Coding Хаб",
     lightMode: "Светлая",
     darkMode: "Тёмная",
   },
   vi: {
-    title: "FishXCode - Bảo trì hệ thống",
+    title: "AICentOS - Bảo trì hệ thống",
     heading: "Đang nâng cấp hệ thống",
     subtitle: "Chúng tôi đang cải thiện trải nghiệm cho bạn",
-    desc: "FishXCode đang tiến hành nâng cấp hệ thống để cải thiện độ ổn định và hiệu suất. Tất cả dịch vụ tạm thời không khả dụng. Dữ liệu của bạn vẫn an toàn.",
+    desc: "AICentOS đang tiến hành nâng cấp hệ thống để cải thiện độ ổn định và hiệu suất. Tất cả dịch vụ tạm thời không khả dụng. Dữ liệu của bạn vẫn an toàn.",
     progress: "Tiến độ nâng cấp",
     eta: `Thời gian bảo trì ước tính: ${ESTIMATED_MIN} phút`,
     status1: "Sao lưu dữ liệu",
@@ -238,13 +258,15 @@ const I18N: Record<string, I18nTexts> = {
     status3: "Khôi phục dịch vụ",
     faq: "Câu hỏi thường gặp",
     faqQ1: "Dữ liệu của tôi có bị mất không?",
-    faqA1: "Không. Tất cả dữ liệu đã được sao lưu trước khi bảo trì. Quá trình nâng cấp không ảnh hưởng đến an toàn dữ liệu.",
+    faqA1:
+      "Không. Tất cả dữ liệu đã được sao lưu trước khi bảo trì. Quá trình nâng cấp không ảnh hưởng đến an toàn dữ liệu.",
     faqQ2: "Tôi có thể sử dụng API Key trong khi nâng cấp không?",
-    faqA2: "Dịch vụ API tạm thời không khả dụng. Key của bạn sẽ tự động hoạt động trở lại sau khi hoàn tất.",
+    faqA2:
+      "Dịch vụ API tạm thời không khả dụng. Key của bạn sẽ tự động hoạt động trở lại sau khi hoàn tất.",
     faqQ3: "Tôi có cần đăng nhập lại sau khi nâng cấp không?",
     faqA3: "Không. Trạng thái đăng nhập và tất cả cấu hình sẽ được giữ nguyên.",
     contact: "Liên hệ khẩn cấp",
-    footer: "FishXCode - Trạm chuyển tiếp AI Coding",
+    footer: "AICentOS - Trạm chuyển tiếp AI Coding",
     lightMode: "Sáng",
     darkMode: "Tối",
   },
@@ -256,7 +278,9 @@ function detectLang(req: Request): string {
   if (param && I18N[param]) return param;
 
   const accept = req.headers.get("accept-language") || "";
-  const langs = accept.split(",").map((s) => s.split(";")[0].trim().toLowerCase());
+  const langs = accept
+    .split(",")
+    .map((s) => s.split(";")[0].trim().toLowerCase());
   for (const l of langs) {
     const short = l.split("-")[0];
     if (I18N[short]) return short;
@@ -289,8 +313,9 @@ function handleHealthCheck(): Response {
 // ─── 语言选项 HTML ───────────────────────────────────────────────────────────
 function renderLangOptions(currentLang: string): string {
   return Object.entries(LANG_LABELS)
-    .map(([code, label]) =>
-      `<option value="${code}"${code === currentLang ? " selected" : ""}>${label}</option>`
+    .map(
+      ([code, label]) =>
+        `<option value="${code}"${code === currentLang ? " selected" : ""}>${label}</option>`,
     )
     .join("");
 }
@@ -546,7 +571,7 @@ function renderPage(t: I18nTexts, lang: string): string {
 
   <div class="container">
     <!-- Logo -->
-    <img class="logo" src="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" alt="FishXCode" width="80" height="80">
+    <img class="logo" src="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" alt="AICentOS" width="80" height="80">
 
     <h1>${t.heading}</h1>
     <p class="subtitle">${t.subtitle}</p>
@@ -739,7 +764,7 @@ Deno.serve({ port: PORT }, (req: Request) => {
   });
 });
 
-console.log(`\n  FishXCode Maintenance Server`);
+console.log(`\n  AICentOS Maintenance Server`);
 console.log(`  ───────────────────────────`);
 console.log(`  Port:      ${PORT}`);
 console.log(`  ETA:       ${ESTIMATED_MIN} min`);
