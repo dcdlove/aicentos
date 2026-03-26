@@ -1306,7 +1306,7 @@ function buildHtml(visitCount: number): string {
           <ul class="space-y-2.5">
             <li><a href="https://aicentos.com/" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.home">平台首页</a></li>
             <li><a href="https://aicentos.com/console" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.console">控制台</a></li>
-            <li><a href="https://aicentos.com/register?aff=9CTW" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.register">立即注册</a></li>
+            <li><a href="https://www.aicentos.com/register?aff=Dptp" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.register">立即注册</a></li>
           </ul>
         </div>
 
@@ -1314,8 +1314,8 @@ function buildHtml(visitCount: number): string {
         <div>
           <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider" data-i18n="footer.resources">资源</h4>
           <ul class="space-y-2.5">
-            <li><a href="https://doc.aicentos.com/faq" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.faq">常见问题</a></li>
-            <li><a href="https://doc.aicentos.com/models" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.models">支持的模型</a></li>
+            <!-- <li><a href="https://doc.aicentos.com/faq" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.faq">常见问题</a></li> -->
+            <li><a href="https://www.aicentos.com/pricing" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.models">支持的模型</a></li>
             <li><a href="https://doc.aicentos.com/changelog" target="_blank" class="foot-link" style="color:#e0c870" data-i18n="footer.changelog">更新日志</a></li>
           </ul>
         </div>
@@ -1325,20 +1325,20 @@ function buildHtml(visitCount: number): string {
           <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider" data-i18n="footer.support">支持</h4>
           <ul class="space-y-2.5">
             <!-- <li>
-               <a href="https://pre.aicentos.com/qq_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+               <a href="" target="_blank" class="foot-link" style="color:#e0c870">
                  QQ群：（查看二维码）
                </a>
-             </li>
-            <li> -->
-              <a href="https://pre.aicentos.com/fishxcode_user.jpg" target="_blank" class="foot-link" style="color:#e0c870">
-                微信号：oiovdev（查看二维码）
+             </li> -->
+            <li>
+              <a href="#" target="_blank" class="foot-link" style="color:#e0c870">
+                微信号：oiovdev
               </a>
             </li>
-            <li>
-              <a href="https://pre.aicentos.com/wechat_group.jpg" target="_blank" class="foot-link" style="color:#e0c870">
+            <!-- <li>
+              <a href="#" target="_blank" class="foot-link" style="color:#e0c870">
                 微信群（查看二维码）
               </a>
-            </li>
+            </li> -->
            <!-- <li>
                <a href="https://pre.aicentos.com/qq.png" target="_blank" class="foot-link" style="color:#e0c870">
                 QQ客服：（查看二维码）

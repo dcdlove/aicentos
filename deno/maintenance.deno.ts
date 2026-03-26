@@ -332,7 +332,7 @@ function renderPage(t: I18nTexts, lang: string): string {
   <meta name="robots" content="noindex,nofollow">
   <meta name="description" content="${t.subtitle}">
   <meta name="theme-color" content="#c9973e">
-  <link rel="icon" href="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png">
+  <link rel="icon" href="https://aicentos.com/logo.svg">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
 
@@ -571,7 +571,7 @@ function renderPage(t: I18nTexts, lang: string): string {
 
   <div class="container">
     <!-- Logo -->
-    <img class="logo" src="https://free.picui.cn/free/2026/02/11/698c585ee1b64.png" alt="AICentOS" width="80" height="80">
+    <img class="logo" src="https://aicentos.com/logo.svg" alt="AICentOS" width="80" height="80">
 
     <h1>${t.heading}</h1>
     <p class="subtitle">${t.subtitle}</p>
