@@ -1356,11 +1356,11 @@ function buildHtml(visitCount: number): string {
       <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
         <div style="color:#6272a4;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span>&copy; 2026 AICentOS. All rights reserved.</span>
-          <span style="color:#374163">·</span>
+          <!-- <span style="color:#374163">·</span>
           <span><span data-i18n="footer.visits.prefix">累计访问</span>
             <span style="color:#e0c870;font-weight:700">${visitCount.toLocaleString()}</span>
             <span data-i18n="footer.visits.suffix">次</span>
-          </span>
+          </span> -->
         </div>
         <div class="flex flex-wrap gap-5 justify-center">
           <a href="https://doc.aicentos.com/terms" target="_blank" class="foot-link" style="color:#6272a4;font-size:13px" data-i18n="footer.terms">用户协议</a>
