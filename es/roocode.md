@@ -1,4 +1,4 @@
-# Usar AICentos con RooCode
+# Usar AICentOS con RooCode
 
 ## Instalación en VSCode
 
@@ -12,7 +12,7 @@ Abre RooCode y agrega un proveedor compatible con OpenAI:
 | Configuración | Valor |
 |---------------|-------|
 | **URL base de OpenAI** | `https://aicentos.com/v1` |
-| **API Key** | Tu clave de AICentos |
+| **API Key** | Tu clave de AICentOS |
 | **Modelo** | `gpt-5` |
 
 ::: tip Consejo

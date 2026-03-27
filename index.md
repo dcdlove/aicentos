@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: "AICentos"
+  name: "AICentOS"
   text: "AI Coding 中转站"
   tagline: 支持 Claude、Codex 模型在多种平台使用
   image:
     src: /img/logo.svg
-    alt: AICentos Logo
+    alt: AICentOS Logo
   actions:
     - theme: brand
       text: 立即注册

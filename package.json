@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "AICentos - AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用",
+  "description": "AICentOS - AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用",
   "keywords": [
     "aicentos",
     "ai-coding",

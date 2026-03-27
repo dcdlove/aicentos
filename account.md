@@ -8,7 +8,7 @@
 
 访问 [aicentos.com](https://aicentos.com/register?aff=9CTW)，点击**注册**：
 
-![AICentos 首页](/img/start/api-01-home.png)
+![AICentOS 首页](/img/start/api-01-home.png)
 
 选择注册方式（GitHub、LinuxDO 或用户名注册）：
 

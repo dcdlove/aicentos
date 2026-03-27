@@ -1,4 +1,4 @@
-# Usando AICentos com Claude Code
+# Usando AICentOS com Claude Code
 
 > Primeira vez? Primeiro complete a [Configuração de conta](/pt/account).
 
@@ -53,7 +53,7 @@ npx zcf
 
 ---
 
-## 3. Configurar AICentos
+## 3. Configurar AICentOS
 
 1. Digite `npx zcf` no terminal e pressione Enter.
    Quando aparecer `Ok to proceed? (y)`, digite `y` e pressione Enter.
@@ -91,7 +91,7 @@ npx zcf
     ```
 
 12. Chave de API:
-    Insira o token gerado no console do AICentos
+    Insira o token gerado no console do AICentOS
 
 13. Configurações relacionadas ao modelo:
     Pressione Enter para pular com os valores padrão
@@ -213,7 +213,7 @@ Adicione ao `settings.json` do VSCode:
 
 ![Exemplo de configuração no settings.json](/img/start/vscode-04-config.png)
 
-Após salvar, **feche e reabra o VSCode** — o plugin estará conectado ao AICentos normalmente.
+Após salvar, **feche e reabra o VSCode** — o plugin estará conectado ao AICentOS normalmente.
 
 ![Usando Claude Code no VSCode](/img/start/vscode-05-demo.gif)
 

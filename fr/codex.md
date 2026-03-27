@@ -1,4 +1,4 @@
-# Utiliser AICentos avec Codex
+# Utiliser AICentOS avec Codex
 
 ## Installation
 
@@ -40,7 +40,7 @@ bunx --global @openai/codex
    stream_idle_timeout_ms = 300000
    ```
 
-3. Créez `~/.codex/auth.json`, en définissant `OPENAI_API_KEY` avec votre clé API AICentos :
+3. Créez `~/.codex/auth.json`, en définissant `OPENAI_API_KEY` avec votre clé API AICentOS :
 
    ```json
    {

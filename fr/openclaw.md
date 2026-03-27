@@ -1,4 +1,4 @@
-# Utiliser AICentos avec OpenClaw
+# Utiliser AICentOS avec OpenClaw
 
 ::: info Présentation du projet
 OpenClaw est une plateforme d'assistant IA personnel open-source et auto-hébergée qui connecte les applications de messagerie à des agents IA fonctionnant sur votre propre matériel. Conçue pour les développeurs et les utilisateurs avancés souhaitant des assistants IA autonomes sans céder le contrôle de leurs données.
@@ -11,7 +11,7 @@ OpenClaw est une plateforme d'assistant IA personnel open-source et auto-héberg
 ## Prérequis
 
 - OpenClaw installé (voir la section installation ci-dessous)
-- Clé API AICentos ([Obtenir depuis la console](https://aicentos.com/console/token))
+- Clé API AICentOS ([Obtenir depuis la console](https://aicentos.com/console/token))
 
 ## Fonctionnalités principales
 
@@ -39,7 +39,7 @@ OpenClaw est une plateforme d'assistant IA personnel open-source et auto-héberg
 ## Installation
 
 ::: info Prérequis
-- Clé API AICentos
+- Clé API AICentOS
 - Node.js 22+ requis pour les méthodes npm/git ; le one-liner curl gère automatiquement les dépendances
 :::
 
@@ -165,13 +165,13 @@ Ajoutez le contenu suivant dans `openclaw.json` :
 ```
 
 ::: warning Important
-- Remplacez `sk-votre-token-aicentos` par votre token réel obtenu depuis la [console AICentos](https://aicentos.com/console/token)
+- Remplacez `sk-votre-token-aicentos` par votre token réel obtenu depuis la [console AICentOS](https://aicentos.com/console/token)
 - **Pour le protocole Anthropic, le `baseUrl` ne doit PAS inclure `/v1`** — le SDK ajoute automatiquement le chemin
 :::
 
 #### Configurer les modèles OpenAI (GPT)
 
-Lorsque vous appelez des modèles OpenAI via AICentos, le champ `api` doit être `openai-responses` :
+Lorsque vous appelez des modèles OpenAI via AICentOS, le champ `api` doit être `openai-responses` :
 
 ```json
 {
@@ -390,7 +390,7 @@ Le protocole OpenAI nécessite `/v1`, soit `https://aicentos.com/v1`. Cela est d
 
 Des valeurs comme `openai-chat`, `openai`, `anthropic`, etc. provoqueront des erreurs.
 
-**Solution** : Lors de l'utilisation de AICentos, utilisez `anthropic-messages` pour les modèles Claude et `openai-responses` pour les modèles GPT.
+**Solution** : Lors de l'utilisation de AICentOS, utilisez `anthropic-messages` pour les modèles Claude et `openai-responses` pour les modèles GPT.
 
 ### Réponse vide avec openai-completions (Ne pas utiliser pour les modèles GPT)
 
@@ -398,7 +398,7 @@ Des valeurs comme `openai-chat`, `openai`, `anthropic`, etc. provoqueront des er
 
 **Cause** : OpenClaw gère les flux de messages en interne au format Anthropic. Les réponses au format OpenAI de `openai-completions` peuvent ne pas être correctement mappées dans certains cas.
 
-**Solution** : Pour appeler des modèles GPT via AICentos, utilisez `openai-responses` plutôt que `openai-completions`.
+**Solution** : Pour appeler des modèles GPT via AICentOS, utilisez `openai-responses` plutôt que `openai-completions`.
 
 ### Les modifications de configuration ne prennent pas effet
 
@@ -450,5 +450,5 @@ python3 -m json.tool ~/.openclaw/openclaw.json
 | `openclaw gateway restart` | Redémarrer la passerelle |
 
 ::: tip Stratégie de débogage
-Utilisez d'abord curl pour confirmer que l'API AICentos elle-même fonctionne normalement, puis vérifiez ce qui est différent dans les requêtes envoyées par OpenClaw (UA, chemin, format).
+Utilisez d'abord curl pour confirmer que l'API AICentOS elle-même fonctionne normalement, puis vérifiez ce qui est différent dans les requêtes envoyées par OpenClaw (UA, chemin, format).
 :::

@@ -1,4 +1,4 @@
-# Using AICentos with RooCode
+# Using AICentOS with RooCode
 
 ## Install RooCode in VSCode
 
@@ -12,7 +12,7 @@ After installing RooCode, open it and select configure provider. Add an OpenAI C
 | Setting | Value |
 |---------|-------|
 | **OpenAI Base URL** | `https://aicentos.com/v1` |
-| **API Key** | Your key from AICentos |
+| **API Key** | Your key from AICentOS |
 | **Model** | `gpt-5` |
 
 ::: tip

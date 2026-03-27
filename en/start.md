@@ -1,4 +1,4 @@
-# Using AICentos with Claude  Code
+# Using AICentOS with Claude  Code
 
 > New here? Complete [Account Setup](/en/account) first.
 
@@ -53,7 +53,7 @@ npx zcf
 
 ---
 
-## 3. Configure AICentos
+## 3. Configure AICentOS
 
 1. In the terminal, type `npx zcf` and press Enter.
    When prompted `Ok to proceed? (y)`, type `y` and press Enter.
@@ -91,7 +91,7 @@ npx zcf
     ```
 
 12. API Key:
-    Enter the token generated from your AICentos console
+    Enter the token generated from your AICentOS console
 
 13. Model-related configuration:
     Press Enter to skip with defaults
@@ -195,7 +195,7 @@ After installation, the extension offers three connection methods:
 
 ![Claude  Code Extension Connection Methods](/img/start/vscode-02-login.png)
 
-It is recommended to connect to AICentos via `settings.json`. Click the **gear icon** in the bottom-right of the extension → **Edit in settings.json**:
+It is recommended to connect to AICentOS via `settings.json`. Click the **gear icon** in the bottom-right of the extension → **Edit in settings.json**:
 
 ![Open settings.json for Editing](/img/start/vscode-03-settings.png)
 
@@ -213,7 +213,7 @@ Add the following to VSCode's `settings.json`:
 
 ![settings.json Configuration Example](/img/start/vscode-04-config.png)
 
-After saving, **quit and reopen VSCode** — the extension will connect to AICentos normally.
+After saving, **quit and reopen VSCode** — the extension will connect to AICentOS normally.
 
 ![Using Claude  Code in VSCode](/img/start/vscode-05-demo.gif)
 

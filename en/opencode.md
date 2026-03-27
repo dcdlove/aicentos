@@ -1,4 +1,4 @@
-# Using AICentos with OpenCode
+# Using AICentOS with OpenCode
 
 ## Install OpenCode
 
@@ -18,7 +18,7 @@ scoop install opencode
 
 :::
 
-## Configure AICentos
+## Configure AICentOS
 
 1. Get your API Key from [https://aicentos.com/console/token](https://aicentos.com/console/token)
 2. Set the environment variable:
@@ -72,7 +72,7 @@ $env:FISHXCODE_TOKEN="sk-xxx"
 ```
 
 ::: warning Important
-Replace `sk-xxx` with your actual Token from the [AICentos console](https://aicentos.com/console/token).
+Replace `sk-xxx` with your actual Token from the [AICentOS console](https://aicentos.com/console/token).
 :::
 
 ## Launch
@@ -82,4 +82,4 @@ cd my-project
 opencode
 ```
 
-Once launched, select a model under the AICentos provider to start coding.
+Once launched, select a model under the AICentOS provider to start coding.

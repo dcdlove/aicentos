@@ -1,4 +1,4 @@
-# 在 Codex 中使用 AICentos
+# 在 Codex 中使用 AICentOS
 
 ## 安装 Codex
 
@@ -40,7 +40,7 @@ bunx --global @openai/codex
    stream_idle_timeout_ms = 300000
    ```
 
-3. 创建 `~/.codex/auth.json` 文件，将 `OPENAI_API_KEY` 的值设置为你的 AICentos API Key：
+3. 创建 `~/.codex/auth.json` 文件，将 `OPENAI_API_KEY` 的值设置为你的 AICentOS API Key：
 
    ```json
    {

@@ -1,4 +1,4 @@
-# Utiliser AICentos dans Cursor
+# Utiliser AICentOS dans Cursor
 
 > Première utilisation ? Terminez la [création de compte](/fr/account) puis générez votre API Key dans la console.
 
@@ -14,7 +14,7 @@ Dans le menu latéral, cliquez sur **Models**.
 
 Cliquez sur **Ajouter un modèle**, puis renseignez :
 
-- **API Key** : clé AICentos
+- **API Key** : clé AICentOS
 - **Base URL** : `https://aicentos.com/v1`
 
 ![Exemple de configuration Cursor Models](/img/start/cursor.png)

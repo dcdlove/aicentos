@@ -1,4 +1,4 @@
-# Política de Privacidade da AICentos
+# Política de Privacidade da AICentOS
 
 **Data de vigência: 11 de fevereiro de 2026**
 
@@ -14,7 +14,7 @@ A presente política está em conformidade com a Lei de Proteção de Informaç�
 ## 2. Uso dos dados enviados
 
 ::: info
-A AICentos **não utiliza** suas entradas nem as saídas geradas para treinar modelos de IA, salvo se você ativar explicitamente o modo de histórico ou depuração.
+A AICentOS **não utiliza** suas entradas nem as saídas geradas para treinar modelos de IA, salvo se você ativar explicitamente o modo de histórico ou depuração.
 :::
 
 ## 3. Compartilhamento de dados
@@ -53,7 +53,7 @@ Nos termos da PIPL, você possui os seguintes direitos:
 
 ## 8. Menores de idade
 
-A AICentos não coleta intencionalmente dados de menores de idade.
+A AICentOS não coleta intencionalmente dados de menores de idade.
 
 ## 9. Contato
 

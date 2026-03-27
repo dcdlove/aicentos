@@ -1,10 +1,10 @@
-# Conditions d'utilisation AICentos
+# Conditions d'utilisation AICentOS
 
 **Date d'entrée en vigueur : 11 février 2026**
 
 ## 1. Dispositions générales
 
-Le présent accord est conclu entre l'utilisateur et la plateforme API AICentos. Il intègre la politique de confidentialité ainsi que l'ensemble des règles connexes. L'utilisation du service requiert d'avoir atteint l'âge de 18 ans. Toute personne représentant une entité juridique doit disposer de l'autorité nécessaire pour l'engager contractuellement.
+Le présent accord est conclu entre l'utilisateur et la plateforme API AICentOS. Il intègre la politique de confidentialité ainsi que l'ensemble des règles connexes. L'utilisation du service requiert d'avoir atteint l'âge de 18 ans. Toute personne représentant une entité juridique doit disposer de l'autorité nécessaire pour l'engager contractuellement.
 
 ## 2. Définitions
 
@@ -19,7 +19,7 @@ L'utilisateur est tenu de s'enregistrer avec des informations exactes et à jour
 
 ## 4. Règles d'utilisation
 
-AICentos concède à l'utilisateur une licence limitée, non exclusive et non cessible. Sont strictement prohibés :
+AICentOS concède à l'utilisateur une licence limitée, non exclusive et non cessible. Sont strictement prohibés :
 
 1. Tout acte portant atteinte à la sécurité nationale ;
 2. La diffusion de contenus pornographiques, violents ou relatifs aux jeux d'argent illégaux ;
@@ -36,25 +36,25 @@ Le service fonctionne sur la base de crédits prépayés. Aucun remboursement ne
 
 ## 6. Données et confidentialité
 
-L'utilisateur conserve la propriété des données qu'il soumet. AICentos conserve les journaux réseau conformément aux obligations légales en vigueur en République populaire de Chine et les communique aux autorités compétentes sur demande légalement fondée.
+L'utilisateur conserve la propriété des données qu'il soumet. AICentOS conserve les journaux réseau conformément aux obligations légales en vigueur en République populaire de Chine et les communique aux autorités compétentes sur demande légalement fondée.
 
 ## 7. Propriété intellectuelle
 
-L'ensemble de la propriété intellectuelle de la plateforme appartient à AICentos. Tout retour d'expérience ou suggestion transmis par l'utilisateur confère à AICentos une licence mondiale, permanente et irrévocable sur lesdits éléments.
+L'ensemble de la propriété intellectuelle de la plateforme appartient à AICentOS. Tout retour d'expérience ou suggestion transmis par l'utilisateur confère à AICentOS une licence mondiale, permanente et irrévocable sur lesdits éléments.
 
 ## 8. Exclusions de garantie et limitation de responsabilité
 
 ::: warning
-Le service est fourni « en l'état », sans garantie d'aucune sorte. AICentos ne pourra être tenu responsable des dommages indirects ou accessoires. La responsabilité totale de AICentos est plafonnée au montant des sommes versées au cours des douze (12) derniers mois ou à cent dollars américains (100 USD), le montant le plus élevé étant retenu.
+Le service est fourni « en l'état », sans garantie d'aucune sorte. AICentOS ne pourra être tenu responsable des dommages indirects ou accessoires. La responsabilité totale de AICentOS est plafonnée au montant des sommes versées au cours des douze (12) derniers mois ou à cent dollars américains (100 USD), le montant le plus élevé étant retenu.
 :::
 
 ## 9. Modification et résiliation
 
-AICentos se réserve le droit de modifier les présentes conditions à tout moment. La poursuite de l'utilisation du service vaut acceptation des nouvelles conditions. Toute violation des présentes conditions peut entraîner la résiliation du service.
+AICentOS se réserve le droit de modifier les présentes conditions à tout moment. La poursuite de l'utilisation du service vaut acceptation des nouvelles conditions. Toute violation des présentes conditions peut entraîner la résiliation du service.
 
 ## 10. Droit applicable
 
-Les présentes conditions sont régies par le droit de la République populaire de Chine. Tout différend sera résolu en priorité par voie de négociation amiable. À défaut, le litige sera porté devant les tribunaux compétents du lieu d'établissement de AICentos.
+Les présentes conditions sont régies par le droit de la République populaire de Chine. Tout différend sera résolu en priorité par voie de négociation amiable. À défaut, le litige sera porté devant les tribunaux compétents du lieu d'établissement de AICentOS.
 
 ## 11. Dispositions diverses
 

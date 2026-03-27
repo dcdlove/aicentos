@@ -2,9 +2,9 @@
 
 ## Geral
 
-### O que e o AICentos?
+### O que e o AICentOS?
 
-O AICentos e uma estacao de retransmissao de AI Coding que suporta os modelos Claude e Codex em multiplas plataformas.
+O AICentOS e uma estacao de retransmissao de AI Coding que suporta os modelos Claude e Codex em multiplas plataformas.
 
 ### Quais ferramentas sao suportadas?
 
@@ -19,7 +19,7 @@ Ferramentas disponiveis atualmente:
 
 ### Como meus dados sao tratados?
 
-O AICentos funciona apenas como um servico de retransmissao de API. Seu codigo e suas conversas nao sao armazenados em nossos servidores. Todas as requisicoes sao encaminhadas diretamente aos provedores de modelos.
+O AICentOS funciona apenas como um servico de retransmissao de API. Seu codigo e suas conversas nao sao armazenados em nossos servidores. Todas as requisicoes sao encaminhadas diretamente aos provedores de modelos.
 
 ::: tip Dica
 Para projetos sensiveis, recomendamos consultar a politica de privacidade de cada provedor de modelos antes de utilizar o servico.
@@ -76,7 +76,7 @@ echo $ANTHROPIC_AUTH_TOKEN
 | RooCode | Configuracoes JSON do VS Code |
 | Qwen Code | Variaveis de ambiente |
 
-### Nao consigo me conectar ao AICentos
+### Nao consigo me conectar ao AICentOS
 
 1. Confirme que o `BASE_URL` esta configurado como `https://aicentos.com/` (atencao para a `/` no final)
 2. Verifique se `aicentos.com` esta acessivel pela sua rede
@@ -141,4 +141,4 @@ Um codigo `429` significa que voce esta enviando requisicoes com muita frequenci
 
 ### Modelo nao disponivel
 
-Verifique se o nome do modelo esta correto. Consulte a lista de modelos recomendados em [Comecar](/pt/start). Alguns modelos podem ainda nao estar disponiveis no AICentos.
+Verifique se o nome do modelo esta correto. Consulte a lista de modelos recomendados em [Comecar](/pt/start). Alguns modelos podem ainda nao estar disponiveis no AICentOS.

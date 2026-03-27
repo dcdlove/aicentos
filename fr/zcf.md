@@ -12,10 +12,10 @@
 
 | Paramètre | Description |
 |---|---|
-| `-p custom` | Utiliser un fournisseur personnalisé (méthode utilisée par AICentos) |
+| `-p custom` | Utiliser un fournisseur personnalisé (méthode utilisée par AICentOS) |
 | `-t api_key` | Écriture équivalente, même effet que `-p custom` |
 | `-k "sk-xxx"` | Clé API |
-| `-u "https://aicentos.com/"` | URL de base AICentos |
+| `-u "https://aicentos.com/"` | URL de base AICentOS |
 | `-M "claude-sonnet-4-5-20250929"` | Modèle principal |
 | `-H "claude-haiku-4-5-20251001"` | Modèle rapide |
 

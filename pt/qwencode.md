@@ -1,4 +1,4 @@
-# Usando AICentos com Qwen Code
+# Usando AICentOS com Qwen Code
 
 ## Instalação
 
@@ -41,7 +41,7 @@ $env:OPENAI_MODEL="gpt-5"
 :::
 
 ::: warning Importante
-Substitua `sk-xxx` pelo seu token do [Console AICentos](https://aicentos.com/console/token).
+Substitua `sk-xxx` pelo seu token do [Console AICentOS](https://aicentos.com/console/token).
 :::
 
 ## Iniciar Diretamente

@@ -1,4 +1,4 @@
-# Utiliser AICentos avec Claude Code
+# Utiliser AICentOS avec Claude Code
 
 > Première utilisation ? Commencez par [créer votre compte](/fr/account).
 
@@ -53,7 +53,7 @@ npx zcf
 
 ---
 
-## 3. Configurer AICentos
+## 3. Configurer AICentOS
 
 1. Dans le terminal, saisissez `npx zcf` et appuyez sur Entrée.
    Lorsque `Ok to proceed? (y)` apparaît, saisissez `y` et appuyez sur Entrée.
@@ -91,7 +91,7 @@ npx zcf
     ```
 
 12. Clé API :
-    Saisissez le token généré dans la console AICentos
+    Saisissez le token généré dans la console AICentOS
 
 13. Configuration liée au modèle :
     Appuyez sur Entrée pour ignorer les valeurs par défaut
@@ -195,7 +195,7 @@ Une fois installé, le plugin propose trois méthodes de connexion :
 
 ![Méthodes de connexion du plugin Claude Code](/img/start/vscode-02-login.png)
 
-Il est recommandé de configurer la connexion à AICentos via `settings.json`. Cliquez sur l'**icône d'engrenage** en bas à droite du plugin → **Modifier dans settings.json** :
+Il est recommandé de configurer la connexion à AICentOS via `settings.json`. Cliquez sur l'**icône d'engrenage** en bas à droite du plugin → **Modifier dans settings.json** :
 
 ![Ouvrir l'édition de settings.json](/img/start/vscode-03-settings.png)
 
@@ -213,7 +213,7 @@ Ajoutez les éléments suivants dans le `settings.json` de VSCode :
 
 ![Exemple de configuration settings.json](/img/start/vscode-04-config.png)
 
-Après avoir sauvegardé, **quittez et rouvrez VSCode** ; le plugin se connectera normalement à AICentos.
+Après avoir sauvegardé, **quittez et rouvrez VSCode** ; le plugin se connectera normalement à AICentOS.
 
 ![Utiliser Claude Code dans VSCode](/img/start/vscode-05-demo.gif)
 

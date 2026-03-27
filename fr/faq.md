@@ -2,9 +2,9 @@
 
 ## Informations generales
 
-### Qu'est-ce que AICentos ?
+### Qu'est-ce que AICentOS ?
 
-AICentos est un relais AI Coding qui prend en charge les modeles Claude et Codex sur plusieurs plateformes.
+AICentOS est un relais AI Coding qui prend en charge les modeles Claude et Codex sur plusieurs plateformes.
 
 ### Quels outils sont pris en charge ?
 
@@ -19,7 +19,7 @@ Les outils actuellement compatibles :
 
 ### Qu'en est-il de la confidentialite de mes donnees ?
 
-AICentos fonctionne uniquement comme un relais d'API. Votre code et vos conversations ne sont pas stockes sur nos serveurs. Toutes les requetes sont transmises directement aux fournisseurs de modeles.
+AICentOS fonctionne uniquement comme un relais d'API. Votre code et vos conversations ne sont pas stockes sur nos serveurs. Toutes les requetes sont transmises directement aux fournisseurs de modeles.
 
 ::: tip Conseil
 Pour les projets sensibles, nous vous recommandons de consulter la politique de confidentialite de chaque fournisseur de modeles.
@@ -76,7 +76,7 @@ echo $ANTHROPIC_AUTH_TOKEN
 | RooCode | Parametres JSON de VS Code |
 | Qwen Code | Variables d'environnement |
 
-### Impossible de se connecter a AICentos
+### Impossible de se connecter a AICentOS
 
 1. Verifiez que le `BASE_URL` est bien `https://aicentos.com/` (attention au `/` final)
 2. Assurez-vous que `aicentos.com` est accessible depuis votre reseau
@@ -141,4 +141,4 @@ Un code `429` signifie que vos requetes sont trop frequentes.
 
 ### Modele non disponible
 
-Verifiez le nom exact du modele que vous avez specifie. Consultez la liste des modeles recommandes dans [Demarrage rapide](/fr/start). Certains modeles peuvent ne pas encore etre disponibles sur AICentos.
+Verifiez le nom exact du modele que vous avez specifie. Consultez la liste des modeles recommandes dans [Demarrage rapide](/fr/start). Certains modeles peuvent ne pas encore etre disponibles sur AICentOS.

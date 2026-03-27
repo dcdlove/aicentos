@@ -1,6 +1,6 @@
 # Tool Comparison
 
-Choose the right AI coding tool for your workflow. Here is a comprehensive comparison of all tools available on the AICentos platform.
+Choose the right AI coding tool for your workflow. Here is a comprehensive comparison of all tools available on the AICentOS platform.
 
 ## Basic Information
 
@@ -46,7 +46,7 @@ Choose the right AI coding tool for your workflow. Here is a comprehensive compa
 | **Droid CLI** | - | JSON | CLI Interactive |
 | **OpenCode** | :white_check_mark: | JSON | TUI Interactive |
 
-## AICentos Compatibility
+## AICentOS Compatibility
 
 | Tool | Status | Setup Difficulty | Notes |
 |------|:------:|:----------------:|-------|

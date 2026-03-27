@@ -1,4 +1,4 @@
-# Utiliser AICentos avec Droid CLI
+# Utiliser AICentOS avec Droid CLI
 
 ## Installation
 

@@ -1,4 +1,4 @@
-# 在 Claude  Code 中使用 AICentos
+# 在 Claude  Code 中使用 AICentOS
 
 > 首次使用？请先完成 [账户注册与充值](/account)。
 
@@ -52,7 +52,7 @@ npx zcf
 :::
 
 ---
-## 三、配置 AICentos
+## 三、配置 AICentOS
 
 1. 终端输入 `npx zcf`，回车运行。
    出现 `Ok to proceed? (y)` 时输入 `y` 回车。
@@ -90,7 +90,7 @@ npx zcf
     ```
 
 12. API 密钥：
-    填写 AICentos 控制台生成的令牌
+    填写 AICentOS 控制台生成的令牌
 
 13. 模型相关配置：
     默认回车跳过即可
@@ -194,7 +194,7 @@ npm install -g @anthropic-ai/claude-code
 
 ![Claude  Code 插件接入方式](/img/start/vscode-02-login.png)
 
-推荐通过 `settings.json` 配置接入 AICentos。点击插件右下角**齿轮图标** → **在 settings.json 中编辑**：
+推荐通过 `settings.json` 配置接入 AICentOS。点击插件右下角**齿轮图标** → **在 settings.json 中编辑**：
 
 ![打开 settings.json 编辑](/img/start/vscode-03-settings.png)
 
@@ -212,7 +212,7 @@ npm install -g @anthropic-ai/claude-code
 
 ![settings.json 配置示例](/img/start/vscode-04-config.png)
 
-保存后**退出并重新打开 VSCode**，插件即可正常连接 AICentos。
+保存后**退出并重新打开 VSCode**，插件即可正常连接 AICentOS。
 
 ![在 VSCode 中使用 Claude  Code](/img/start/vscode-05-demo.gif)
 

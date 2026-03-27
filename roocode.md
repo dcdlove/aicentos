@@ -1,4 +1,4 @@
-# 在 RooCode 中使用 AICentos
+# 在 RooCode 中使用 AICentOS
 
 ## 在 VSCode 中安装 RooCode
 
@@ -12,7 +12,7 @@
 | 配置项 | 值 |
 |--------|-----|
 | **OpenAI 基础 URL** | `https://aicentos.com/v1` |
-| **API 密钥** | 你在 AICentos 创建的 Key |
+| **API 密钥** | 你在 AICentOS 创建的 Key |
 | **模型** | `gpt-5` |
 
 ::: tip 提示

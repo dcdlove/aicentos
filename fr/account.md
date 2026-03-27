@@ -8,7 +8,7 @@
 
 Rendez-vous sur [aicentos.com](https://aicentos.com/register?aff=9CTW) et cliquez sur **S'inscrire** :
 
-![Page d'accueil AICentos](/img/start/api-01-home.png)
+![Page d'accueil AICentOS](/img/start/api-01-home.png)
 
 Choisissez votre méthode d'inscription (GitHub, LinuxDO ou nom d'utilisateur) :
 

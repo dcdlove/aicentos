@@ -1,4 +1,4 @@
-# Politique de confidentialité de AICentos
+# Politique de confidentialité de AICentOS
 
 **Date d'entrée en vigueur : 11 février 2026**
 
@@ -14,7 +14,7 @@ La présente politique est conforme à la loi chinoise sur la protection des inf
 ## 2. Utilisation des données soumises
 
 ::: info
-AICentos **n'utilise pas** vos entrées ni les sorties générées pour entraîner des modèles d'IA, sauf si vous activez explicitement le mode historique ou débogage.
+AICentOS **n'utilise pas** vos entrées ni les sorties générées pour entraîner des modèles d'IA, sauf si vous activez explicitement le mode historique ou débogage.
 :::
 
 ## 3. Partage des données
@@ -53,7 +53,7 @@ Conformément à la PIPL, vous disposez des droits suivants :
 
 ## 8. Mineurs
 
-AICentos ne collecte pas intentionnellement de données provenant de mineurs.
+AICentOS ne collecte pas intentionnellement de données provenant de mineurs.
 
 ## 9. Contact
 

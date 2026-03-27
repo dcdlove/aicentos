@@ -1,4 +1,4 @@
-# 在 Droid CLI 中使用 AICentos
+# 在 Droid CLI 中使用 AICentOS
 
 ## 安装 Droid CLI
 
@@ -34,7 +34,7 @@ irm https://app.factory.ai/cli/windows | iex
 ```
 
 ::: warning 重要
-请将 `YOUR_FISHXCODE_KEY` 替换为你的 AICentos API Key。
+请将 `YOUR_FISHXCODE_KEY` 替换为你的 AICentOS API Key。
 :::
 
 ## 直接启动使用

@@ -1,4 +1,4 @@
-# Using AICentos with OpenClaw
+# Using AICentOS with OpenClaw
 
 ::: info Project Introduction
 OpenClaw is an open-source, self-hosted personal AI assistant platform that bridges messaging apps to AI agents running on your own hardware. Designed for developers and power users who want autonomous AI assistants without surrendering data control.
@@ -11,7 +11,7 @@ OpenClaw is an open-source, self-hosted personal AI assistant platform that brid
 ## Prerequisites
 
 - OpenClaw installed (see installation section below)
-- AICentos API Key ([Get from Console](https://aicentos.com/console/token))
+- AICentOS API Key ([Get from Console](https://aicentos.com/console/token))
 
 ## Core Features
 
@@ -39,7 +39,7 @@ OpenClaw is an open-source, self-hosted personal AI assistant platform that brid
 ## Installation
 
 ::: info Requirements
-- AICentos API Key
+- AICentOS API Key
 - Node.js 22+ required for npm/git methods; the curl one-liner handles dependencies automatically
 :::
 
@@ -165,13 +165,13 @@ Add the following to `openclaw.json`:
 ```
 
 ::: warning Important
-- Replace `sk-your-aicentos-token` with your actual Token from the [AICentos console](https://aicentos.com/console/token)
+- Replace `sk-your-aicentos-token` with your actual Token from the [AICentOS console](https://aicentos.com/console/token)
 - **For Anthropic protocol, `baseUrl` should NOT include `/v1`** — the SDK automatically appends the path
 :::
 
 #### Configure OpenAI (GPT) Models
 
-When calling OpenAI models through AICentos, the `api` field must be set to `openai-responses`:
+When calling OpenAI models through AICentOS, the `api` field must be set to `openai-responses`:
 
 ```json
 {
@@ -307,7 +307,7 @@ Run the following command to confirm the configuration is working:
 openclaw
 ```
 
-If configured correctly, OpenClaw will start normally and route requests through AICentos.
+If configured correctly, OpenClaw will start normally and route requests through AICentOS.
 
 You can also check the model list:
 
@@ -399,7 +399,7 @@ OpenAI protocol requires `/v1`, i.e., `https://aicentos.com/v1`. This is because
 
 Values like `openai-chat`, `openai`, `anthropic`, etc. will cause errors.
 
-**Fix**: When using AICentos, use `anthropic-messages` for Claude models and `openai-responses` for GPT models.
+**Fix**: When using AICentOS, use `anthropic-messages` for Claude models and `openai-responses` for GPT models.
 
 ### Empty Response with openai-completions (Don't Use for GPT Models)
 
@@ -407,7 +407,7 @@ Values like `openai-chat`, `openai`, `anthropic`, etc. will cause errors.
 
 **Cause**: OpenClaw internally handles message streams in Anthropic format. OpenAI-format responses from `openai-completions` may not map correctly in some cases.
 
-**Fix**: When calling GPT models via AICentos, use `openai-responses` instead of `openai-completions`.
+**Fix**: When calling GPT models via AICentOS, use `openai-responses` instead of `openai-completions`.
 
 ### Configuration Changes Not Taking Effect
 
@@ -457,8 +457,8 @@ GPT-5.x Codex series generally supports `reasoning`. For Claude models, it depen
 
 ### What's the Difference Between openai-completions and openai-responses?
 
-- **openai-responses** — Corresponds to OpenAI Responses API (`/v1/responses`). **Use this when accessing GPT models via AICentos.**
-- **openai-completions** — Corresponds to OpenAI Chat Completions API (`/v1/chat/completions`), a universal compatibility format, but may cause empty responses with AICentos's GPT models. **Not recommended.**
+- **openai-responses** — Corresponds to OpenAI Responses API (`/v1/responses`). **Use this when accessing GPT models via AICentOS.**
+- **openai-completions** — Corresponds to OpenAI Chat Completions API (`/v1/chat/completions`), a universal compatibility format, but may cause empty responses with AICentOS's GPT models. **Not recommended.**
 
 ### Diagnostic Command Reference
 
@@ -470,5 +470,5 @@ GPT-5.x Codex series generally supports `reasoning`. For Claude models, it depen
 | `openclaw gateway restart` | Restart Gateway |
 
 ::: tip Debugging Strategy
-First use curl to confirm the AICentos API itself is working normally, then check what's different in the requests sent by OpenClaw (UA, path, format).
+First use curl to confirm the AICentOS API itself is working normally, then check what's different in the requests sent by OpenClaw (UA, path, format).
 :::

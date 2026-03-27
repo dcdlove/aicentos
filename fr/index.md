@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: "AICentos"
+  name: "AICentOS"
   text: "Relais AI Coding"
   tagline: Utilisez les modèles Claude et Codex sur plusieurs plateformes
   image:
     src: /img/logo.svg
-    alt: AICentos Logo
+    alt: AICentOS Logo
   actions:
     - theme: brand
       text: S'inscrire

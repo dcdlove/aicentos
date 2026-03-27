@@ -1,4 +1,4 @@
-# Using AICentos with Droid CLI
+# Using AICentOS with Droid CLI
 
 ## Install Droid CLI
 
@@ -34,7 +34,7 @@ Edit `~/.factory/config.json` with the following content:
 ```
 
 ::: warning Important
-Replace `YOUR_FISHXCODE_KEY` with your AICentos API Key.
+Replace `YOUR_FISHXCODE_KEY` with your AICentOS API Key.
 :::
 
 ## Launch Directly

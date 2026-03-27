@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://doc.aicentos.com/img/logo.svg" width="120" alt="AICentos Logo">
+  <img src="https://doc.aicentos.com/img/logo.svg" width="120" alt="AICentOS Logo">
 </p>
 
-<h1 align="center">AICentos</h1>
+<h1 align="center">AICentOS</h1>
 
 <p align="center">
   AI Coding 中转站 — 支持 Claude、Codex 模型在多种平台使用
@@ -19,7 +19,7 @@
 
 ## 简介
 
-AICentos 是一个 AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用。
+AICentOS 是一个 AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用。
 
 **支持的工具：**
 

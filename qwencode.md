@@ -1,4 +1,4 @@
-# 在 Qwen Code 中使用 AICentos
+# 在 Qwen Code 中使用 AICentOS
 
 ## 安装 Qwen Code
 
@@ -47,7 +47,7 @@ set OPENAI_MODEL="gpt-5"
 :::
 
 ::: warning 重要
-请将 `sk-xxx` 替换为你在 [AICentos 控制台](https://aicentos.com/console/token) 获取的实际 Token。
+请将 `sk-xxx` 替换为你在 [AICentOS 控制台](https://aicentos.com/console/token) 获取的实际 Token。
 :::
 
 ## 快速启动

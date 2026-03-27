@@ -12,10 +12,10 @@
 
 | Parameter | Description |
 |---|---|
-| `-p custom` | Use a custom provider (this is the mode AICentos uses) |
+| `-p custom` | Use a custom provider (this is the mode AICentOS uses) |
 | `-t api_key` | Equivalent shorthand, same effect as `-p custom` |
 | `-k "sk-xxx"` | API Key |
-| `-u "https://aicentos.com/"` | AICentos Base URL |
+| `-u "https://aicentos.com/"` | AICentOS Base URL |
 | `-M "claude-sonnet-4-5-20250929"` | Primary model |
 | `-H "claude-haiku-4-5-20251001"` | Fast model |
 

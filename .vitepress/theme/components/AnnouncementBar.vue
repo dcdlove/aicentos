@@ -13,23 +13,23 @@ const props = withDefaults(
 
 const I18N: Record<string, { text: string; linkText: string }> = {
   "zh-CN": {
-    text: "欢迎使用 AICentos — AI Coding 中转站",
+    text: "欢迎使用 AICentOS — AI Coding 中转站",
     linkText: "立即注册",
   },
   "en-US": {
-    text: "Welcome to AICentos — AI Coding Relay",
+    text: "Welcome to AICentOS — AI Coding Relay",
     linkText: "Register Now",
   },
   "fr-FR": {
-    text: "Bienvenue sur AICentos — Relais AI Coding",
+    text: "Bienvenue sur AICentOS — Relais AI Coding",
     linkText: "S'inscrire",
   },
   "es-ES": {
-    text: "Bienvenido a AICentos — Relay AI Coding",
+    text: "Bienvenido a AICentOS — Relay AI Coding",
     linkText: "Registrarse",
   },
   "pt-BR": {
-    text: "Bem-vindo ao AICentos — Relay AI Coding",
+    text: "Bem-vindo ao AICentOS — Relay AI Coding",
     linkText: "Registrar",
   },
 };

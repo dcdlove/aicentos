@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: "AICentos"
+  name: "AICentOS"
   text: "Estación AI Coding"
   tagline: Usa modelos Claude y Codex en múltiples plataformas
   image:
     src: /img/logo.svg
-    alt: AICentos Logo
+    alt: AICentOS Logo
   actions:
     - theme: brand
       text: Registrarse

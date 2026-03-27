@@ -173,7 +173,7 @@ export default withPwa(
             },
             {
               text: "立即注册",
-              link: "https://aicentos.com/register?aff=9CTW",
+              link: "https://aicentos.com/register?aff=Dptp",
             },
           ],
           sidebar: [
@@ -373,7 +373,7 @@ export default withPwa(
             },
             {
               text: "S'inscrire",
-              link: "https://aicentos.com/register?aff=9CTW",
+              link: "https://aicentos.com/register?aff=Dptp",
             },
           ],
           sidebar: [
@@ -476,7 +476,7 @@ export default withPwa(
             },
             {
               text: "Registrarse",
-              link: "https://aicentos.com/register?aff=9CTW",
+              link: "https://aicentos.com/register?aff=Dptp",
             },
           ],
           sidebar: [
@@ -576,7 +576,7 @@ export default withPwa(
             },
             {
               text: "Registrar",
-              link: "https://aicentos.com/register?aff=9CTW",
+              link: "https://aicentos.com/register?aff=Dptp",
             },
           ],
           sidebar: [

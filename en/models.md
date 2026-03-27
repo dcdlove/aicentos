@@ -1,6 +1,6 @@
 # Supported Models
 
-AICentos supports a variety of AI models from multiple providers, covering different use cases and toolchains. You can freely choose and switch models based on your needs.
+AICentOS supports a variety of AI models from multiple providers, covering different use cases and toolchains. You can freely choose and switch models based on your needs.
 
 ## Anthropic (Claude)
 

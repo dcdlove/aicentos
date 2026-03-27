@@ -1,7 +1,7 @@
 {
   "timestamp": "2026-03-05T08:00:27+08:00",
   "project": "aicentos",
-  "description": "AICentos - AI Coding 中转站文档站 + Landing Page",
+  "description": "AICentOS - AI Coding 中转站文档站 + Landing Page",
   "repository": "https://github.com/aicentos/aicentos.git",
   "homepage": "https://doc.aicentos.com",
   "modules": [

@@ -1,10 +1,10 @@
-# Términos de Servicio de AICentos
+# Términos de Servicio de AICentOS
 
 **Fecha de entrada en vigor: 11 de febrero de 2026**
 
 ## 1. Disposiciones generales
 
-El presente acuerdo se celebra entre el usuario y la plataforma API AICentos. Incorpora la política de privacidad y demás normas relacionadas. El uso del servicio requiere haber cumplido 18 años de edad. Toda persona que actúe en representación de una entidad jurídica deberá contar con la autorización necesaria para obligarla contractualmente.
+El presente acuerdo se celebra entre el usuario y la plataforma API AICentOS. Incorpora la política de privacidad y demás normas relacionadas. El uso del servicio requiere haber cumplido 18 años de edad. Toda persona que actúe en representación de una entidad jurídica deberá contar con la autorización necesaria para obligarla contractualmente.
 
 ## 2. Definiciones
 
@@ -19,7 +19,7 @@ El usuario está obligado a registrarse con información veraz y actualizada. Le
 
 ## 4. Normas de uso
 
-AICentos otorga al usuario una licencia limitada, no exclusiva e intransferible. Están estrictamente prohibidos:
+AICentOS otorga al usuario una licencia limitada, no exclusiva e intransferible. Están estrictamente prohibidos:
 
 1. Cualquier acto que atente contra la seguridad nacional;
 2. La difusión de contenido pornográfico, violento o relacionado con juegos de azar ilegales;
@@ -36,25 +36,25 @@ El servicio opera bajo un modelo de créditos prepagados. No se realizarán reem
 
 ## 6. Datos y privacidad
 
-El usuario conserva la titularidad de los datos que envía. AICentos conserva los registros de red conforme a las obligaciones legales vigentes en la República Popular China, y los comunica a las autoridades competentes cuando así lo exija la ley.
+El usuario conserva la titularidad de los datos que envía. AICentOS conserva los registros de red conforme a las obligaciones legales vigentes en la República Popular China, y los comunica a las autoridades competentes cuando así lo exija la ley.
 
 ## 7. Propiedad intelectual
 
-La totalidad de la propiedad intelectual de la plataforma pertenece a AICentos. Cualquier comentario o sugerencia transmitida por el usuario otorga a AICentos una licencia mundial, permanente e irrevocable sobre dichos elementos.
+La totalidad de la propiedad intelectual de la plataforma pertenece a AICentOS. Cualquier comentario o sugerencia transmitida por el usuario otorga a AICentOS una licencia mundial, permanente e irrevocable sobre dichos elementos.
 
 ## 8. Exclusión de garantías y limitación de responsabilidad
 
 ::: warning
-El servicio se presta «tal cual», sin garantía de ningún tipo. AICentos no asumirá responsabilidad alguna por daños indirectos o incidentales. La responsabilidad total de AICentos se limita al importe abonado durante los últimos doce (12) meses o a cien dólares estadounidenses (100 USD), prevaleciendo la cifra mayor.
+El servicio se presta «tal cual», sin garantía de ningún tipo. AICentOS no asumirá responsabilidad alguna por daños indirectos o incidentales. La responsabilidad total de AICentOS se limita al importe abonado durante los últimos doce (12) meses o a cien dólares estadounidenses (100 USD), prevaleciendo la cifra mayor.
 :::
 
 ## 9. Modificación y resolución
 
-AICentos se reserva el derecho de modificar los presentes términos en cualquier momento. La continuación en el uso del servicio implica la aceptación de los nuevos términos. El incumplimiento de los presentes términos podrá dar lugar a la rescisión del servicio.
+AICentOS se reserva el derecho de modificar los presentes términos en cualquier momento. La continuación en el uso del servicio implica la aceptación de los nuevos términos. El incumplimiento de los presentes términos podrá dar lugar a la rescisión del servicio.
 
 ## 10. Legislación aplicable
 
-Los presentes términos se rigen por la legislación de la República Popular China. Cualquier controversia se resolverá, en primer término, mediante negociación amistosa. En caso de no alcanzarse un acuerdo, el litigio se someterá a los tribunales competentes del lugar donde AICentos tenga su domicilio social.
+Los presentes términos se rigen por la legislación de la República Popular China. Cualquier controversia se resolverá, en primer término, mediante negociación amistosa. En caso de no alcanzarse un acuerdo, el litigio se someterá a los tribunales competentes del lugar donde AICentOS tenga su domicilio social.
 
 ## 11. Disposiciones diversas
 

@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: "AICentos"
+  name: "AICentOS"
   text: "AI Coding Relay"
   tagline: Use Claude and Codex models across multiple platforms
   image:
     src: /img/logo.svg
-    alt: AICentos Logo
+    alt: AICentOS Logo
   actions:
     - theme: brand
       text: Register Now
