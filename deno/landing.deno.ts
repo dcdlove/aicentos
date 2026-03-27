@@ -986,7 +986,7 @@ function buildHtml(visitCount: number): string {
       <div class="anim-fade-up delay-4 mb-10">
         <p class="text-gray-400 text-xs mb-2 tracking-wide"><span data-i18n="hero.urlHint">▸ 替换 Base URL 即可接入</span></p>
         <div class="url-bar">
-          <span class="url-bar-text" id="apiUrl">https://aicentos.com</span>
+          <span class="url-bar-text" id="apiUrl">https://www.aicentos.com</span>
           <button class="url-bar-btn" id="copyBtn" onclick="copyUrl()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span data-i18n="hero.copy">复制</span>
