@@ -94,7 +94,7 @@ export default withPwa(
         { property: "og:title", content: "AICentOS - AI Coding 中转站" },
       ],
       ["meta", { property: "og:description", content: SITE_DESC }],
-      ["meta", { property: "og:image", content: `${SITE_URL}/img/logo.jpg` }],
+      ["meta", { property: "og:image", content: `${SITE_URL}/img/logo.svg` }],
       ["meta", { property: "og:url", content: SITE_URL }],
       ["meta", { name: "twitter:card", content: "summary" }],
       ["meta", { name: "twitter:site", content: "@aicentos" }],
