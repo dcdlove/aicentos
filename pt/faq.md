@@ -29,7 +29,7 @@ Para projetos sensiveis, recomendamos consultar a politica de privacidade de cad
 
 ### Como me cadastro?
 
-Acesse [aicentos.com/register](https://www.aicentos.com/register?aff=9CTW) e siga as instrucoes para criar sua conta.
+Acesse [aicentos.com/register](https://www.aicentos.com/register?aff=Dptp) e siga as instrucoes para criar sua conta.
 
 ### Como obtenho um token de API?
 

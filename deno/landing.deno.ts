@@ -1161,7 +1161,7 @@ function buildHtml(visitCount: number): string {
           <a href="https://doc.aicentos.com/start" target="_blank" class="text-gray-600 hover:text-purple-700 transition text-sm font-medium px-3 py-2 rounded-lg hover:bg-purple-50 hidden sm:block">
             <span data-i18n="nav.start">快速开始</span>
           </a>
-          <a href="https://www.aicentos.com/register?aff=9CTW" target="_blank" class="btn-primary text-sm" style="padding:10px 22px">
+          <a href="https://www.aicentos.com/register?aff=Dptp" target="_blank" class="btn-primary text-sm" style="padding:10px 22px">
             <span data-i18n="nav.enter">进入平台</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -1424,7 +1424,7 @@ function buildHtml(visitCount: number): string {
               <div class="step-num">1</div>
               <div>
                 <p class="font-semibold text-gray-800" data-i18n="step1.title">注册账户</p>
-                <p class="text-gray-500 text-sm mt-0.5" data-i18n-html="step1.desc">访问 <a href="https://www.aicentos.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> 注册，几秒即可完成</p>
+                <p class="text-gray-500 text-sm mt-0.5" data-i18n-html="step1.desc">访问 <a href="https://www.aicentos.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">aicentos.com</a> 注册，几秒即可完成</p>
               </div>
             </li>
             <li class="flex gap-4 items-start">
@@ -1690,7 +1690,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'联系客服','footer.status':'服务状态','footer.quota':'额度查询',
         'footer.terms':'用户协议','footer.privacy':'隐私政策','footer.contact':'联系我们',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Claude 教程','terminal.docs.codex':'Codex 教程','terminal.comment.claude':'// 配置 Claude','terminal.comment.codex':'// 配置 Codex','terminal.start':'# 开始编码',
-        'step1.desc':'访问 <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 注册，几秒即可完成',
+        'step1.desc':'访问 <a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 注册，几秒即可完成',
         'step2.desc':'在账户设置中一键生成专属 API Key',
         'step3.desc':'Claude 教程：<a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Codex 教程：<a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'一切就绪，享受 AI Coding 加持的开发体验',
@@ -1735,7 +1735,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'聯繫客服','footer.status':'服務狀態','footer.quota':'額度查詢',
         'footer.terms':'用戶協議','footer.privacy':'隱私政策','footer.contact':'聯繫我們',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Claude 教程','terminal.docs.codex':'Codex 教程','terminal.comment.claude':'// 設定 Claude','terminal.comment.codex':'// 設定 Codex','terminal.start':'# 開始編碼',
-        'step1.desc':'訪問 <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 註冊，幾秒即可完成',
+        'step1.desc':'訪問 <a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> 註冊，幾秒即可完成',
         'step2.desc':'在帳戶設定中一鍵生成專屬 API Key',
         'step3.desc':'Claude 教程：<a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Codex 教程：<a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'一切就緒，享受 AI Coding 加持的開發體驗',
@@ -1785,7 +1785,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'Contact Support','footer.status':'Status','footer.quota':'Usage Checker',
         'footer.terms':'Terms','footer.privacy':'Privacy','footer.contact':'Contact Us',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Claude Guide','terminal.docs.codex':'Codex Guide','terminal.comment.claude':'// Setup Claude','terminal.comment.codex':'// Setup Codex','terminal.start':'# Start coding',
-        'step1.desc':'Visit <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> to sign up — takes just seconds',
+        'step1.desc':'Visit <a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> to sign up — takes just seconds',
         'step2.desc':'Generate your API Key in account settings with one click',
         'step3.desc':'Claude guide: <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Codex guide: <a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'All set! Enjoy AI-powered coding experience',
@@ -1830,7 +1830,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'Support','footer.status':'Statut','footer.quota':"Vérifier l'usage",
         'footer.terms':'CGU','footer.privacy':'Confidentialité','footer.contact':'Contact',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Guide Claude','terminal.docs.codex':'Guide Codex','terminal.comment.claude':'// Configurer Claude','terminal.comment.codex':'// Configurer Codex','terminal.start':'# Commencer à coder',
-        'step1.desc':'Visitez <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> pour vous inscrire — quelques secondes',
+        'step1.desc':'Visitez <a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> pour vous inscrire — quelques secondes',
         'step2.desc':"Générez votre clé API en un clic dans les paramètres du compte",
         'step3.desc':'Suivez le guide Claude : <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Guide Codex : <a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'Tout est prêt ! Profitez du développement assisté par IA',
@@ -1875,7 +1875,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'サポートへ連絡','footer.status':'サービス状態','footer.quota':'使用量確認',
         'footer.terms':'利用規約','footer.privacy':'プライバシー','footer.contact':'お問い合わせ',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Claude ガイド','terminal.docs.codex':'Codex ガイド','terminal.comment.claude':'// Claude を設定','terminal.comment.codex':'// Codex を設定','terminal.start':'# コーディング開始',
-        'step1.desc':'<a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> でアカウント登録 — 数秒で完了',
+        'step1.desc':'<a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> でアカウント登録 — 数秒で完了',
         'step2.desc':'アカウント設定からワンクリックで API Key を発行',
         'step3.desc':'Claude ガイド：<a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Codex ガイド：<a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'準備完了！AI 搭載のコーディング体験をお楽しみください',
@@ -1920,7 +1920,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'Поддержка','footer.status':'Статус','footer.quota':'Проверка лимитов',
         'footer.terms':'Условия','footer.privacy':'Конфиденциальность','footer.contact':'Контакты',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Гайд Claude','terminal.docs.codex':'Гайд Codex','terminal.comment.claude':'// Настройка Claude','terminal.comment.codex':'// Настройка Codex','terminal.start':'# Начало кодирования',
-        'step1.desc':'Зарегистрируйтесь на <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> — за несколько секунд',
+        'step1.desc':'Зарегистрируйтесь на <a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> — за несколько секунд',
         'step2.desc':'Сгенерируйте API-ключ в настройках аккаунта одним кликом',
         'step3.desc':'Гайд Claude: <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Гайд Codex: <a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'Всё готово! Наслаждайтесь разработкой с AI',
@@ -1965,7 +1965,7 @@ function buildHtml(visitCount: number): string {
         'footer.cs':'Hỗ trợ','footer.status':'Trạng thái','footer.quota':'Kiểm tra quota',
         'footer.terms':'Điều khoản','footer.privacy':'Quyền riêng tư','footer.contact':'Liên hệ',
         'terminal.tab.claude':'Claude','terminal.tab.codex':'Codex','terminal.docs.claude':'Hướng dẫn Claude','terminal.docs.codex':'Hướng dẫn Codex','terminal.comment.claude':'// Cấu hình Claude','terminal.comment.codex':'// Cấu hình Codex','terminal.start':'# Bắt đầu code',
-        'step1.desc':'Truy cập <a href="https://fishxcode.com/register?aff=9CTW" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> để đăng ký — chỉ vài giây',
+        'step1.desc':'Truy cập <a href="https://fishxcode.com/register?aff=Dptp" target="_blank" class="text-purple-600 hover:underline">fishxcode.com</a> để đăng ký — chỉ vài giây',
         'step2.desc':'Tạo API Key trong cài đặt tài khoản chỉ với một cú nhấp',
         'step3.desc':'Hướng dẫn Claude: <a href="https://doc.fishxcode.com/start" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/start</a><br/>Hướng dẫn Codex: <a href="https://doc.fishxcode.com/codex" target="_blank" class="text-purple-600 hover:underline">https://doc.fishxcode.com/codex</a>',
         'step4.desc':'Sẵn sàng! Tận hưởng trải nghiệm lập trình với AI',

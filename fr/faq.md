@@ -29,7 +29,7 @@ Pour les projets sensibles, nous vous recommandons de consulter la politique de 
 
 ### Comment creer un compte ?
 
-Rendez-vous sur [aicentos.com/register](https://www.aicentos.com/register?aff=9CTW) et suivez les instructions pour vous inscrire.
+Rendez-vous sur [aicentos.com/register](https://www.aicentos.com/register?aff=Dptp) et suivez les instructions pour vous inscrire.
 
 ### Comment obtenir un token API ?
 

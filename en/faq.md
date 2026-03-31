@@ -29,7 +29,7 @@ For sensitive projects, we recommend reviewing each model provider's privacy pol
 
 ### How do I sign up?
 
-Visit [aicentos.com/register](https://www.aicentos.com/register?aff=9CTW) and follow the prompts to create an account.
+Visit [aicentos.com/register](https://www.aicentos.com/register?aff=Dptp) and follow the prompts to create an account.
 
 ### How do I get an API token?
 

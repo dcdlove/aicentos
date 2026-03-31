@@ -83,7 +83,7 @@ function dismiss() {
     <div v-if="visible" class="announcement-bar">
       <div class="content">
         <span>{{ t.text }}</span>
-        <a href="https://www.aicentos.com/register?aff=9CTW" class="link">{{
+        <a href="https://www.aicentos.com/register?aff=Dptp" class="link">{{
           t.linkText
         }}</a>
       </div>

@@ -29,7 +29,7 @@ Para proyectos sensibles, te sugerimos revisar la politica de privacidad de cada
 
 ### Como me registro?
 
-Visita [aicentos.com/register](https://www.aicentos.com/register?aff=9CTW) y sigue las instrucciones para crear tu cuenta.
+Visita [aicentos.com/register](https://www.aicentos.com/register?aff=Dptp) y sigue las instrucciones para crear tu cuenta.
 
 ### Como obtengo un token de API?
 
