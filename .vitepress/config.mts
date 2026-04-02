@@ -99,6 +99,14 @@ export default withPwa(
       ["meta", { name: "twitter:card", content: "summary" }],
       ["meta", { name: "twitter:site", content: "@aicentos" }],
       ["meta", { name: "twitter:image", content: `${SITE_URL}/img/logo.jpg` }],
+      [
+        "script",
+        {
+          defer: true,
+          src: "https://cloud.umami.is/script.js",
+          "data-website-id": "687a0730-a095-450e-a39d-df754a937bd4",
+        },
+      ],
     ],
     buildEnd: generateFeed,
     vite: {
