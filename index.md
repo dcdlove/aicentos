@@ -6,8 +6,8 @@ hero:
   text: "AI Coding 中转站"
   tagline: 支持 Claude、Codex 模型在多种平台使用
   image:
-    src: /img/logo.svg
-    alt: AICentOS Logo
+    src: /img/cc-b.png
+    alt: AICentOS
   actions:
     - theme: brand
       text: 立即注册
