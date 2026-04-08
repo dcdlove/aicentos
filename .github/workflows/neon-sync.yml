@@ -1,0 +1,38 @@
+name: Sync main → back
+
+on:
+  schedule:
+    # 每天 UTC 18:00 执行（台北时间凌晨 2:00）
+    - cron: '0 18 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 安装 PostgreSQL 客户端
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y postgresql-client
+
+      - name: 导出 main 数据库
+        run: |
+          pg_dump -Fc -v \
+            -d "${{ secrets.MAIN_DB_URL }}" \
+            -f /tmp/sync.dump
+
+      - name: 同步到 back 数据库
+        run: |
+          pg_restore -v \
+            --clean \
+            --if-exists \
+            --no-owner \
+            --no-privileges \
+            -d "${{ secrets.BACK_DB_URL }}" \
+            /tmp/sync.dump
+
+      - name: 清理临时文件
+        if: always()
+        run: rm -f /tmp/sync.dump

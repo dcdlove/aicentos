@@ -1,0 +1,44 @@
+name: Backup main & back
+
+on:
+  schedule:
+    # 每天 UTC 19:00 执行（台北时间凌晨 3:00）
+    - cron: '0 19 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 安装 PostgreSQL 客户端
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y postgresql-client
+
+      - name: 备份 main 数据库
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          pg_dump -Fc -v \
+            -d "${{ secrets.MAIN_DB_URL }}" \
+            -f "/tmp/main_${TIMESTAMP}.dump"
+          echo "MAIN_DUMP=main_${TIMESTAMP}.dump" >> $GITHUB_ENV
+
+      - name: 备份 back 数据库
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          pg_dump -Fc -v \
+            -d "${{ secrets.BACK_DB_URL }}" \
+            -f "/tmp/back_${TIMESTAMP}.dump"
+          echo "BACK_DUMP=back_${TIMESTAMP}.dump" >> $GITHUB_ENV
+
+      - name: 上传备份到 Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: neon-backup-${{ github.run_id }}
+          path: |
+            /tmp/main_*.dump
+            /tmp/back_*.dump
+          # Artifacts 保留 90 天（免费账号上限）
+          retention-days: 90
