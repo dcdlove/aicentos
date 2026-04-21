@@ -19,19 +19,37 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "导出 main..."
+          echo "=== 导出 main (PG18) ==="
           docker run --rm \
             -v /tmp:/backup \
             -e "DB_URL=${MAIN_DB_URL}" \
-            postgres:17-bookworm \
+            postgres:18-bookworm \
             sh -c 'pg_dump -Fc -v -d "$DB_URL" -f /backup/sync.dump'
 
-          echo "同步到 back..."
-          docker run --rm \
-            -v /tmp:/backup \
-            -e "DB_URL=${BACK_DB_URL}" \
-            postgres:17-bookworm \
-            sh -c 'pg_restore -v --clean --if-exists --no-owner --no-privileges -d "$DB_URL" /backup/sync.dump'
+          echo "=== 开始同步到备份库 ==="
+          FAILED=0
+          INDEX=0
+          while IFS= read -r url; do
+            url=$(echo "$url" | xargs)
+            [ -z "$url" ] && continue
+            INDEX=$((INDEX + 1))
+            echo "--- 同步到备份库 #${INDEX} ---"
+            if docker run --rm \
+              -v /tmp:/backup \
+              -e "DB_URL=${url}" \
+              postgres:17-bookworm \
+              sh -c 'pg_restore -v --clean --if-exists --no-owner --no-privileges -d "$DB_URL" /backup/sync.dump'; then
+              echo "备份库 #${INDEX} 同步成功"
+            else
+              echo "::warning::备份库 #${INDEX} 同步失败"
+              FAILED=$((FAILED + 1))
+            fi
+          done <<< "${BACK_DB_URL}"
 
-          # rm -f /tmp/sync.dump
-          # echo "同步完成 ✓"
+          rm -f /tmp/sync.dump
+
+          if [ "$FAILED" -gt 0 ]; then
+            echo "::error::${FAILED} 个备份库同步失败"
+            exit 1
+          fi
+          echo "=== 全部同步完成 ==="

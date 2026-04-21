@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: 备份两个数据库
+      - name: 备份所有数据库
         env:
           MAIN_DB_URL: ${{ secrets.MAIN_DB_URL }}
           BACK_DB_URL: ${{ secrets.BACK_DB_URL }}
@@ -20,22 +20,29 @@ jobs:
           set -euo pipefail
           TIMESTAMP=$(date -u '+%Y%m%d_%H%M%S')
 
-          echo "备份 main..."
+          echo "=== 备份 main (PG18) ==="
           docker run --rm \
             -v /tmp:/backup \
             -e "DB_URL=${MAIN_DB_URL}" \
-            postgres:17-bookworm \
+            postgres:18-bookworm \
             sh -c 'pg_dump -Fc -v -d "$DB_URL" -f /backup/main_'"${TIMESTAMP}"'.dump'
 
-          echo "备份 back..."
-          docker run --rm \
-            -v /tmp:/backup \
-            -e "DB_URL=${BACK_DB_URL}" \
-            postgres:17-bookworm \
-            sh -c 'pg_dump -Fc -v -d "$DB_URL" -f /backup/back_'"${TIMESTAMP}"'.dump'
+          echo "=== 备份 back 库 ==="
+          INDEX=0
+          while IFS= read -r url; do
+            url=$(echo "$url" | xargs)
+            [ -z "$url" ] && continue
+            INDEX=$((INDEX + 1))
+            echo "--- 备份 back #${INDEX} ---"
+            docker run --rm \
+              -v /tmp:/backup \
+              -e "DB_URL=${url}" \
+              postgres:17-bookworm \
+              sh -c 'pg_dump -Fc -v -d "$DB_URL" -f /backup/back'"${INDEX}"'_'"${TIMESTAMP}"'.dump'
+          done <<< "${BACK_DB_URL}"
 
-          echo "备份完成，文件列表："
-          ls -lh /tmp/main_*.dump /tmp/back_*.dump
+          echo "=== 备份完成 ==="
+          ls -lh /tmp/main_*.dump /tmp/back*_*.dump
 
       - name: 上传备份到 Artifacts
         uses: actions/upload-artifact@v4
@@ -43,5 +50,5 @@ jobs:
           name: neon-backup-${{ github.run_id }}
           path: |
             /tmp/main_*.dump
-            /tmp/back_*.dump
+            /tmp/back*_*.dump
           retention-days: 90
