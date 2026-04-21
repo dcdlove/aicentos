@@ -46,7 +46,6 @@ jobs:
             fi
           done <<< "${BACK_DB_URL}"
 
-          rm -f /tmp/sync.dump
 
           if [ "$FAILED" -gt 0 ]; then
             echo "::error::${FAILED} 个备份库同步失败"
